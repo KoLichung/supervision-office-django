@@ -93,6 +93,11 @@ class ProductSupervisionOfficeShip(models.Model):
         on_delete=models.CASCADE
     )
 
+
+
+
+
+
 class Order(models.Model):
     user = models.ForeignKey(
         User,
@@ -103,11 +108,18 @@ class Order(models.Model):
         on_delete=models.RESTRICT
     )
 
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.RESTRICT,
+        null =True
+    )
+
     # waitOwnerCheck, ownerCanceled, waitForDeposit, waitForAtmDeposit
     # ownerWillContact, onTheWay, closed
     state =  models.CharField(max_length=100, default='', blank = True, null=True)
     orderMoney = models.IntegerField(default=0, null=True)
     memo = models.TextField(default='', null=True, blank=True)
+    amount = models.IntegerField(default=0,null=True)
 
     isAtm = models.BooleanField(default=False, blank = True, null=True)
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
@@ -115,6 +127,11 @@ class Order(models.Model):
     ATMInfoExpireDate = models.DateTimeField(auto_now=False, blank = True,null=True)
 
     createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
+
+
+
+
+
 
 class PayInfo(models.Model):
     order = models.ForeignKey(

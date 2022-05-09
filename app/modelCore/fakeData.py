@@ -91,15 +91,19 @@ def fakeData():
     order = Order()
     order.user = User.objects.get(id = 2)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=1).supervisionOffice
-    order.state =  'Paid'
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price
+    order.state =  'waitForAtmDeposit'
+    order.amount = 5
+    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price * order.amount
+    order.product = ProductSupervisionOfficeShip.objects.get(id=1).product
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=2).supervisionOffice
-    order.state =  'Unpaid'
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price
+    order.state =  'waitOwnerCheck'
+    order.amount = 3
+    order.product = ProductSupervisionOfficeShip.objects.get(id=2).product
+    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price * order.amount
     order.save()
 
     payinfo = PayInfo()

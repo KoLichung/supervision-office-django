@@ -32,7 +32,8 @@ def order_detail(request):
     orders = Order.objects.order_by('id')
     users = User.objects.all()
     payinfos=PayInfo.objects.all()
-    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos})
+    products=Product.objects.all()
+    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products})
 
 
 def products(request):
