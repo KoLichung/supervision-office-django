@@ -21,3 +21,36 @@ tfoot {
   height: 80px;
   width: 120px;
 }
+
+
+
+.img-wrap {
+  margin-bottom: 5px;
+  display: inline-block;
+  position: relative;
+  width: 120px;
+  height: 80px;
+}
+
+.delete-bg {
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top:3px;
+  left: 3px;
+  
+}
+
+.delete {
+  color: white;
+  position: absolute;
+  top: -5px;
+  left: 2px;
+}
+
+
+
+
+
