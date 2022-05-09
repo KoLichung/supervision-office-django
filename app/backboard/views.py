@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import requests
+from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+
+
 
 # Create your views here.
 
@@ -19,7 +23,17 @@ def order_detail(request):
     return render(request, 'backboard/order_detail.html')
 
 def orders(request):
-    return render(request, 'backboard/orders.html')
+    
+    orders = Order.objects.order_by('id')
+    users = User.objects.all()
+    return render(request, 'backboard/orders.html',{'orders':orders,'users':users})
+
+def order_detail(request):
+    orders = Order.objects.order_by('id')
+    users = User.objects.all()
+    payinfos=PayInfo.objects.all()
+    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos})
+
 
 def products(request):
     return render(request, 'backboard/products.html')

@@ -13,29 +13,38 @@
                         
                       <table class="table  table-striped fs--1 mb-0">
                           <p>訂單明細</p>
+                          {% for order in orders %}
+                            {% for user in users %}
+                              {% if order.user == user %}
                         
-                        <thead class="bg-200 text-900">
-                          <tr>
-                            <th>狀態</th>
-                            <th>日期</th>
-                            <th>姓名</th>
-                            <th>電話</th>
-                            <th>金額</th>
-                          </tr>
-                        </thead>
+                                <thead class="bg-200 text-900">
+                          
+                                  <tr>
+                                    <th>狀態</th>
+                                    <th>日期</th>
+                                    <th>姓名</th>
+                                    <th>電話</th>
+                                    <th>金額</th>
+                                  </tr>
+                                </thead>
 
-                        <tbody class="list">
-                          <tr>
-                            <td >
-                              <button type="button" class="btn btn-outline-dark btn-sm">未處理</button>
-                            </td>
-                            <td>2022-04-28</td>
-                            <td>劉金發</td>
-                            <td>0912345678</td>
-                            <td>$2345</td>
-                          </tr>
+                                <tbody class="list">
+                                  <tr>
+                                    
+                                          <td >
+                                            <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                          </td>
+                                          <td class="text-nowrap">{{order.createDate}}</td>>
+                                          <td class="text-nowrap">{{user.name}}</td>>
+                                          <td class="text-nowrap">{{user.phone}}</td>
+                                          <td class="text-nowrap">{{order.orderMoney}}</td>
+                                
+                                  </tr>
                          
-                        </tbody>
+                                </tbody>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
                       </table>
                     </div>
                  
@@ -50,18 +59,25 @@
                       <table class="table  table-striped fs--1 mb-0">
                         <p>金流明細</p>
                         <thead class="bg-200 text-900">
-                          <tr>
-                            <th >付款狀態</th>
-                            <th >付款方式</th>
-                          </tr>
+                              <tr>
+                                <th >付款狀態</th>
+                                <th >付款方式</th>
+                              </tr>
                         </thead>
                         <tbody class="list">
-                          <tr>
-                            <td >
-                              <button type="button" class="btn btn-outline-dark btn-sm">未付款</button>
-                            </td>
-                            <td>超商代碼付款</td>
-                          </tr>
+                          {% for payinfo in payinfos %}
+                            {% for order in orders %}
+                              {% if payinfo.order == order %}
+                            
+                                <tr>
+                                  <td >
+                                    <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                  </td>
+                                  <td>{{payinfo.PaymentType}}</td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>
@@ -83,12 +99,18 @@
                           </tr>
                         </thead>
                         <tbody class="list">
-                          <tr>
-                            <td>宜蘭監理所</td>
-                            <td>劉金發</td>
-                            <td>12345</td>
-                            
-                          </tr>
+                          {% for order in orders %}
+                            {% for user in users %}
+                              {% if order.user == user %}
+                                  <tr>
+                                    <td>{{order.supervisionOffice}}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.phone}}</td>
+                                    
+                                  </tr>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>
