@@ -1,0 +1,23 @@
+/* -------------------------------------------------------------------------- */
+/*                                chijia Button                               */
+/* -------------------------------------------------------------------------- */
+/* prettier-ignore */
+/*# sourceMappingURL=user.css.map */
+
+.text-yellow {
+  color: #ffc701 !important;
+}
+
+
+tfoot {
+  font-weight: 900;
+}
+
+.inlineText{
+  padding: 10px;
+}
+
+.customImageSize {
+  height: 80px;
+  width: 120px;
+}

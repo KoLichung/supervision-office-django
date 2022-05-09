@@ -1,0 +1,194 @@
+{% extends 'backboard/base.html' %} {% block content %}
+          <!-- 內容 -->
+          <div class="row g-3 mb-3">
+            <!-- 左圖 近期訂單數 -->
+            <div class="col-lg-6 ps-lg-2 mb-3">
+                <div class="card h-lg-100">
+                  <div class="card-header">
+                    <div class="row flex-between-center">
+                      <div class="col-auto">
+                        <h6 class="mb-0">Total Sales</h6>
+                      </div>
+                      <div class="col-auto d-flex">
+                        <select class="form-select form-select-sm select-month me-2">
+                          <option value="0">January</option>
+                          <option value="1">February</option>
+                          <option value="2">March</option>
+                          <option value="3">April</option>
+                          <option value="4">May</option>
+                          <option value="5">Jun</option>
+                          <option value="6">July</option>
+                          <option value="7">August</option>
+                          <option value="8">September</option>
+                          <option value="9">October</option>
+                          <option value="10">November</option>
+                          <option value="11">December</option>
+                        </select>
+                        <div class="dropdown font-sans-serif btn-reveal-trigger">
+                          <button class="btn btn-link text-600 btn-sm dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="dropdown-total-sales" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--2"></span></button>
+                          <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-total-sales"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                            <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card-body h-100 pe-0">
+                    <!-- Find the JS file for the following chart at: src\js\charts\echarts\total-sales.js-->
+                    <!-- If you are not using gulp based workflow, you can find the transpiled code at: public\assets\js\theme.js-->
+                    <div class="echart-line-total-sales h-100" data-echart-responsive="true"></div>
+                  </div>
+
+                </div>
+            </div>
+
+            <!-- 右圖 近期銷售額 -->
+            <div class="col-lg-6 ps-lg-2 mb-3">
+                <div class="card h-lg-100">
+                  <div class="card-header">
+                    <div class="row flex-between-center">
+                      <div class="col-auto">
+                        <h6 class="mb-0">Total Sales</h6>
+                      </div>
+                      <div class="col-auto d-flex">
+                        <select class="form-select form-select-sm select-month me-2">
+                          <option value="0">January</option>
+                          <option value="1">February</option>
+                          <option value="2">March</option>
+                          <option value="3">April</option>
+                          <option value="4">May</option>
+                          <option value="5">Jun</option>
+                          <option value="6">July</option>
+                          <option value="7">August</option>
+                          <option value="8">September</option>
+                          <option value="9">October</option>
+                          <option value="10">November</option>
+                          <option value="11">December</option>
+                        </select>
+                        <div class="dropdown font-sans-serif btn-reveal-trigger">
+                          <button class="btn btn-link text-600 btn-sm dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="dropdown-total-sales" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--2"></span></button>
+                          <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-total-sales"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                            <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body h-100 pe-0">
+                    <!-- Find the JS file for the following chart at: src\js\charts\echarts\total-sales.js-->
+                    <!-- If you are not using gulp based workflow, you can find the transpiled code at: public\assets\js\theme.js-->
+                    <div class="echart-line-total-sales h-100" data-echart-responsive="true"></div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- 本月銷售排行 -->
+            <div class="col-lg-3 ps-lg-2 mb-3">
+                <div class="card h-lg-100">
+
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-striped overflow-hidden">
+
+                          <thead>
+                            <tr class="btn-reveal-trigger">
+                              <th scope="col">本月銷售排行</th>
+                              <th scope="col"></th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr class="btn-reveal-trigger">
+                              <td>五月花衛生紙</td>
+                              <td class="text-end">154</td>
+                            </tr>
+                            <tr class="btn-reveal-trigger">
+                                <td>泡麵</td>
+                                <td class="text-end">95</td>
+                            </tr>
+                            <tr class="btn-reveal-trigger">
+                                <td>沙士</td>
+                                <td class="text-end">88</td>
+                            </tr>
+                          </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 未處理訂單 -->
+            <div class="col-lg-9 ps-lg-2 mb-3">
+                <div class="card h-lg-100">
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-striped overflow-hidden">
+                          <thead>
+                            <tr class="btn-reveal-trigger">
+                              <th colspan="6">未處理訂單 (9)</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr class="btn-reveal-trigger">
+                              <td>2022-04-26</td>
+                              <td >劉金發</td>
+                              <td>0912345678</td>
+                              <td>桃園監理所</td>
+                              <td>＄2345</td>
+                              <td class="text-end">
+                                <div class="dropdown font-sans-serif position-static">
+                                    <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
+                                      <div class="text-white">
+                                          查看
+                                      </div>
+                                    </button>
+                                </div>
+                              </td>
+                            </tr>
+
+                            <tr class="btn-reveal-trigger">
+                                <td>2022-04-26</td>
+                                <td >劉金發</td>
+                                <td>0912345678</td>
+                                <td>桃園監理所</td>
+                                <td>＄2345</td>
+                                <td class="text-end">
+                                  <div class="dropdown font-sans-serif position-static">
+                                      <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
+                                        <div class="text-white">
+                                            查看
+                                        </div>
+                                      </button>
+                                  </div>
+                                </td>
+                            </tr>
+
+                            <tr class="btn-reveal-trigger">
+                                <td>2022-04-26</td>
+                                <td >劉金發</td>
+                                <td>0912345678</td>
+                                <td>桃園監理所</td>
+                                <td>＄2345</td>
+                                <td class="text-end">
+                                  <div class="dropdown font-sans-serif position-static">
+                                      <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
+                                        <div class="text-white">
+                                            查看
+                                        </div>
+                                      </button>
+                                  </div>
+                                </td>
+                            </tr>
+
+
+                        
+
+                           
+                          </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+{% endblock %}

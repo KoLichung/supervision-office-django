@@ -1,0 +1,5 @@
+*/flutterjava-firebase.json
+*/db.sqlite3
+venv/*
+app/media/images/*
+__pycache__

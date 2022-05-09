@@ -1,0 +1,90 @@
+
+{% extends 'backboard/base.html' %} {% block content %}
+
+          <!-- 內容 -->
+
+          <div class="g-3 mb-3">
+            <div class="col-lg-12 ps-lg-2 mb-3">
+
+                <div class="mb-3">
+                    <a href="order_detail.html" class="btn btn-warning btn-sm" role="button">2022/02</a>
+                    <span class="inlineText">總訂單：<b>120</b></span> 
+                    <span class="inlineText">總銷售額：<b>120,000</b></span>
+                </div>
+
+              <div class="card h-lg-100">
+                <div class="card-header">
+                  <div id="tableExample2" data-list='{"valueNames":["name","email","age"],"page":10,"pagination":true}'>
+                    <div class="table-responsive scrollbar">
+                      <table class="table  table-striped fs--1 mb-0">
+
+                        <thead class="bg-200 text-900">
+                          <tr>
+                            <th>各監理所銷售額</th>
+                            <th>訂單數</th>
+                            <th colspan="2">營收</th>
+                          </tr>
+                        </thead>
+
+                        <tbody class="list">
+                            <tr>
+                              <td>宜蘭監理所</td>
+                              <td>150</td>
+                              <td>23450</td>
+                              <td class="text-end">                    
+                                <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>宜蘭監理所</td>
+                              <td>150</td>
+                              <td>23450</td>
+                              <td class="text-end">                    
+                                <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>宜蘭監理所</td>
+                              <td>150</td>
+                              <td>23450</td>
+                              <td class="text-end">                    
+                                <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>宜蘭監理所</td>
+                              <td>150</td>
+                              <td>23450</td>
+                              <td class="text-end">                    
+                                <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>宜蘭監理所</td>
+                              <td>150</td>
+                              <td>23450</td>
+                              <td class="text-end">                    
+                                <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
+                              </td>
+                            </tr>
+                           
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-3">
+                      <button class="btn btn-sm btn-chijia-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                      <ul class="pagination mb-0"></ul>
+                      <button class="btn btn-sm btn-chijia-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+{% endblock %}
+  
