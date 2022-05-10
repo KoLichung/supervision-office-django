@@ -95,7 +95,7 @@ class OrderViewSet(viewsets.GenericViewSet,
 
 class ShoppingCartViewSet(viewsets.GenericViewSet,
                         mixins.ListModelMixin,):
-    autheneication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     queryset = ShoppingCart.objects.all()
