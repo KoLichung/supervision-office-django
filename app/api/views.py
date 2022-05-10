@@ -94,10 +94,7 @@ class OrderViewSet(viewsets.GenericViewSet,
         return self.queryset.filter(user=self.request.user)
 
 class ShoppingCartViewSet(viewsets.GenericViewSet,
-                        mixins.ListModelMixin,
-                        mixins.RetrieveModelMixin,
-                        mixins.CreateModelMixin,
-                        mixins.UpdateModelMixin):
+                        mixins.ListModelMixin,):
     autheneication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
