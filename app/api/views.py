@@ -88,6 +88,9 @@ class OrderViewSet(viewsets.GenericViewSet,
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
 class ShoppingCartViewSet(viewsets.GenericViewSet,
                         mixins.ListModelMixin,
                         mixins.RetrieveModelMixin,
@@ -98,4 +101,7 @@ class ShoppingCartViewSet(viewsets.GenericViewSet,
 
     queryset = ShoppingCart.objects.all()
     serializer_class = serializers.ShoppingCartSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
