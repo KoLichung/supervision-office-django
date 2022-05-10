@@ -6,9 +6,10 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 # Create your views here.
 
-from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart
+from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, User
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -78,17 +79,18 @@ class SupervisionOfficeViewSet(viewsets.GenericViewSet,
 
 
 class OrderViewSet(viewsets.GenericViewSet,
-                    mixins.ListModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.CreateModelMixin,
-                    mixins.UpdateModelMixin):
-    autheneication_classes = (TokenAuthentication,)
+                    mixins.ListModelMixin,):
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
+        # my_token = self.request.META.get('HTTP_AUTHORIZATION').split()[1]
+        # user_id = Token.objects.get(key=my_token).user_id
+        # user = User.objects.get(id=user_id)
+        # user = self.request.user
         return self.queryset.filter(user=self.request.user)
 
 class ShoppingCartViewSet(viewsets.GenericViewSet,
