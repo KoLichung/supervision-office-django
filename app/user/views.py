@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 
-from user.serializers import UserSerializer, AuthTokenSerializer
+from user.serializers import UserSerializer, AuthTokenSerializer, UpdateUserSerializer
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system"""
@@ -24,7 +24,7 @@ class CreateTokenView(ObtainAuthToken):
 #http://localhost:8000/api/user/me/  要有 token
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user"""
-    serializer_class = UserSerializer
+    serializer_class = UpdateUserSerializer
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -48,3 +48,18 @@ class UpdateUserLineIdView(APIView):
             return Response({'message': 'success update!'})
         except Exception as e:
             raise APIException("wrong token or null line_id")
+
+class UpdateUserPassword(APIView):
+    authentication_classes = (authentication.TokenAuthentication,)
+
+    def put(self, request, format=None):
+        user = self.request.user
+        old_password = self.request.data.get('old_password')
+
+        if user.check_password(old_password):
+            new_password = self.request.data.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'success update!'})
+        else:
+            raise APIException("wrong old password")
