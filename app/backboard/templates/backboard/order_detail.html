@@ -4,39 +4,55 @@
 
           <div class="g-3 mb-3">
             <div class="col-lg-12 ps-lg-2 mb-3">
-              <b>訂單明細</b>
 
               <!-- 訂單明細 -->
-              <div class="card h-lg-100 my-3">
+              <div class="card h-lg-100 mb-3">
                 <div class="card-header">
                   
                     <div class="table-responsive scrollbar">
                         
                       <table class="table  table-striped fs--1 mb-0">
-                          <p>訂單資料</p>
+                          <p>訂單明細</p>
+                          
                         
-                        <thead class="bg-200 text-900">
-                          <tr>
-                            <th>狀態</th>
-                            <th>日期</th>
-                            <th>姓名</th>
-                            <th>電話</th>
-                            <th>金額</th>
-                          </tr>
-                        </thead>
+                                <thead class="bg-200 text-900">
+                          
+                                  <tr>
+                                    <th>狀態</th>
+                                    <th>日期</th>
+                                    <th>姓名</th>
+                                    <th>電話</th>
+                                    <th>金額</th>
+                                  </tr>
+                                </thead>
 
-                        <tbody class="list">
-                          <tr>
-                            <td >
-                              <button type="button" class="btn btn-outline-dark btn-sm">未處理</button>
-                            </td>
-                            <td>2022-04-28</td>
-                            <td>劉金發</td>
-                            <td>0912345678</td>
-                            <td>$2345</td>
-                          </tr>
-                         
-                        </tbody>
+                                <tbody class="list">
+                                  
+                                  {% for order in orders %}
+                                    {% for user in users %}
+
+                                      
+                                        {% if order.user == user %}
+                                        
+                                          <tr>
+                                      
+                                            <td >
+                                              <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                            </td>
+                                            <td class="text-nowrap">{{order.createDate}}</td>>
+                                            <td class="text-nowrap">{{user.name}}</td>>
+                                            <td class="text-nowrap">{{user.phone}}</td>
+                                            <td class="text-nowrap">{{order.orderMoney}}</td>
+                                  
+                                          </tr>
+                                        {% endif %}
+                                      
+                                      
+                                    {% endfor %}
+                                  {% endfor %}
+                                  
+                                </tbody>
+                              
                       </table>
                     </div>
                  
@@ -51,18 +67,25 @@
                       <table class="table  table-striped fs--1 mb-0">
                         <p>金流明細</p>
                         <thead class="bg-200 text-900">
-                          <tr>
-                            <th >付款狀態</th>
-                            <th >付款方式</th>
-                          </tr>
+                              <tr>
+                                <th >付款狀態</th>
+                                <th >付款方式</th>
+                              </tr>
                         </thead>
                         <tbody class="list">
-                          <tr>
-                            <td >
-                              <button type="button" class="btn btn-outline-dark btn-sm">未付款</button>
-                            </td>
-                            <td>超商代碼付款</td>
-                          </tr>
+                          {% for payinfo in payinfos %}
+                            {% for order in orders %}
+                              {% if payinfo.order == order %}
+                            
+                                <tr>
+                                  <td >
+                                    <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                  </td>
+                                  <td>{{payinfo.PaymentType}}</td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>
@@ -71,77 +94,87 @@
               </div>
 
               <!-- 收件者明細 -->
-              <div class="card h-lg-100 mb-3">
-                <div class="card-header">
-                    <div class="table-responsive scrollbar">
-                      <table class="table  table-striped fs--1 mb-0">
-                        <p>收件者資料</p>
-                        <thead class="bg-200 text-900">
-                          <tr>
-                            <th>站所</th>
-                            <th>姓名</th>
-                            <th >編號</th>
-                          </tr>
-                        </thead>
-                        <tbody class="list">
-                          <tr>
-                            <td>宜蘭監理所</td>
-                            <td>劉金發</td>
-                            <td>12345</td>
-                            
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                </div>
-              </div>
+              {% for order in orders %}
+                      <div class="card h-lg-100 mb-3">
+                        <div class="card-header">
+                          <div class="table-responsive scrollbar">
+                            <table class="table  table-striped fs--1 mb-0">
+                        
+                          
+                                    {% for user in users %}
+                                        {% if order.user == user %}
+                                            <p>收件者資料</p>
+                                            <thead class="bg-200 text-900">
+                                              <tr>
+                                                <th>站所</th>
+                                                <th>姓名</th>
+                                                <th >編號</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody class="list">
+                                              
+                                              <tr>
+                                                <td>{{order.supervisionOffice}}</td>
+                                                <td>{{user.name}}</td>
+                                                <td>{{user.phone}}</td>
+                                                        
+                                              </tr>
+                                      
+                                  
+                                            </tbody>
+                                        {% endif %}
+                                      {% endfor %}
+                            </table>
+                          </div>
+                        </div>
+                      </div>
 
-              <!-- 商品明細 -->
-              <div class="card h-lg-100 mb-3">
-                <div class="card-header">
-                    <div class="table-responsive scrollbar">
-                      <table class="table  table-striped fs--1 mb-0">
-                        <p>訂購商品明細</p>
-                        <thead class="bg-200 text-900">
-                          <tr>
-                            <th>商品名稱</th>
-                            <th>單價</th>
-                            <th>數量</th>
-                            <th >小計</th>
-                          </tr>
-                        </thead>
-                        <tbody class="list">
-                          <tr>
-                            <td>五月花衛生紙</td>
-                            <td>130</td>
-                            <td>5</td>
-                            <td >650</td>
-                          </tr>
-                          <tr>
-                            <td>五月花衛生紙五月花衛生紙五月花衛生紙</td>
-                            <td>130</td>
-                            <td>5</td>
-                            <td >650</td>
-                          </tr>
-                          <tr>
-                            <td>五月花衛生紙五月花衛生紙五月花衛生紙</td>
-                            <td>130</td>
-                            <td>5</td>
-                            <td >650</td>
-                          </tr>
-                        </tbody>
-                        <tfoot>
-                          <tr>
-                            <td>總計</td>
-                            <td></td>
-                            <td></td>
-                            <td>650</td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                </div>
-              </div>
+                        <!-- 商品明細 -->
+                        <div class="card h-lg-100 mb-3">
+                          <div class="card-header">
+                            <div class="table-responsive scrollbar">
+                                <table class="table  table-striped fs--1 mb-0">
+
+                                    {% for product in products%}
+                                        {% if order.product == product %}
+                                            <p>訂購商品明細</p>
+                                            <thead class="bg-200 text-900">
+                                              <tr>
+                                                <th>商品名稱</th>
+                                                <th>單價</th>
+                                                <th>數量</th>
+                                                <th >小計</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody class="list">
+                                                
+
+                                                      <tr>
+                                                        <td>{{product.name}}</td>
+                                                        <td>{{product.price}}</td>
+                                                        <td>{{order.amount}}</td>
+                                                        <td >{{order.orderMoney}}</td>
+                                                      </tr>
+                                              
+                                          
+                                            </tbody>
+                                            <tfoot>
+                                              <tr>
+                                                <td>總計</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{order.orderMoney}}</td>
+                                              </tr>
+                                            </tfoot>
+                                        {% endif %}
+                                    {% endfor %}
+                        
+                              
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+              {% endfor %}
 
 
             </div>

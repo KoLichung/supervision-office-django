@@ -20,22 +20,21 @@
                 </tr>
               </thead>
               <tbody class="list">
-                <tr>
-                  <td valign="middle">張曉明</td>
-                  <td valign="middle">abc@gmail.com</td>
-                  <td valign="middle">0912345678</td>
-                  <td class="text-end">                    
-                    <a href="{% url 'customer_detail' %}" class="btn btn-warning btn-sm" role="button">查看</a>
-                </td>
-                </tr>
-                <tr>
-                  <td valign="middle">張曉明</td>
-                  <td valign="middle">abc@gmail.com</td>
-                  <td valign="middle">0912345678</td>
-                  <td class="text-end">                    
-                    <a href="{% url 'customer_detail' %}" class="btn btn-warning btn-sm" role="button">查看</a>
-                  </td>
-                </tr>
+                {% for customer in customers %}
+                 {% if customer.id > 1 %}
+                        <tr>
+                          
+                                <td valign="middle">{{customer.name}}</td>
+                                <td valign="middle">{{customer.email}}</td>
+                                <td valign="middle">{{customer.phone}}</td>
+                                <td class="text-end">                
+                                <!-- <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'customer_detail' %}?customer_id={{customer_id}}'"></td> -->
+                                <a href="{% url 'customer_detail' %}?customer_id={{customer.id}}" class="btn btn-warning btn-sm" role="button">查看</a>
+                          
+                        
+                        </tr>
+                  {% endif %}
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -51,6 +50,3 @@
 </div>
 
 {% endblock %}
-
-
-          

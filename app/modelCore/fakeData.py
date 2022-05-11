@@ -23,15 +23,17 @@ def importSupervisionOffice():
 
 def fakeData():
     user = User()
-    user.name = 'testUser03'
+    user.name = '許筱真'
     user.phone = '0915323131'
+    user.email ='happy@gmail.com'
     user.is_active = True
     user.is_staff =  False
     user.save()
 
     user = User()
-    user.name = 'testUser04'
+    user.name = '周杰倫'
     user.phone = '0985463816'
+    user.email = 'cat@gmail.com'
     user.is_active = True
     user.is_staff =  False
     user.save()
@@ -91,15 +93,19 @@ def fakeData():
     order = Order()
     order.user = User.objects.get(id = 2)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=1).supervisionOffice
-    order.state =  'waitOwnerCheck'
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price
+    order.state =  'waitForAtmDeposit'
+    order.amount = 5
+    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price * order.amount
+    order.product = ProductSupervisionOfficeShip.objects.get(id=1).product
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=2).supervisionOffice
     order.state =  'waitOwnerCheck'
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price
+    order.amount = 3
+    order.product = ProductSupervisionOfficeShip.objects.get(id=2).product
+    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price * order.amount
     order.save()
 
     payinfo = PayInfo()

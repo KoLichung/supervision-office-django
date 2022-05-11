@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from .models import  User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
 
 
 @admin.register(User)
@@ -31,6 +31,8 @@ class SupervisionOfficeShipAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'user','supervisionOffice','state','orderMoney', 'memo')
+
+
 
 @admin.register(PayInfo)
 class PayInfoAdmin(admin.ModelAdmin):

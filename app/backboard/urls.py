@@ -2,6 +2,10 @@ from django.urls import path, include
 from . import views
 from django.shortcuts import render
 from django.http import HttpResponse 
+from rest_framework.routers import DefaultRouter
+
+
+
 
 
 
@@ -14,4 +18,5 @@ urlpatterns = [
     path('orders', views.orders, name = 'orders'), 
     path('products', views.products, name = 'products'), 
     path('bills', views.bills, name = 'bills'), 
+    path('', include('django.contrib.auth.urls'))
 ]
