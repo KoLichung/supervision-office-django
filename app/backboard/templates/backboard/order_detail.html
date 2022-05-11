@@ -27,23 +27,30 @@
                                 </thead>
 
                                 <tbody class="list">
+                                  
                                   {% for order in orders %}
                                     {% for user in users %}
-                                      {% if order.user == user %}
-                                        <tr>
-                                    
-                                          <td >
-                                            <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
-                                          </td>
-                                          <td class="text-nowrap">{{order.createDate}}</td>>
-                                          <td class="text-nowrap">{{user.name}}</td>>
-                                          <td class="text-nowrap">{{user.phone}}</td>
-                                          <td class="text-nowrap">{{order.orderMoney}}</td>
-                                
-                                        </tr>
-                                      {% endif %}
+
+                                      
+                                        {% if order.user == user %}
+                                        
+                                          <tr>
+                                      
+                                            <td >
+                                              <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                            </td>
+                                            <td class="text-nowrap">{{order.createDate}}</td>>
+                                            <td class="text-nowrap">{{user.name}}</td>>
+                                            <td class="text-nowrap">{{user.phone}}</td>
+                                            <td class="text-nowrap">{{order.orderMoney}}</td>
+                                  
+                                          </tr>
+                                        {% endif %}
+                                      
+                                      
                                     {% endfor %}
                                   {% endfor %}
+                                  
                                 </tbody>
                               
                       </table>
