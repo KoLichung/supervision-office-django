@@ -97,19 +97,19 @@ def add_new_product(request):
 
         
         
-        if ship_officeId1 != "":
+        if ship_officeId1 == "1":
             productsupervisionOfficeship = ProductSupervisionOfficeShip()
             productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
             productsupervisionOfficeship.product = product
             productsupervisionOfficeship.save()
 
-        if ship_officeId2 != "":
+        if ship_officeId2 == "2":
             productsupervisionOfficeship = ProductSupervisionOfficeShip()
             productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
             productsupervisionOfficeship.product = product
             productsupervisionOfficeship.save()
 
-        if ship_officeId3 != "":
+        if ship_officeId3 == "3":
             productsupervisionOfficeship = ProductSupervisionOfficeShip()
             productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
             productsupervisionOfficeship.product = product

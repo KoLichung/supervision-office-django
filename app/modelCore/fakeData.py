@@ -79,6 +79,10 @@ def fakeData():
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '宜蘭監理所'
     supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '花蓮監理所'
+    supervisionOffice.save()
     
     productsupervisionOfficeship =ProductSupervisionOfficeShip()
     productsupervisionOfficeship.product = Product.objects.get(id=1)
