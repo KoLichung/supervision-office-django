@@ -54,7 +54,9 @@
                                       {% endfor %}
                                   
                                 <td valign="middle" class="text-end">                    
-                                  <a href="#" class="btn btn-warning btn-sm" role="button">修改商品</a>
+                                  
+                                  <a href="{% url 'edit_product' %}?productId={{product.id}}" class="btn btn-warning btn-sm" role="button">修改商品</a>
+
                                 </td>
                         
                       </tr>
