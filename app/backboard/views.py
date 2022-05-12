@@ -73,11 +73,13 @@ def add_new_product(request):
     categories = Category.objects.all()
 
     if request.method == 'POST':
-        a
+        
         product = Product()
-        ship = ProductSupervisionOfficeShip()
+        
         product.name = request.POST.get('productName') 
-        product.category = request.POST.get('productCategory')
+        
+        category_Id = request.POST.get('productCategory')
+        product.category = Category.objects.get(id=category_Id)
         product.sublabel =request.POST.get('productSublabel')
         product.info = request.POST.get('productInfo')
         product.content = request.POST.get('productContent')
@@ -86,13 +88,34 @@ def add_new_product(request):
         product.stocks = request.POST.get('productStock')
         product.isPublish = request.POST.get('productIspublish')
         product.save()
-
-        ship_office =request.POST.get('ship_office')
-        ship.supervisionOffice = SupervisionOffice.objects.get(name=ship_office)
-        ship_product =request.POST.get('ship_product')
-        ship.product = Product.objects.get(name=ship_product)
         
-        ship.save()
+        
+        ship_officeId =request.POST.get('ship_officeId')
+        ship_officeId2 =request.POST.get('ship_officeId2')
+        ship_officeId3 =request.POST.get('ship_officeId3')
+        
+
+        
+        
+        if ship_officeId != "":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
+
+        if ship_officeId2 != "":
+            productsupervisionOfficeship = ProductSupervisionOfficeShip()
+            productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
+            productsupervisionOfficeship.product = product
+            productsupervisionOfficeship.save()
+
+        if ship_officeId3 != "":
+            productsupervisionOfficeship = ProductSupervisionOfficeShip()
+            productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
+            productsupervisionOfficeship.product = product
+            productsupervisionOfficeship.save()
+
+        
         return redirect('/backboard/products')
 
     return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
