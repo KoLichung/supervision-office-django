@@ -68,10 +68,13 @@ def products(request):
     return render(request, 'backboard/products.html',{'products':products,'ships':ships})
 
 def add_new_product(request):
-    
+
+    supervisionoffices = SupervisionOffice.objects.all()
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        a
         product = Product()
-        supervisionoffices = SupervisionOffice.objects.all()
-        categories = Category.objects.all()
         ship = ProductSupervisionOfficeShip()
         product.name = request.POST.get('productName') 
         product.category = request.POST.get('productCategory')
@@ -90,8 +93,9 @@ def add_new_product(request):
         ship.product = Product.objects.get(name=ship_product)
         
         ship.save()
+        return redirect('/backboard/products')
 
-        return redirect(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
+    return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
         
 
 
