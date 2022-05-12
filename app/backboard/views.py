@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render ,redirect
 from django.http import HttpResponse
 import requests
 from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
@@ -9,6 +9,9 @@ from modelCore.models import User , Category, Product , ProductImage , Supervisi
 
 def index(request):
     return render(request, 'backboard/index.html')
+
+def base(request):
+    return render(request, 'backboard/base.html')
 
 def add_new_product(request):
     return render(request, 'backboard/add_new_product.html')
@@ -63,3 +66,34 @@ def products(request):
     products = Product.objects.all()
     ships = ProductSupervisionOfficeShip.objects.all()
     return render(request, 'backboard/products.html',{'products':products,'ships':ships})
+
+def add_new_product(request):
+    
+        product = Product()
+        supervisionoffices = SupervisionOffice.objects.all()
+        categories = Category.objects.all()
+        ship = ProductSupervisionOfficeShip()
+        product.name = request.POST.get('productName') 
+        product.category = request.POST.get('productCategory')
+        product.sublabel =request.POST.get('productSublabel')
+        product.info = request.POST.get('productInfo')
+        product.content = request.POST.get('productContent')
+        product.price = request.POST.get('productPrice')
+        product.unit =request.POST.get('productUnit')
+        product.stocks = request.POST.get('productStock')
+        product.isPublish = request.POST.get('productIspublish')
+        product.save()
+
+        ship_office =request.POST.get('ship_office')
+        ship.supervisionOffice = SupervisionOffice.objects.get(name=ship_office)
+        ship_product =request.POST.get('ship_product')
+        ship.product = Product.objects.get(name=ship_product)
+        
+        ship.save()
+
+        return redirect(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
+        
+
+
+
+

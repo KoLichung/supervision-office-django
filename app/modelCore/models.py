@@ -63,9 +63,13 @@ class Product(models.Model):
 
     name = models.CharField(max_length = 255, blank = True, null=True)
     price = models.IntegerField(default=0, blank = True, null=True)
+    sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
     isPublish = models.BooleanField(default=True, blank = True, null=True)
     content = models.TextField(default="", blank = True, null=True)
     info = models.TextField(default="", blank = True, null=True)
+    unit = models.CharField(max_length = 255, blank = True, null=True,default='')
+    stocks = models.IntegerField(default=0, blank = True, null=True)
+    
 
     def __str__(self):
             return self.name

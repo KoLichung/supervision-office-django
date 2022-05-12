@@ -11,6 +11,7 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('index', views.index, name = 'index'), 
+    path('base', views.base, name = 'base'), 
     path('add_new_product', views.add_new_product, name = 'add_new_product'),
     path('customers', views.customers, name = 'customers'), 
     path('customer_detail', views.customer_detail, name = 'customer_detail'),
