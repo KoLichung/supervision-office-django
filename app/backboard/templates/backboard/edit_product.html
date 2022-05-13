@@ -5,173 +5,215 @@
 <div class="g-3 mb-3">
   <div class="col-lg-12 ps-lg-2 mb-3">
     <b>上架新商品</b>
-      <form method="post">{% csrf_token %}
     
-        <div class="card h-lg-100 mt-3">
-          <div class="card-header">
-
-            <!-- 站所選擇 -->
-            <div>
+      
+        
+          <form method="post">{% csrf_token %}
+            {% for product in ProductQueryset %}
               
-                  <div>
-                    <label class="form-label">供應站所：</label>
-                  </div>
-                   
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" id="ship_officeId1" type="checkbox" name="ship_officeId1" value="1" />
-                          <label class="form-check-label" for="ship_officeId1">台中監理所</label>
 
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" id="ship_officeId2" type="checkbox" name="ship_officeId2" value="2" />
-                          <label class="form-check-label" for="ship_officeId2">宜蘭監理所 </label>
-
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" id="ship_officeId3" type="checkbox" name="ship_officeId3" value="3" />
-                           <label class="form-check-label" for="ship_officeId3">花蓮監理所</label>
-
-                        
+                <div class="card h-lg-100 mt-3">
+                  <div class="card-header">
                     
-                  </div>
-                  
-              
-            </div>
+                        <!-- 站所選擇 -->
+                        <div>
 
-            <!-- 商品分類 -->
-            <div >
-              
-                            <div>
-                                <label class="form-label">商品分類：</label>
-                            </div>
-                              {% for category in categories %}
-                              
+                              <div>
+                                <label class="form-label">供應站所：</label>
+                              </div>
+                                
+
                                   <div class="form-check form-check-inline">
-                                      <input class="form-check-input" id="productCategory" type="radio" name="productCategory" value="{{category.id}}" />
-                                      <label class="form-check-label" for="productCategory">{{category.name}}</label>
+                                    <input class="form-check-input" id="ship_officeId1" type="checkbox" name="ship_officeId1" value="1" 
+                                    {% for ship in productships %}
+                                        {% if ship.supervisionOffice.id == 1  %} 
+                                          checked 
+                                        {% endif %} 
+                                    {% endfor %}
+                                    />
+                                    <label class="form-check-label" for="ship_officeId1">台中監理所</label>
                                   </div>
-                              {% endfor %}
-            </div>
+                                  <div class="form-check form-check-inline">
+                                      <input class="form-check-input" id="ship_officeId2" type="checkbox" name="ship_officeId2" value="2" 
+                                        {% for ship in productships %}
+                                            {% if ship.supervisionOffice.id == 2 %} 
+                                              checked 
+                                            {% endif %} 
+                                        {% endfor %}
+                                      />
+                                      <label class="form-check-label" for="ship_officeId2">宜蘭監理所 </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="ship_officeId3" type="checkbox" name="ship_officeId3" value="3" 
+                                        {% for ship in productships %} 
+                                            {% if ship.supervisionOffice.id == 3 %} 
+                                              checked 
+                                            {% endif %}  
+                                        {% endfor %}    
+                                        />
+                                        <label class="form-check-label" for="ship_officeId3">花蓮監理所</label>
+                                      
+                                  
+                                  </div>
+                          
+                        </div>
 
-            <!-- 商品名稱 -->
-            <div class="mb-3">
-              <label class="form-label" for="productName">商品名稱：</label>
-              <input class="form-control" id="productName" type="text" placeholder="" name='productName'  />
-            </div>
+                      
 
-            <!-- 商品副標 -->
-            <div class="mb-3">
-              <label class="form-label" for="productSublabel">商品副標：</label>
-              <input class="form-control" id="productSublabel" name="productSublabel" type="text" placeholder=""  />
-            </div>
+                        <!-- 商品分類 -->
+                        <div>
 
-            <!-- 商品敘述 -->
-            <div class="mb-3">
-              <label class="form-label" for="productInfo">商品敘述：</label>
-              <textarea class="form-control" id="productInfo" type='text' name="productInfo"  rows="2"></textarea>
-            </div>
+                              <div>
+                                <label class="form-label">商品分類：</label>
+                              </div>
+                                  {% for category in categories %}
 
-            <!-- 內容物 -->
-            <div class="mb-3">
-              <label class="form-label" for="productContent">內容物：</label>
-              <input class="form-control" id="productContent" type="text" name="productContent" placeholder="例：商品規格 會客菜三菜一湯...等"  />
-            </div>                
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" id="productCategory" type="radio" name="productCategory" value="{{category.id}}"
+                                        {% if product.category == category %} 
+                                          checked 
+                                        {% endif %} />
+                                      <label class="form-check-label" for="productCategory">{{category.name}}</label>
+                                      
+                                    </div>
+                                  {% endfor %}
+                        </div>
 
-            <!-- 商品售價、單位、庫存 -->
-            <div class="row mb-3">
+                        <!-- 商品名稱 -->
+                        <div class="mb-3">
+                          <label class="form-label" for="productName">商品名稱：</label>
+                          <input class="form-control" id="productName" type="text" placeholder="" name='productName'
+                            value="{{product.name}}" />
+                        </div>
 
-              <div class="col-md-4">
-                <label class="form-label" for="productPrice">商品售價：</label>
-                <input class="form-control form-inline" id="productPrice" name="productPrice" type="text"  />
-              </div>
+                        <!-- 商品副標 -->
+                        <div class="mb-3">
+                          <label class="form-label" for="productSublabel">商品副標：</label>
+                          <input class="form-control" id="productSublabel" name="productSublabel" type="text" placeholder=""
+                            value="{{product.sublabel}}" />
+                        </div>
 
-              <div class="col-md-4">
-                <label class="form-label" for="productUnit">單位：</label>
-                <input class="form-control form-inline" id="productUnit" type="text" placeholder="包、個、支...等" name="productUnit"  />
-              </div>
+                        <!-- 商品敘述 -->
+                        <div class="mb-3">
+                          <label class="form-label" for="productInfo">商品敘述：</label>
+                          <textarea class="form-control" id="productInfo" type='text' name="productInfo" value="{{product.info}}"
+                            rows="2"></textarea>
+                        </div>
 
-              <div class="col-md-4">
-                <label class="form-label" for="productStock">商品庫存：</label>
-                <input class="form-control form-inline" id="productStock" type="text" name="productStock"  />
-              </div>
-                            
-            </div>
+                        <!-- 內容物 -->
+                        <div class="mb-3">
+                          <label class="form-label" for="productContent">內容物：</label>
+                          <input class="form-control" id="productContent" type="text" name="productContent"
+                            value= "{{product.content}}" placeholder="例：商品規格 會客菜三菜一湯...等" />
+                        </div>
 
-            <!-- 商品圖片 -->
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1">商品圖片：</label>
-              <a href="*" class="btn btn-warning btn-sm " role="button">上傳圖片</a>
+                        <!-- 商品售價、單位、庫存 -->
+                        <div class="row mb-3">
 
-                <div class="row mx-n1 mt-3">
-                  <div class="p-1">
+                          <div class="col-md-4">
+                            <label class="form-label" for="productPrice">商品售價：</label>
+                            <input class="form-control form-inline" id="productPrice" name="productPrice" type="text"
+                              value="{{product.price}}" />
+                          </div>
 
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
-                    <div class="img-wrap">
-                      <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                      <div class="delete-bg">
-                        <div class="delete">&times;</div>
-                      </div>
-                    </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="productUnit">單位：</label>
+                            <input class="form-control form-inline" id="productUnit" type="text" placeholder="包、個、支...等"
+                              name="productUnit" value = "{{product.unit}}" />
+                          </div>
 
+                          <div class="col-md-4">
+                            <label class="form-label" for="productStock">商品庫存：</label>
+                            <input class="form-control form-inline" id="productStock" type="text" name="productStock"
+                              value= "{{product.stocks}}" />
+                          </div>
+
+                        </div>
+
+                        <!-- 商品圖片 -->
+                        <div class="mb-3">
+                          <label class="form-label" for="exampleFormControlInput1">商品圖片：</label>
+                          <a href="*" class="btn btn-warning btn-sm " role="button">上傳圖片</a>
+
+                          <div class="row mx-n1 mt-3">
+                            <div class="p-1">
+
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+                              <div class="img-wrap">
+                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
+                                <div class="delete-bg">
+                                  <div class="delete">&times;</div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 上架狀態 -->
+                        <div>
+                          <div>
+                            <label class="form-label">上架狀態：</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="productIspublish" type="radio" name="productIspublish"
+                              value="True" {% if product.isPublish == True %} checked {% endif %} />
+                            <label class="form-check-label" for="productIspublish">上架</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="productIspublish" type="radio" name="productIspublish"
+                              value="False" {% if product.isPublish == False %} checked {% endif %} />
+                            <label class="form-check-label" for="productIspublish">下架</label>
+                          </div>
+                        </div>
+
+                        <div class="col-12 text-end">
+                          <button class="btn btn-warning btn-sm" type="submit" name="submit" value=ok
+                            onclick="location.href='{% url 'edit_product' %}'">
+                            修改商品
+                          </button>
+                        </div>
+
+
+
+
+                      
                   </div>
                 </div>
-            </div>
-
-            <!-- 上架狀態 -->
-            <div >
-                            <div>
-                                <label class="form-label">上架狀態：</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="productIspublish" type="radio" name="productIspublish" value="True" />
-                                <label class="form-check-label" for="productIspublish">上架</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="productIspublish" type="radio" name="productIspublish" value="None" />
-                                <label class="form-check-label" for="productIspublish">下架</label>
-                            </div>
-            </div>
-
-            <div class="col-12 text-end">
-                <button class="btn btn-warning btn-sm" type="submit" name="submit" value=ok onclick="location.href='{% url 'edit_product' %}'">
-                  新增商品
-                </button>
-            </div>
-                    
-
-                    
-
-          </div>
-
-        </div>
-      </form>
+              
+            {% endfor %}
+          </form>
+        
+      
   </div>
 </div>
 

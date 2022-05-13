@@ -123,20 +123,28 @@ def add_new_product(request):
 
 def edit_product(request):
     
+    products = Product.objects.all()
+    
     productId = request.GET.get("productId")
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
-    theProduct = Product.objects.get(id=productId)
-    ship1 = ProductSupervisionOfficeShip.objects.filter(product=theProduct,supervisionOffice=1)
-    ship2 = ProductSupervisionOfficeShip.objects.filter(product=theProduct,supervisionOffice=2)
-    ship3 = ProductSupervisionOfficeShip.objects.filter(product=theProduct,supervisionOffice=3)
+    ProductQueryset = Product.objects.filter(id=productId)
+    theproduct = Product.objects.get(id=productId)
+    productships = ProductSupervisionOfficeShip.objects.filter(product=theproduct)
+    ship1 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=1)
+    ship2 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=2)
+    ship3 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=3)
+    
+    for ship in productships:
+        print(ship.supervisionOffice.id)
     
    
 
     if request.method == 'POST':
         
         
-        if theProduct.name == request.POST.get('productName'):
+        
+        if theproduct.name == request.POST.get('productName'):
             product = Product.objects.get(id=productId)
             category_Id = request.POST.get('productCategory')
             product.category = Category.objects.get(id=category_Id)
@@ -225,6 +233,7 @@ def edit_product(request):
 
 
         elif Product.objects.filter(name=request.POST.get('productName')).exists() == False :
+            
             product = Product.objects.get(id=productId)
             product.name = request.POST.get('productName')
             category_Id = request.POST.get('productCategory')
@@ -315,6 +324,6 @@ def edit_product(request):
 
         else:
             pass
-
-    return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
+    
+    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset})
         
