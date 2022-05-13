@@ -47,12 +47,19 @@
                                       <td valign="middle">{{product.category}}</td>
                                       <td valign="middle"> {{product.name}} </td>
                                       <td valign="middle">$ {{product.price}} </td>
-                                      {%for ship in ships %}
-                                        {% if ship.product == product %}
-                                          <td valign="middle">{{ship.supervisionOffice}}</td>
-                                        {% endif %}
-                                      {% endfor %}
-                                  
+                                      <td>
+                                        <table class="table  table-striped fs--1 mb-0">
+                                              {%for ship in ships %}
+                                                {% if ship.product == product %}         
+                                                  </br>
+                                                  <tr>                 
+                                                    <tr  valign="middle">{{ship.supervisionOffice}}</tr>
+                                                      
+                                                  </tr>  
+                                                {% endif %}
+                                              {% endfor %}
+                                        </table>
+                                      </td>
                                 <td valign="middle" class="text-end">                    
                                   
                                   <a href="{% url 'edit_product' %}?productId={{product.id}}" class="btn btn-warning btn-sm" role="button">修改商品</a>
