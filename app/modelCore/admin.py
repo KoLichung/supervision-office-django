@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from .models import  OrderState, User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart, OrderState
 
 
 @admin.register(User)
@@ -30,8 +30,11 @@ class SupervisionOfficeShipAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user','supervisionOffice','state','orderMoney', 'memo')
+    list_display = ('id', 'user','supervisionOffice','state','orderMoney', 'memo','cashflowState')
 
+@admin.register(OrderState)
+class OrderState(admin.ModelAdmin):
+    list_display=('id','name')
 
 
 @admin.register(PayInfo)

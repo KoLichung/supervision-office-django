@@ -1,7 +1,7 @@
 from django.shortcuts import render ,redirect
 from django.http import HttpResponse
 import requests
-from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState
 
 
 
@@ -43,9 +43,14 @@ def orders(request):
     
     orders = Order.objects.all()
     users = User.objects.all()
+    orderstates = OrderState.objects.all()
+    orderstate_id = request.GET.get('order_state')
+    theOrderstate = orderstates.filter(id=orderstate_id)
     for order in orders:
         order_id=order.id
-    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'order_id':order_id})
+    # if request.method == 'POST':
+
+    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'order_id':order_id,'orderstates':orderstates,'theOrderstate':theOrderstate})
     
 
 def order_detail(request):

@@ -100,7 +100,11 @@ class ProductSupervisionOfficeShip(models.Model):
 
 
 
-
+class OrderState(models.Model):
+    name = models.CharField(max_length=255, null=True , blank=True)
+    
+    def __str__(self):
+        return self.name
 
 
 class Order(models.Model):
@@ -121,11 +125,16 @@ class Order(models.Model):
 
     # waitOwnerCheck, ownerCanceled, waitForDeposit, waitForAtmDeposit
     # ownerWillContact, onTheWay, closed
-    state =  models.CharField(max_length=100, default='', blank = True, null=True)
+    state =  models.ForeignKey(
+            OrderState,
+            on_delete=models.RESTRICT,
+            null =True
+            )
+    cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
     orderMoney = models.IntegerField(default=0, null=True)
     memo = models.TextField(default='', null=True, blank=True)
     amount = models.IntegerField(default=0,null=True)
-
+    
     isAtm = models.BooleanField(default=False, blank = True, null=True)
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfovAccount = models.CharField(max_length=20, default='', blank = True, null=True)

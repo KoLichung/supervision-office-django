@@ -1,7 +1,7 @@
 import csv
 import os
 from datetime import datetime, timedelta
-from .models import User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from .models import OrderState, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
 
 
 def importSupervisionOffice():
@@ -72,6 +72,14 @@ def fakeData():
     product.info = "外觀造型獨特，不失其質感在家的好夥伴，陪你度過悠閒的假期"
     product.save()
     
+    product = Product()
+    product.category = Category.objects.get(id=3)
+    product.name = '小熊餅乾'
+    product.price = 280
+    product.content = "植物油、小麥粉、砂糖、乳糖、可可塊、澱粉、全脂奶粉、蛋、轉化糖、食鹽、膨脹劑、食用天然色素、香料、乳化劑"
+    product.info = "★暢銷多年的好滋味\n★餅乾裡有滿滿的巧克力內餡\n★可愛小熊共有200種圖案"
+    product.save()
+
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '台中監理所'
     supervisionOffice.save()
@@ -94,10 +102,27 @@ def fakeData():
     productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 1)
     productsupervisionOfficeship.save()
 
+    productsupervisionOfficeship =ProductSupervisionOfficeShip()
+    productsupervisionOfficeship.product = Product.objects.get(id=3)
+    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 3)
+    productsupervisionOfficeship.save()
+
+    orderstate = OrderState()
+    orderstate.name = '未處理'
+    orderstate.save()
+
+    orderstate = OrderState()
+    orderstate.name = '已完成'
+    orderstate.save()
+
+    orderstate = OrderState()
+    orderstate.name = '已取消'
+    orderstate.save()
+
     order = Order()
     order.user = User.objects.get(id = 2)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=1).supervisionOffice
-    order.state =  'waitForAtmDeposit'
+    order.state =  OrderState.objects.get(id=1)
     order.amount = 5
     order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price * order.amount
     order.product = ProductSupervisionOfficeShip.objects.get(id=1).product
@@ -106,10 +131,19 @@ def fakeData():
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=2).supervisionOffice
-    order.state =  'waitOwnerCheck'
+    order.state =  OrderState.objects.get(id=2)
     order.amount = 3
     order.product = ProductSupervisionOfficeShip.objects.get(id=2).product
     order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price * order.amount
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 3)
+    order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=3).supervisionOffice
+    order.state =  OrderState.objects.get(id=2)
+    order.amount = 5
+    order.product = ProductSupervisionOfficeShip.objects.get(id=3).product
+    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=3).product.price * order.amount
     order.save()
 
     payinfo = PayInfo()
@@ -118,6 +152,10 @@ def fakeData():
 
     payinfo = PayInfo()
     payinfo.order = Order.objects.get(id=2)
+    payinfo.save()
+
+    payinfo = PayInfo()
+    payinfo.order = Order.objects.get(id=3)
     payinfo.save()
 
     shoppingCart = ShoppingCart()
