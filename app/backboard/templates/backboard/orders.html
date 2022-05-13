@@ -10,16 +10,16 @@
 
         <div class="mb-3">
 
-          <a href="{% url 'orders' %}" class="btn btn-warning btn-sm" role="button">所有訂單</a>
+          <a href="{% url 'orders' %}?order_state1=1&order_state2=2&order_state3=3" class="btn btn-warning btn-sm" role="button">所有訂單</a>
             {% for orderstate in orderstates %}
               {% if orderstate.id == 1 %}
-                  <a href="{% url 'orders' %}?order_state={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
+                  <a href="{% url 'orders' %}?order_state1={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
               {% endif %}
               {% if orderstate.id == 2 %}
-                  <a href="{% url 'orders' %}?order_state={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
+                  <a href="{% url 'orders' %}?order_state2={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
               {% endif %}
               {% if orderstate.id == 3 %}
-                  <a href="{% url 'orders' %}?order_state={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
+                  <a href="{% url 'orders' %}?order_state3={{orderstate.id}}" class="btn btn-outline-warning btn-sm" role="button">{{orderstate.name}}</a>
               {% endif %}
             {% endfor %}
         </div>
@@ -39,33 +39,88 @@
                 </tr>
               </thead>
               <tbody class="list">
-                  {% for order in orders %}
-                    {% for orderstateId in theOrderstate %}
-                      {% if order.state == orderstateId %}
-                    
-                    
-                        <tr>
-                            {% for user in users %}
-                              {% if order.user == user %}
-                                    <td ><button type="button" class="btn btn-outline-warning btn-sm">{{orderstateId.name}}</button></td>
-                                    <td class="text-nowrap">{{user.name}}</td>>
-                                    <td class="text-nowrap">{{user.phone}}</td>
-                                    <td class="text-nowrap">{{order.createDate}}</td>
-                                    <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
-                                    <td class="text-nowrap">{{order.orderMoney}}</td>
-                                    <td class="text-nowrap">{{order.state}}</td>
-                              {% endif %}
-                              
-                            {% endfor %}
-                            
-                          <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?order_id={{order.id}}'"></td>
-                                <!-- <td><button class="btn btn-warning btn-link text-white btn-sm" href=”/order_detail?order_id={{order.id}}”>查看</button></td> -->
-                            
-                        </tr>
+                  
 
-                        
-                      {% endif %}
-                    {% endfor %}
+
+
+
+
+                  {% for order in orders %}
+                          {% for orderstate1 in theOrderstate1 %}
+                            {% if order.state == orderstate1 %}
+                          
+                          
+                              <tr>
+                                  {% for user in users %}
+                                    {% if order.user == user %}
+                                          <td ><button type="button" class="btn btn-outline-warning btn-sm">{{orderstate1.name}}</button></td>
+                                          <td class="text-nowrap">{{user.name}}</td>>
+                                          <td class="text-nowrap">{{user.phone}}</td>
+                                          <td class="text-nowrap">{{order.createDate}}</td>
+                                          <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
+                                          <td class="text-nowrap">{{order.orderMoney}}</td>
+                                          <td class="text-nowrap">{{order.state}}</td>
+                                    {% endif %}
+                                    
+                                  {% endfor %}
+                                  
+                                <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?order_id={{order.id}}'"></td>
+                                      <!-- <td><button class="btn btn-warning btn-link text-white btn-sm" href=”/order_detail?order_id={{order.id}}”>查看</button></td> -->
+                                  
+                              </tr>
+                            {% endif %}
+                            
+                          {% endfor %}
+                          {% for orderstate2 in theOrderstate2 %}
+                            {% if order.state == orderstate2 %}
+                          
+                          
+                              <tr>
+                                  {% for user in users %}
+                                    {% if order.user == user %}
+                                          <td ><button type="button" class="btn btn-outline-warning btn-sm">{{orderstate2.name}}</button></td>
+                                          <td class="text-nowrap">{{user.name}}</td>>
+                                          <td class="text-nowrap">{{user.phone}}</td>
+                                          <td class="text-nowrap">{{order.createDate}}</td>
+                                          <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
+                                          <td class="text-nowrap">{{order.orderMoney}}</td>
+                                          <td class="text-nowrap">{{order.state}}</td>
+                                    {% endif %}
+                                    
+                                  {% endfor %}
+                                  
+                                <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?order_id={{order.id}}'"></td>
+                                      <!-- <td><button class="btn btn-warning btn-link text-white btn-sm" href=”/order_detail?order_id={{order.id}}”>查看</button></td> -->
+                                  
+                              </tr>
+                            {% endif %}
+                            
+                          {% endfor %}
+                          {% for orderstate3 in theOrderstate3 %}
+                            {% if order.state == orderstate3 %}
+                          
+                          
+                              <tr>
+                                  {% for user in users %}
+                                    {% if order.user == user %}
+                                          <td ><button type="button" class="btn btn-outline-warning btn-sm">{{orderstate3.name}}</button></td>
+                                          <td class="text-nowrap">{{user.name}}</td>>
+                                          <td class="text-nowrap">{{user.phone}}</td>
+                                          <td class="text-nowrap">{{order.createDate}}</td>
+                                          <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
+                                          <td class="text-nowrap">{{order.orderMoney}}</td>
+                                          <td class="text-nowrap">{{order.state}}</td>
+                                    {% endif %}
+                                    
+                                  {% endfor %}
+                                  
+                                <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?order_id={{order.id}}'"></td>
+                                      <!-- <td><button class="btn btn-warning btn-link text-white btn-sm" href=”/order_detail?order_id={{order.id}}”>查看</button></td> -->
+                                  
+                              </tr>
+                            {% endif %}
+                            
+                          {% endfor %}
                   {% endfor %}
               </tbody>
             </table>
@@ -74,6 +129,17 @@
             <button class="btn btn-sm btn-chijia-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
               <ul class="pagination mb-0"></ul>
             <button class="btn btn-sm btn-chijia-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+
+            <td class="text-nowrap">
+              <button class="btn p-0" type="button" data-bs-toggle="modal" 
+              
+              data-bs-target="#modal{{orderstate.name}}"
+            
+              >
+                <span class="text-500 fas fa-edit"></span>
+              </button>
+              {{ orderstate.name }}
+            </td>
           </div>
         </div>
       </div>

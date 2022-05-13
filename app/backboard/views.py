@@ -44,13 +44,17 @@ def orders(request):
     orders = Order.objects.all()
     users = User.objects.all()
     orderstates = OrderState.objects.all()
-    orderstate_id = request.GET.get('order_state')
-    theOrderstate = orderstates.filter(id=orderstate_id)
+    orderstate_id1 = request.GET.get('order_state1')
+    orderstate_id2 = request.GET.get('order_state2')
+    orderstate_id3 = request.GET.get('order_state3')
+    theOrderstate1 = orderstates.filter(id=orderstate_id1)
+    theOrderstate2 = orderstates.filter(id=orderstate_id2)
+    theOrderstate3 = orderstates.filter(id=orderstate_id3)
     for order in orders:
         order_id=order.id
     # if request.method == 'POST':
 
-    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'order_id':order_id,'orderstates':orderstates,'theOrderstate':theOrderstate})
+    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'order_id':order_id,'orderstates':orderstates,'theOrderstate1':theOrderstate1,'theOrderstate2':theOrderstate2,'theOrderstate3':theOrderstate3})
     
 
 def order_detail(request):
