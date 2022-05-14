@@ -36,8 +36,49 @@
                                         
                                           <tr>
                                       
-                                            <td >
-                                              <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                                            <td> 
+                                              <form method="post">{% csrf_token %}
+                                                <button class="btn btn-outline-warning btn-sm" type="button" data-bs-toggle="modal" 
+                                  
+                                                data-bs-target="#modal{{order.state}}" 
+                                              
+                                                >
+                                                  {{order.state}}
+                                                </button>
+                                                <div class="modal fade" id="modal{{order.state}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5>請選擇訂單狀態</h5>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        
+                                                          {% for orderstate in orderstates %}
+                                                              <input class="form-check-input" id="OrderState" type="radio" name="OrderState" value="{{orderstate.id}}" 
+                                                              {% if order.state == orderstate %} 
+                                                                checked 
+                                                              {% endif %} 
+                                                              />
+                                                              <label class="form-check-label" for="OrderState">{{orderstate.name}}</label>
+                                                            <hr>
+                                                          {% endfor %}
+                                                        
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                                                          取消
+                                                        </button>
+                                                        <button class="btn btn-primary" type="submit" name="submit" value="ok" onclick="location.href='{% url 'orders' %}'">
+                                                          儲存
+                                                        </button>
+                                                          
+                                                      </div>
+                                                        
+                                                      
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </form>
                                             </td>
                                             <td class="text-nowrap">{{order.createDate}}</td>>
                                             <td class="text-nowrap">{{user.name}}</td>>

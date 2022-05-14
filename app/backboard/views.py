@@ -44,31 +44,53 @@ def orders(request):
     orders = Order.objects.all()
     users = User.objects.all()
     orderstates = OrderState.objects.all()
-    orderstate_id1 = request.GET.get('order_state1')
-    orderstate_id2 = request.GET.get('order_state2')
-    orderstate_id3 = request.GET.get('order_state3')
-    theOrderstate1 = orderstates.filter(id=orderstate_id1)
-    theOrderstate2 = orderstates.filter(id=orderstate_id2)
-    theOrderstate3 = orderstates.filter(id=orderstate_id3)
+    q = request.GET.get('order_state')
+    if q != None:
+        theOrderstates = orderstates.filter(id=request.GET.get('order_state'))
+        
+    else:
+        theOrderstates = orderstates
+        
+    
+    
     for order in orders:
-        order_id=order.id
-    # if request.method == 'POST':
+        IdOder=order.id
+    
+        
 
-    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'order_id':order_id,'orderstates':orderstates,'theOrderstate1':theOrderstate1,'theOrderstate2':theOrderstate2,'theOrderstate3':theOrderstate3})
+
+        
+
+    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates,'theOrderstates':theOrderstates})
     
 
 def order_detail(request):
     orders = Order.objects.all()
     users = User.objects.all()
     payinfos=PayInfo.objects.all()
+    orderstates = OrderState.objects.all()
     products=Product.objects.all()
     
-    if request.GET.get('order_id') != None:
-            order_id=request.GET.get('order_id', '')        
-    else:
-            order_id = 1 
+    
+    order_id=request.GET.get('IdOrder')
     orders = orders.filter(id=order_id)
-    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products})
+    if order_id != None:        
+        
+        theOrder = Order.objects.get(id=order_id)
+    else:
+        print('order_id:',order_id)
+        theOrder = Order.objects.get(id=order_id)
+    
+    if request.method == 'POST':
+        
+        State_Id = request.POST.get('OrderState')
+        
+        theOrder.state = OrderState.objects.get(id=State_Id)
+        theOrder.save()
+
+        return redirect('/backboard/orders')
+
+    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates})
 
 
 def products(request):
