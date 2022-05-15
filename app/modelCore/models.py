@@ -123,14 +123,16 @@ class Order(models.Model):
         null =True
     )
 
-    # waitOwnerCheck, ownerCanceled, waitForDeposit, waitForAtmDeposit
-    # ownerWillContact, onTheWay, closed
+    #已完成, 未處理, 已取消 
     state =  models.ForeignKey(
-            OrderState,
-            on_delete=models.RESTRICT,
-            null =True
-            )
+        OrderState,
+        on_delete=models.RESTRICT,
+        null =True
+    )
+
+    #paid, failPaid, waitForATMPay, waitForSuperMarketPay  
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
+
     orderMoney = models.IntegerField(default=0, null=True)
     memo = models.TextField(default='', null=True, blank=True)
     amount = models.IntegerField(default=0,null=True)

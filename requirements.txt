@@ -7,3 +7,5 @@ pyparsing==3.0.8
 pytz==2022.1
 sqlparse==0.4.2
 requests==2.27.1
+pycryptodome>=3.14.1
+cryptography>=36.0.2

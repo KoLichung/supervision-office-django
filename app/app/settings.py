@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'user',
     'api',
     'backboard',
+    'payECPay',
 ]
 
 MIDDLEWARE = [
