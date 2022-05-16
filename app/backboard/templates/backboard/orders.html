@@ -39,49 +39,25 @@
                     </tr>
                   </thead>
                   <tbody class="list">
-                      
-
-
-
-
-
-                      {% for order in orders %}
-                        
+                      {% for order in orders %}                       
                               {% for theState in theOrderstates %}
-                                {% if order.state == theState %}
-
-
-
-
-
-
-                                  <tr>
+                                {% if order.state == theState %}                                 
                                       {% for user in users %}
-                                        {% if order.user == user %}
-                                              
-                                              <td ><button type="button" class="btn btn-outline-warning btn-sm">{{theState.name}}</button></td>
-                                                      
-                                              <td class="text-nowrap">{{user.name}}</td>>
+                                        {% if order.user == user %}   
+                                          <tr>                       
+                                              <td><button type="button" class="btn btn-outline-warning btn-sm">{{theState.name}}</button></td>                                                     
+                                              <td class="text-nowrap">{{user.name}}</td>
                                               <td class="text-nowrap">{{user.phone}}</td>
                                               <td class="text-nowrap">{{order.createDate}}</td>
                                               <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
                                               <td class="text-nowrap">{{order.orderMoney}}</td>
                                               <td class="text-nowrap">{{order.state}}</td>
-                                        {% endif %}
-                                        
-                                      {% endfor %}
-                                      
-                                    <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
-                                          
-                                      
-                                  </tr>
-                                {% endif %}
-                                
-                              
-                              
-                                
-                              {% endfor %}
-                              
+                                              <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
+                                          </tr>
+                                        {% endif %}                                       
+                                      {% endfor %}                                                                                                         
+                                {% endif %}                             
+                              {% endfor %}                             
                       {% endfor %}
                   </tbody>
                 </table>

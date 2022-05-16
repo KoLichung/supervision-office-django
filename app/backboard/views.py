@@ -102,51 +102,57 @@ def add_new_product(request):
 
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
+    
 
     if request.method == 'POST':
-        
-        product = Product()
-        
-        product.name = request.POST.get('productName') 
-        
-        category_Id = request.POST.get('productCategory')
-        product.category = Category.objects.get(id=category_Id)
-        product.sublabel =request.POST.get('productSublabel')
-        product.info = request.POST.get('productInfo')
-        product.content = request.POST.get('productContent')
-        product.price = request.POST.get('productPrice')
-        product.unit =request.POST.get('productUnit')
-        product.stocks = request.POST.get('productStock')
-        product.isPublish = request.POST.get('productIspublish')
-        product.save()
-        
-        
-        ship_officeId1 =request.POST.get('ship_officeId1')
-        ship_officeId2 =request.POST.get('ship_officeId2')
-        ship_officeId3 =request.POST.get('ship_officeId3')
-        
+        if Product.objects.filter(name=request.POST.get('productName')).exists() == False :
+            product = Product()
+            product_img = ProductImage()
+            
+            product.name = request.POST.get('productName') 
+            
+            category_Id = request.POST.get('productCategory')
+            product.category = Category.objects.get(id=category_Id)
+            product.sublabel =request.POST.get('productSublabel')
+            product.info = request.POST.get('productInfo')
+            product.content = request.POST.get('productContent')
+            product.price = request.POST.get('productPrice')
+            product.unit =request.POST.get('productUnit')
+            product.stocks = request.POST.get('productStock')
+            product.isPublish = request.POST.get('productIspublish')
+            product.save()
+            
+            product_img.product = Product.objects.get(name=request.POST.get('productName'))
+            product_img.image = request.POST.get('upload_img')
+            product_img.save()
+            
+            ship_officeId1 =request.POST.get('ship_officeId1')
+            ship_officeId2 =request.POST.get('ship_officeId2')
+            ship_officeId3 =request.POST.get('ship_officeId3')
+            
 
-        
-        
-        if ship_officeId1 == "1":
-            productsupervisionOfficeship = ProductSupervisionOfficeShip()
-            productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
-            productsupervisionOfficeship.product = product
-            productsupervisionOfficeship.save()
+            
+            
+            if ship_officeId1 == "1":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-        if ship_officeId2 == "2":
-            productsupervisionOfficeship = ProductSupervisionOfficeShip()
-            productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
-            productsupervisionOfficeship.product = product
-            productsupervisionOfficeship.save()
+            if ship_officeId2 == "2":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-        if ship_officeId3 == "3":
-            productsupervisionOfficeship = ProductSupervisionOfficeShip()
-            productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
-            productsupervisionOfficeship.product = product
-            productsupervisionOfficeship.save()
+            if ship_officeId3 == "3":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-        
+            else:
+                pass
         return redirect('/backboard/products')
 
     return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
