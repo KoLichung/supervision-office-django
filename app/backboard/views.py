@@ -1,7 +1,7 @@
 from django.shortcuts import render ,redirect
 from django.http import HttpResponse
 import requests
-from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState
+from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState,image_upload_handler
 
 
 
@@ -123,7 +123,8 @@ def add_new_product(request):
             product.save()
             
             product_img.product = Product.objects.get(name=request.POST.get('productName'))
-            product_img.image = request.POST.get('upload_img')
+            IMGfile = request.POST.get('upload_img')
+            product_img.image=image_upload_handler(IMGfile)
             product_img.save()
             
             ship_officeId1 =request.POST.get('ship_officeId1')

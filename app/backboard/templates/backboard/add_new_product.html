@@ -97,13 +97,13 @@
 
             <!-- 商品圖片 -->
             <div class="mb-3">
-              
+              <form method="post" enctype="multipart/form-data">{% csrf_token %}
                 <label   class="form-label" for="exampleFormControlInput1">商品圖片：</label>
                 <label class="btn btn-warning btn-sm" for="upload_img">
                 <input id="upload_img" name="upload_img" style="display:none;" type="file">
                 上傳圖片
                 </label>
-              
+              </form>
 
                 <div class="row mx-n1 mt-3">
                   <div class="p-1">

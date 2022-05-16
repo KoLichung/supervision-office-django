@@ -10,7 +10,6 @@ class UserManager(BaseUserManager):
         """Creates and saves a new user"""
         if not phone:
             raise ValueError('Users must have an phone')
-        # user = self.model(email=self.normalize_email(email), **extra_fields)
         user = self.model(
             phone = phone, 
             name=extra_fields.get('name'),
@@ -30,7 +29,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-def image_upload_handler(instance, filename):
+def image_upload_handler(filename):
     fpath = pathlib.Path(filename)
     new_fname = str(uuid.uuid1()) #uuid1 -> uuid + timestamp
     return f'images/{new_fname}{fpath.suffix}'
@@ -44,7 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     
     line_id = models.CharField(max_length=255, null=True , blank=True)
-
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
@@ -69,7 +67,6 @@ class Product(models.Model):
     info = models.TextField(default="", blank = True, null=True)
     unit = models.CharField(max_length = 255, blank = True, null=True,default='')
     stocks = models.IntegerField(default=0, blank = True, null=True)
-    
 
     def __str__(self):
             return self.name
