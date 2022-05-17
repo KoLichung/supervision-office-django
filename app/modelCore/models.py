@@ -59,7 +59,7 @@ class Product(models.Model):
         on_delete=models.CASCADE
     )
 
-    name = models.CharField(max_length = 255, blank = True, null=True)
+    name = models.CharField(max_length = 255, blank = True, null=True, unique=True)
     price = models.IntegerField(default=0, blank = True, null=True)
     sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
     isPublish = models.BooleanField(default=True, blank = True, null=True)
