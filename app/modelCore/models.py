@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-def image_upload_handler(filename):
+def image_upload_handler(instance,filename):
     fpath = pathlib.Path(filename)
     new_fname = str(uuid.uuid1()) #uuid1 -> uuid + timestamp
     return f'images/{new_fname}{fpath.suffix}'

@@ -2,7 +2,7 @@ from django.shortcuts import render ,redirect
 from django.http import HttpResponse
 import requests
 from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState,image_upload_handler
-
+from modelCore.forms import *
 
 
 # Create your views here.
@@ -13,8 +13,6 @@ def index(request):
 def base(request):
     return render(request, 'backboard/base.html')
 
-def add_new_product(request):
-    return render(request, 'backboard/add_new_product.html')
 
 def bills(request):
     return render(request, 'backboard/bills.html')
@@ -46,21 +44,13 @@ def orders(request):
     orderstates = OrderState.objects.all()
     q = request.GET.get('order_state')
     if q != None:
-        theOrderstates = orderstates.filter(id=request.GET.get('order_state'))
-        
+        theOrderstates = orderstates.filter(id=request.GET.get('order_state'))        
     else:
         theOrderstates = orderstates
-        
-    
-    
+   
     for order in orders:
         IdOder=order.id
-    
-        
-
-
-        
-
+ 
     return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates,'theOrderstates':theOrderstates})
     
 
@@ -122,14 +112,20 @@ def add_new_product(request):
             product.isPublish = request.POST.get('productIspublish')
             product.save()
             
-            product_img.product = Product.objects.get(name=request.POST.get('productName'))
-            IMGfile = request.POST.get('upload_img')
-            product_img.image=image_upload_handler(IMGfile)
+                
+                
+
+            
+            product_img.product = Product.objects.get(name=request.POST.get('productName'))            
+            photo=request.POST.get('upload_img')
+            
+            product_img.image=photo             
             product_img.save()
             
             ship_officeId1 =request.POST.get('ship_officeId1')
             ship_officeId2 =request.POST.get('ship_officeId2')
             ship_officeId3 =request.POST.get('ship_officeId3')
+            
             
 
             
@@ -152,12 +148,26 @@ def add_new_product(request):
                 productsupervisionOfficeship.product = product
                 productsupervisionOfficeship.save()
 
-            else:
-                pass
-        return redirect('/backboard/products')
 
-    return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
+
+            form = ProductImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                print('1')
+                
+            else:
+                form = ProductImageForm()
+                print('2')
+
+            
+            return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'form':form})
+        else:
+            pass
         
+        return redirect('/backboard/products')
+    return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories})
+
+   
 
 def edit_product(request):
     
