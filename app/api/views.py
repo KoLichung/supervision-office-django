@@ -104,3 +104,26 @@ class ShoppingCartViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
+class SearchViewSet(viewsets.GenericViewSet,
+                    mixins.ListModelMixin,):
+    
+    queryset = Product.objects.all()
+    serializer_class = serializers.ProductSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+        q = self.request.query_params.get('q')
+        
+        #get suppervion offices all products
+        theSuppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
+        productsIds = ProductSupervisionOfficeShip.objects.filter(supervisionOffice=theSuppervisionOffice).values_list('product',flat=True)
+        queryset = queryset.filter(pk__in=productsIds)
+        #filter by category
+        queryset = queryset.filter(name__contains=q)
+        
+        for i in range(len(queryset)):
+            if ProductImage.objects.filter(product=queryset[i]).count()!=0:
+                queryset[i].coverImage = ProductImage.objects.filter(product=queryset[i]).first().image
+
+        return queryset

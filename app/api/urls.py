@@ -11,6 +11,7 @@ router.register('supervisionoffices',views.SupervisionOfficeViewSet)
 # router.register('product_supervisionoffice_ships',views.ProductSupervisionOfficeShipViewSet)
 router.register('orders',views.OrderViewSet)
 router.register('shoppingcarts',views.ShoppingCartViewSet)
+router.register('search', views.SearchViewSet)
 
 app_name = 'api'
 
