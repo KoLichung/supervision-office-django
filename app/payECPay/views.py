@@ -46,7 +46,7 @@ class GetTokenView(APIView):
                     "MerchantTradeNo": merchantTradeNo,
                     "MerchantTradeDate": (datetime.now()+timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S"),
                     "TotalAmount": f"{order.orderMoney}",
-                    "ReturnURL": "http://45.77.25.172/api/ecpay/post_callback",
+                    "ReturnURL": "http://45.77.24.12/api/ecpay/post_callback",
                     "TradeDesc": "監所購物",
                     "ItemName": f"訂單編號{order.id}"
                 },
