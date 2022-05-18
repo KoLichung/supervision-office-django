@@ -15,7 +15,30 @@ def base(request):
 
 
 def bills(request):
-    return render(request, 'backboard/bills.html')
+    offices = SupervisionOffice.objects.all()
+    orders=Order.objects.filter(state=2)
+    TotalOrder = orders.count()
+    TotalMoney = 0
+    for order in orders:
+        TotalMoney += order.orderMoney
+    officeOrders1 =  orders.filter(supervisionOffice=1)
+    officeTotalorder1 = officeOrders1.count()
+    officeTotalMoney1 = 0
+    for officeOrder1 in officeOrders1:
+        officeTotalMoney1 += officeOrder1.orderMoney
+    officeOrders2 =  orders.filter(supervisionOffice=2)
+    officeTotalorder2 = officeOrders2.count()
+    officeTotalMoney2 = 0
+    for officeOrder2 in officeOrders2:
+        officeTotalMoney2 += officeOrder2.orderMoney
+    officeOrders3 =  orders.filter(supervisionOffice=3)
+    officeTotalorder3 = officeOrders3.count()
+    officeTotalMoney3 = 0
+    for officeOrder3 in officeOrders3:
+        officeTotalMoney3 += officeOrder3.orderMoney
+
+
+    return render(request, 'backboard/bills.html',{ 'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
 
 def customers(request):
     customers = User.objects.all()
