@@ -57,6 +57,10 @@ class GetTokenView(APIView):
                 "ATMInfo": {
                     "ExpireDate": 3
                 },
+                "CVSInfo": {
+                    "StoreExpireDate": 10080,
+                    "CVSCode": "CSV"
+                },
                 "ConsumerInfo": {
                     "MerchantMemberID": f"{order.user.id}",
                     "Email": "customer@email.com",
