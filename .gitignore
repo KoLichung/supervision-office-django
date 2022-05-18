@@ -3,3 +3,4 @@
 venv/*
 app/media/images/*
 __pycache__
+*/django.log

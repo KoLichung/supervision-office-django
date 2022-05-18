@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     '45.77.24.12',
     '127.0.0.1',
     'localhost',
+    '336d-125-230-206-99.jp.ngrok.io',
 ]
 
 ADMINS = (
