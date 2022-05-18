@@ -34,6 +34,14 @@ def image_upload_handler(instance,filename):
     new_fname = str(uuid.uuid1()) #uuid1 -> uuid + timestamp
     return f'images/{new_fname}{fpath.suffix}'
 
+@property
+def get_photo_url(self):
+    if self.photo and hasattr(self.photo, 'url'):
+        return self.photo.url
+    else:
+        return "/static/backboard/assets/img/generic/4.jpg"
+        
+        
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that suppors using email instead of username"""
     phone = models.CharField(max_length=10, unique=True)

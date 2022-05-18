@@ -8,7 +8,7 @@
     
       
         
-          <form method="post">{% csrf_token %}
+          <form method="post" enctype="multipart/form-data">{% csrf_token %}
             {% for product in ProductQueryset %}
               
 
@@ -133,47 +133,28 @@
                         <!-- 商品圖片 -->
                         <div class="mb-3">
                           <label class="form-label" for="exampleFormControlInput1">商品圖片：</label>
-                          <a href="*" class="btn btn-warning btn-sm " role="button">上傳圖片</a>
+                          <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% comment %} <input type="hidden" id="product" name="product" value="1"> {% endcomment %}
+                            {{ form.product.as_hidden }}
+                            {{ form.image }} </br></br>
+                            <button type="submit">Upload</button>
+                          </form>
 
                           <div class="row mx-n1 mt-3">
                             <div class="p-1">
-
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
+                              {% for productimage in productimages %}
+                                <div class="img-wrap">
+                                  {% if productimage.image %}
+                                    <img src="{{ productimage.image.url }}" alt="{{productimage.name}}" class="customImageSize rounded mb-2">
+                                  {% endif %}
+                                  <div class="delete-bg">
+                                    
+                                      <a href="/backboard/edit_product/{{productimage.pk}}/delete/" name="product" value="{{productimage.product}}" class="delete">&times;</a>
+                                    
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
-                                </div>
-                              </div>
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
-                                </div>
-                              </div>
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
-                                </div>
-                              </div>
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
-                                </div>
-                              </div>
-                              <div class="img-wrap">
-                                <img class="customImageSize rounded mb-2" src="{% static 'backboard/assets/img/generic/4.jpg' %}">
-                                <div class="delete-bg">
-                                  <div class="delete">&times;</div>
-                                </div>
-                              </div>
+                              {% endfor %}
 
                             </div>
                           </div>
