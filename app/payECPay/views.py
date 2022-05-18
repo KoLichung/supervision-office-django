@@ -59,7 +59,7 @@ class GetTokenView(APIView):
                 },
                 "CVSInfo": {
                     "StoreExpireDate": 10080,
-                    "CVSCode": "CSV"
+                    "CVSCode": "CVS"
                 },
                 "ConsumerInfo": {
                     "MerchantMemberID": f"{order.user.id}",
