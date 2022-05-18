@@ -1,9 +1,9 @@
-from django.shortcuts import render ,redirect
+from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 import requests
 from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState,image_upload_handler
 from modelCore.forms import *
-
+import urllib
 
 # Create your views here.
 
@@ -86,7 +86,9 @@ def order_detail(request):
 def products(request):
     products = Product.objects.all()
     ships = ProductSupervisionOfficeShip.objects.all()
-    return render(request, 'backboard/products.html',{'products':products,'ships':ships})
+    productimages = ProductImage.objects.all()
+    
+    return render(request, 'backboard/products.html',{'products':products,'ships':ships,'productimages':productimages})
 
 def add_new_product(request):
 
@@ -94,83 +96,71 @@ def add_new_product(request):
     categories = Category.objects.all()
     form = ProductImageForm()
 
+    product = Product()
+       
+
     if request.method == 'POST':
-        form = ProductImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            # Get the current instance object to display in the template
-            img_obj = form.instance
-            # img_obj.product = Product.objects.get(id=1)
-            # img_obj.save()
-            # return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
-            render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories, 'form':form, 'img_obj': img_obj})
+
+            
+            
+            form = ProductImageForm(request.POST, request.FILES)
+            productName = request.POST.get('productName') 
+            product.name = productName
+            category_Id = request.POST.get('productCategory')
+            product.category = Category.objects.get(id=category_Id)
+            product.sublabel =request.POST.get('productSublabel')
+            product.info = request.POST.get('productInfo')
+            product.content = request.POST.get('productContent')
+            product.price = request.POST.get('productPrice')
+            product.unit =request.POST.get('productUnit')
+            product.stocks = request.POST.get('productStock')
+            product.isPublish = request.POST.get('productIspublish')
+            product.save()
+            products = Product.objects.filter(name=productName)
+            
+            
+            ship_officeId1 =request.POST.get('ship_officeId1')
+            ship_officeId2 =request.POST.get('ship_officeId2')
+            ship_officeId3 =request.POST.get('ship_officeId3')
+            
+            if ship_officeId1 == "1":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
+
+            if ship_officeId2 == "2":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
+
+            if ship_officeId3 == "3":
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
+
+            
+
+            
+            if form.is_valid():
+                
+                form.save()
+                # Get the current instance object to display in the template
+                img_obj = form.instance
+                print('1')
+                # form.initial['product'] = Product.objects.latest('id')
+                theproductImage=ProductImage.objects.latest('id')
+                theproductImage.product=Product.objects.latest('id')
+                theproductImage.save()
+                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'products':products, 'form':form, 'img_obj': img_obj})
     else:
         form = ProductImageForm()
-        form.initial['product'] = Product.objects.get(id=1 )
-
+        form.initial['product'] = Product.objects.latest('id')
+        print('2')
     return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
-
-    # if request.method == 'POST':
-        # if Product.objects.filter(name=request.POST.get('productName')).exists() == False :
-        #     product = Product()
-        #     product_img = ProductImage()
-            
-        #     product.name = request.POST.get('productName') 
-            
-        #     category_Id = request.POST.get('productCategory')
-        #     product.category = Category.objects.get(id=category_Id)
-        #     product.sublabel =request.POST.get('productSublabel')
-        #     product.info = request.POST.get('productInfo')
-        #     product.content = request.POST.get('productContent')
-        #     product.price = request.POST.get('productPrice')
-        #     product.unit =request.POST.get('productUnit')
-        #     product.stocks = request.POST.get('productStock')
-        #     product.isPublish = request.POST.get('productIspublish')
-        #     product.save()
-            
-        #     product_img.product = Product.objects.get(name=request.POST.get('productName'))            
-        #     photo=request.POST.get('upload_img')
-            
-        #     product_img.image=photo             
-        #     product_img.save()
-            
-        #     ship_officeId1 =request.POST.get('ship_officeId1')
-        #     ship_officeId2 =request.POST.get('ship_officeId2')
-        #     ship_officeId3 =request.POST.get('ship_officeId3')
-            
-        #     if ship_officeId1 == "1":
-        #         productsupervisionOfficeship = ProductSupervisionOfficeShip()
-        #         productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
-        #         productsupervisionOfficeship.product = product
-        #         productsupervisionOfficeship.save()
-
-        #     if ship_officeId2 == "2":
-        #         productsupervisionOfficeship = ProductSupervisionOfficeShip()
-        #         productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
-        #         productsupervisionOfficeship.product = product
-        #         productsupervisionOfficeship.save()
-
-        #     if ship_officeId3 == "3":
-        #         productsupervisionOfficeship = ProductSupervisionOfficeShip()
-        #         productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
-        #         productsupervisionOfficeship.product = product
-        #         productsupervisionOfficeship.save()
-
-        #     # form = ProductImageForm(request.POST, request.FILES)
-        #     # if form.is_valid():
-        #     #     form.save()
-        #     #     print('1')
-                
-        #     # else:
-            
-        #     #     print('2')
-
-            
-        #     return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'form':form})
-        # else:
-        #     pass
         
-        # return redirect('/backboard/products')
 
     
 
@@ -179,7 +169,7 @@ def add_new_product(request):
 def edit_product(request):
     
     products = Product.objects.all()
-    
+    form = ProductImageForm()
     productId = request.GET.get("productId")
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
@@ -189,17 +179,14 @@ def edit_product(request):
     ship1 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=1)
     ship2 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=2)
     ship3 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=3)
-    
+    productimages = ProductImage.objects.filter(product=theproduct).order_by('-id')[:6]
     for ship in productships:
         print(ship.supervisionOffice.id)
-    
-   
-
+  
     if request.method == 'POST':
-        
-        
-        
+      
         if theproduct.name == request.POST.get('productName'):
+            form = ProductImageForm(request.POST, request.FILES)
             product = Product.objects.get(id=productId)
             category_Id = request.POST.get('productCategory')
             product.category = Category.objects.get(id=category_Id)
@@ -284,11 +271,21 @@ def edit_product(request):
                     print('pass2')
                     pass
 
-            return redirect('/backboard/products')
+            if form.is_valid():
+                
+                form.save()
+                # Get the current instance object to display in the template
+                img_obj = form.instance
+                print('1')
+                # form.initial['product'] = Product.objects.latest('id')
+                theproductImage=ProductImage.objects.latest('id')
+                theproductImage.product=theproduct
+                theproductImage.save()
+                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
 
 
         elif Product.objects.filter(name=request.POST.get('productName')).exists() == False :
-            
+            form = ProductImageForm(request.POST, request.FILES)
             product = Product.objects.get(id=productId)
             product.name = request.POST.get('productName')
             category_Id = request.POST.get('productCategory')
@@ -301,17 +298,11 @@ def edit_product(request):
             product.stocks = request.POST.get('productStock')
             product.isPublish = request.POST.get('productIspublish')
             product.save()
-            
-            
+                        
             officeId1=request.POST.get('ship_officeId1')
             officeId2=request.POST.get('ship_officeId2')
             officeId3=request.POST.get('ship_officeId3')
-            
-            
-            
-            
-            
-            
+                     
             if officeId1 == "1" :
                 print("officeId1:",officeId1)
                 if ship1.exists() :
@@ -331,8 +322,6 @@ def edit_product(request):
                 else:
                     print('pass2')
                     pass
-
-
 
             if officeId2 == "2" :
                 print("officeId2:",officeId2)
@@ -374,11 +363,40 @@ def edit_product(request):
                     print('pass2')
                     pass
             
-            return redirect('/backboard/products')
+            if form.is_valid():
+                
+                form.save()
+                # Get the current instance object to display in the template
+                img_obj = form.instance
+                print('1')
+                # form.initial['product'] = Product.objects.latest('id')
+                theproductImage=ProductImage.objects.latest('id')
+                theproductImage.product=Product.objects.get(id=productId)
+                theproductImage.save()
+                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
 
 
-        else:
-            pass
+    else:
+        form = ProductImageForm()
+        form.initial['product'] = theproduct
+        print('2')
     
-    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset})
-        
+    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'productimages':productimages,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form})
+
+def redirect_params(url, params=None):
+    response = redirect(url)
+    if params:
+        query_string = urllib.parse.urlencode(params)
+        response['Location'] += '?' + query_string
+    return response
+
+def deleteImage(request, id=None):
+    image = get_object_or_404(ProductImage, pk=id)
+    ID = image.product.id
+    your_params = {
+        'productId':ID
+    }
+    image.delete()
+
+    
+    return redirect_params("/backboard/edit_product",your_params)

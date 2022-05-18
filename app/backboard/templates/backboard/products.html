@@ -39,7 +39,17 @@
                             <td>
                               <div class="row mx-n1">
                                   <div class="col-6 p-1">
-                                    <img class="customImageSize rounded" src="{% static 'backboard/assets/img/generic/4.jpg' %}" alt="" />
+                                    <div class="p-1">
+                                      {% for productimage in productimages %}
+                                        {% if productimage.product == product %}
+                                        <!-- {% comment %} <input type="hidden" id="productId" name="productId" value="{{product.id}}"> {% endcomment %} -->
+                                          <div class="img-wrap">
+                                            {% if productimage.image %}
+                                              <img src="{{ productimage.image.url }}" alt="{{productimage.name}}" class="customImageSize rounded mb-2">
+                                            {% endif %}
+                                          </div>
+                                        {% endif %}
+                                      {% endfor %}
                                   </div>
                               </div>
                             </td>
