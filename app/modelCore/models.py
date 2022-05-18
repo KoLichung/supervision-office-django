@@ -1,3 +1,4 @@
+from itertools import product
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.urls import reverse
@@ -77,12 +78,17 @@ class Product(models.Model):
     stocks = models.IntegerField(default=0, blank = True, null=True)
 
     def __str__(self):
-            return self.name
+        return self.name
+
+    @property
+    def first_image(self):
+        return self.images.first()
 
 class ProductImage(models.Model):
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='images'
     )
 
     image = models.ImageField(upload_to=image_upload_handler, blank=True, null=True)

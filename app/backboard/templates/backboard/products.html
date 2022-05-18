@@ -40,16 +40,7 @@
                               <div class="row mx-n1">
                                   <div class="col-6 p-1">
                                     <div class="p-1">
-                                      {% for productimage in productimages %}
-                                        {% if productimage.product == product %}
-                                        <!-- {% comment %} <input type="hidden" id="productId" name="productId" value="{{product.id}}"> {% endcomment %} -->
-                                          <div class="img-wrap">
-                                            {% if productimage.image %}
-                                              <img src="{{ productimage.image.url }}" alt="{{productimage.name}}" class="customImageSize rounded mb-2">
-                                            {% endif %}
-                                          </div>
-                                        {% endif %}
-                                      {% endfor %}
+                                      <img src="{{ product.first_image.image.url }}" class="customImageSize rounded mb-2">
                                   </div>
                               </div>
                             </td>
