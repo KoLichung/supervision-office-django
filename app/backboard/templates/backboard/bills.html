@@ -8,8 +8,8 @@
 
     <div class="my-3">
       <a href="order_detail.html" class="btn btn-warning btn-sm" role="button">2022/02</a>
-      <span class="inlineText">總訂單：<b>120</b></span> 
-      <span class="inlineText">總銷售額：<b>120,000</b></span>
+      <span class="inlineText">總訂單：<b>{{TotalOrder}}</b></span> 
+      <span class="inlineText">總銷售額：<b>{{TotalMoney}}</b></span>
     </div>
 
     <div class="card h-lg-100">
@@ -28,44 +28,40 @@
 
             <tbody class="list">
               <tr>
-                <td>宜蘭監理所</td>
-                <td>150</td>
-                <td>23450</td>
-                <td class="text-end">                    
-                  <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
-                </td>
+                {% for office in offices %}
+                  {% if office.id == 1 %}
+                  <td>{{office.name}}</td>
+                  <td>{{officeTotalorder1}}</td>
+                  <td>{{officeTotalMoney1}}</td>
+                  <td class="text-end">                    
+                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                  </td>
+                  {% endif %}
+                {% endfor %}
               </tr>
               <tr>
-                <td>宜蘭監理所</td>
-                <td>150</td>
-                <td>23450</td>
-                <td class="text-end">                    
-                  <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
-                </td>
+                {% for office in offices %}
+                  {% if office.id == 2 %}
+                  <td>{{office.name}}</td>
+                  <td>{{officeTotalorder2}}</td>
+                  <td>{{officeTotalMoney2}}</td>
+                  <td class="text-end">                    
+                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                  </td>
+                  {% endif %}
+                {% endfor %}
               </tr>
               <tr>
-                <td>宜蘭監理所</td>
-                <td>150</td>
-                <td>23450</td>
-                <td class="text-end">                    
-                  <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
-                </td>
-              </tr>
-              <tr>
-                <td>宜蘭監理所</td>
-                <td>150</td>
-                <td>23450</td>
-                <td class="text-end">                    
-                  <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
-                </td>
-              </tr>
-              <tr>
-                <td>宜蘭監理所</td>
-                <td>150</td>
-                <td>23450</td>
-                <td class="text-end">                    
-                  <button class="btn btn-warning btn-link text-white btn-sm" href="#">看商品明細</button>
-                </td>
+                {% for office in offices %}
+                  {% if office.id == 3 %}
+                  <td>{{office.name}}</td>
+                  <td>{{officeTotalorder3}}</td>
+                  <td>{{officeTotalMoney3}}</td>
+                  <td class="text-end">                    
+                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                  </td>
+                  {% endif %}
+                {% endfor %}
               </tr>
                            
             </tbody>
