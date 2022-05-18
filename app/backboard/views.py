@@ -111,6 +111,10 @@ def products(request):
     ships = ProductSupervisionOfficeShip.objects.all()
     productimages = ProductImage.objects.all()
     
+    # for product in products:
+    #     product.image = ProductImage.objects.all().first()
+    #     print(product.image)
+
     return render(request, 'backboard/products.html',{'products':products,'ships':ships,'productimages':productimages})
 
 def add_new_product(request):

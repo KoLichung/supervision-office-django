@@ -41,12 +41,12 @@ class GetTokenView(APIView):
                 "MerchantID": merchandID,
                 "RememberCard": 0,
                 "PaymentUIType": 2,
-                "ChoosePaymentList": "1,3",
+                "ChoosePaymentList": "1,3,4",
                 "OrderInfo": {
                     "MerchantTradeNo": merchantTradeNo,
                     "MerchantTradeDate": (datetime.now()+timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S"),
                     "TotalAmount": f"{order.orderMoney}",
-                    "ReturnURL": "http://45.77.24.12/api/ecpay/post_callback",
+                    "ReturnURL": "https://336d-125-230-206-99.jp.ngrok.io/api/ecpay/post_callback",
                     "TradeDesc": "監所購物",
                     "ItemName": f"訂單編號{order.id}"
                 },
@@ -56,6 +56,10 @@ class GetTokenView(APIView):
                 },
                 "ATMInfo": {
                     "ExpireDate": 3
+                },
+                "CVSInfo": {
+                    "StoreExpireDate": 10080,
+                    "CVSCode": "CSV"
                 },
                 "ConsumerInfo": {
                     "MerchantMemberID": f"{order.user.id}",
@@ -137,6 +141,7 @@ class PaymentResultCallback(APIView):
             
             if('ATMInfo' in data_json and data_json['ATMInfo']!= None):
                 print("atm info")
+                payInfo.PaymentType = "ATM"
                 # 3碼
                 payInfo.ATMInfoBankCode = data_json['ATMInfo']['ATMAccBank']
                 # 後 5 碼
@@ -145,17 +150,17 @@ class PaymentResultCallback(APIView):
                 print("no atm info")
 
             if('CustomField' in data_json and data_json['CustomField']!= None):
-                try:
+                # try:
                     order = Order.objects.get(id= int(data_json['CustomField']))
-                    order.state = 'ownerWillContact'
+                    order.cashflowState = 'paid'
                     order.save()
                     payInfo.order = order
                     payInfo.save()
-                except:
-                    print("can't find order custom field error")
+                    # except:
+                        # print("can't find order custom field error")
             else:
                 order = Order.objects.get(id=1)
-                order.state = 'ownerWillContact'
+                order.cashflowState = 'paid'
                 order.save()
                 payInfo.order = Order.objects.get(id=1)
                 payInfo.save()
