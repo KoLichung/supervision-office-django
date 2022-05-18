@@ -1,0 +1,12 @@
+2022-05-18 03:06:28 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:06:28 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:07:15 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:07:15 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:10:10 [INFO    ] (autoreload.trigger_reload) /Volumes/D/Django-project/supervision-office-django/app/modelCore/migrations/0012_alter_product_name.py changed, reloading.
+2022-05-18 03:10:10 [INFO    ] (autoreload.trigger_reload) /Volumes/D/Django-project/supervision-office-django/app/modelCore/migrations/0012_alter_product_name.py changed, reloading.
+2022-05-18 03:10:10 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:10:10 [INFO    ] (autoreload.run_with_reloader) Watching for file changes with StatReloader
+2022-05-18 03:10:16 [INFO    ] (basehttp.log_message) "GET /backboard/orders HTTP/1.1" 200 17700
+2022-05-18 03:10:16 [INFO    ] (basehttp.log_message) "GET /backboard/orders HTTP/1.1" 200 17700
+2022-05-18 03:10:18 [INFO    ] (basehttp.log_message) "GET /backboard/products HTTP/1.1" 200 24250
+2022-05-18 03:10:18 [INFO    ] (basehttp.log_message) "GET /backboard/products HTTP/1.1" 200 24250
