@@ -88,6 +88,8 @@ class GetTokenView(APIView):
         }
 
         resp = requests.post(post_url, json = postData)
+        
+        print(resp.text)
 
         respData = json.loads(resp.text)['Data']
         decrypt_text = cipher.decrypt(respData)
