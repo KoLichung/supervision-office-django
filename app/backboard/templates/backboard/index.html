@@ -98,10 +98,10 @@
                           </thead>
 
                           <tbody>
-                            {% for rankorder in Ranklist %}
+                            {% for product in productRank %}
                               <tr class="btn-reveal-trigger">
-                                <td>{{rankorder.name}}</td>
-                                <td class="text-end">154</td>
+                                <td>{{product.name}}</td>
+                                <td class="text-end">{{product.week_sum_nums}}</td>
                               </tr>                         
                             {% endfor %}
                           </tbody>

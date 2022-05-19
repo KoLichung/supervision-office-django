@@ -10,23 +10,26 @@ from datetime import datetime, timedelta
 # Create your views here.
 
 def index(request):
-    offices = SupervisionOffice.objects.all()
+    orders = Order.objects.filter(state=1)
     ships = ProductOrderShip.objects.all()
+    products =Product.objects.all()
     undealtorders = Order.objects.filter(state=1)
     UndealtOrdersNum = undealtorders.count()
-    dealtOrders = ships.filter(state=2)
-    lastweek = datetime.today() - timedelta(weeks=1)
-    WeekOrdersIds = Order.objects.filter(listing_date__week=lastweek.isocalendar()[1]).id
-    print(WeekOrdersIds)
-    a = None
-    for id in WeekOrdersIds:
-        a += dealtOrders.filter(order=id)
-    print(a)
-
-    products = Product.objects.all()
-    Ranklist=dealtOrders.annotate(sales_sum=Sum('order__amount')).order_by('sales_sum')
+    dealtOrdersShips = Order.objects.filter(state=2)
+    lastweek = datetime.today() - timedelta(days=7)
+    print(lastweek)
+    WeekOrders = dealtOrdersShips.filter(createDate__date__gte=lastweek.date())
+    for WeekOrder in WeekOrders:
+            ships=ships.filter(order=WeekOrder)
+            for product in products:
+                        sum = ships.filter(product=product).aggregate(Sum('amount'))
+                        product.week_sum_nums = sum['amount__sum']
+                        product.save()
     
-    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'Ranklist':Ranklist})
+    
+    productRank = Product.objects.order_by("-week_sum_nums")[:3]
+    
+    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def base(request):
     return render(request, 'backboard/base.html')
