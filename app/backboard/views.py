@@ -1,14 +1,32 @@
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 import requests
-from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart ,OrderState,image_upload_handler
+from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,ProductOrderShip,PayInfo , ShoppingCart ,OrderState,image_upload_handler
 from modelCore.forms import *
-import urllib
+import urllib 
+from django.db.models import Sum
+from datetime import datetime, timedelta
 
 # Create your views here.
 
 def index(request):
-    return render(request, 'backboard/index.html')
+    offices = SupervisionOffice.objects.all()
+    ships = ProductOrderShip.objects.all()
+    undealtorders = Order.objects.filter(state=1)
+    UndealtOrdersNum = undealtorders.count()
+    dealtOrders = ships.filter(state=2)
+    lastweek = datetime.today() - timedelta(weeks=1)
+    WeekOrdersIds = Order.objects.filter(listing_date__week=lastweek.isocalendar()[1]).id
+    print(WeekOrdersIds)
+    a = None
+    for id in WeekOrdersIds:
+        a += dealtOrders.filter(order=id)
+    print(a)
+
+    products = Product.objects.all()
+    Ranklist=dealtOrders.annotate(sales_sum=Sum('order__amount')).order_by('sales_sum')
+    
+    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'Ranklist':Ranklist})
 
 def base(request):
     return render(request, 'backboard/base.html')

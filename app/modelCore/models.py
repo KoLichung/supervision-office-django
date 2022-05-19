@@ -67,7 +67,7 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE
     )
-
+    
     name = models.CharField(max_length = 255, blank = True, null=True, unique=True)
     price = models.IntegerField(default=0, blank = True, null=True)
     sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
@@ -76,7 +76,9 @@ class Product(models.Model):
     info = models.TextField(default="", blank = True, null=True)
     unit = models.CharField(max_length = 255, blank = True, null=True,default='')
     stocks = models.IntegerField(default=0, blank = True, null=True)
-
+    week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
+    week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
+    
     def __str__(self):
         return self.name
 
@@ -127,35 +129,46 @@ class Order(models.Model):
         SupervisionOffice,
         on_delete=models.RESTRICT
     )
-
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.RESTRICT,
-        null =True
-    )
-
     #已完成, 未處理, 已取消 
     state =  models.ForeignKey(
         OrderState,
         on_delete=models.RESTRICT,
         null =True
     )
-
     #paid, failPaid, waitForATMPay, waitForSuperMarketPay  
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
 
     orderMoney = models.IntegerField(default=0, null=True)
     memo = models.TextField(default='', null=True, blank=True)
-    amount = models.IntegerField(default=0,null=True)
-    
     isAtm = models.BooleanField(default=False, blank = True, null=True)
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfovAccount = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfoExpireDate = models.DateTimeField(auto_now=False, blank = True,null=True)
-
     createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
 
+    
 
+
+class ProductOrderShip(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.RESTRICT,
+    )
+    state =  models.ForeignKey(
+        OrderState,
+        on_delete=models.RESTRICT,
+        null =True
+    )
+    amount = models.IntegerField(default=0,null=True)
+    money = models.IntegerField(default=0, null=True)
+
+    def money(self):
+        return self.amount * self.product.price
 
 
 

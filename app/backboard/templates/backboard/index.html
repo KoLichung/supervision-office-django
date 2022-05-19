@@ -98,18 +98,12 @@
                           </thead>
 
                           <tbody>
-                            <tr class="btn-reveal-trigger">
-                              <td>五月花衛生紙</td>
-                              <td class="text-end">154</td>
-                            </tr>
-                            <tr class="btn-reveal-trigger">
-                                <td>泡麵</td>
-                                <td class="text-end">95</td>
-                            </tr>
-                            <tr class="btn-reveal-trigger">
-                                <td>沙士</td>
-                                <td class="text-end">88</td>
-                            </tr>
+                            {% for rankorder in Ranklist %}
+                              <tr class="btn-reveal-trigger">
+                                <td>{{rankorder.name}}</td>
+                                <td class="text-end">154</td>
+                              </tr>                         
+                            {% endfor %}
                           </tbody>
 
                         </table>
@@ -124,66 +118,25 @@
                         <table class="table table-striped overflow-hidden">
                           <thead>
                             <tr class="btn-reveal-trigger">
-                              <th colspan="6">未處理訂單 (9)</th>
+                              <th colspan="6">未處理訂單 ({{UndealtOrdersNum}})</th>
                             </tr>
                           </thead>
 
                           <tbody>
-                            <tr class="btn-reveal-trigger">
-                              <td>2022-04-26</td>
-                              <td >劉金發</td>
-                              <td>0912345678</td>
-                              <td>桃園監理所</td>
-                              <td>＄2345</td>
-                              <td class="text-end">
-                                <div class="dropdown font-sans-serif position-static">
-                                    <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
-                                      <div class="text-white">
-                                          查看
-                                      </div>
-                                    </button>
-                                </div>
-                              </td>
-                            </tr>
-
-                            <tr class="btn-reveal-trigger">
-                                <td>2022-04-26</td>
-                                <td >劉金發</td>
-                                <td>0912345678</td>
-                                <td>桃園監理所</td>
-                                <td>＄2345</td>
-                                <td class="text-end">
-                                  <div class="dropdown font-sans-serif position-static">
-                                      <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
-                                        <div class="text-white">
-                                            查看
-                                        </div>
-                                      </button>
-                                  </div>
-                                </td>
-                            </tr>
-
-                            <tr class="btn-reveal-trigger">
-                                <td>2022-04-26</td>
-                                <td >劉金發</td>
-                                <td>0912345678</td>
-                                <td>桃園監理所</td>
-                                <td>＄2345</td>
-                                <td class="text-end">
-                                  <div class="dropdown font-sans-serif position-static">
-                                      <button class="btn btn-warning btn-link text-600 btn-sm" href="#">
-                                        <div class="text-white">
-                                            查看
-                                        </div>
-                                      </button>
-                                  </div>
-                                </td>
-                            </tr>
-
-
-                        
-
-                           
+                            {% for order in orders %}
+                                <tr class="btn-reveal-trigger">
+                                  <td>{{order.createDate}}</td>
+                                  <td >{{order.user}}</td>
+                                  <td>{{order.user.phone}}</td>
+                                  <td>{{order.supervisionOffice}}</td>
+                                  <td>＄{{order.orderMoney}}</td>
+                                  <td class="text-end">
+                                    <div class="dropdown font-sans-serif position-static">   
+                                          <input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'">
+                                    </div>
+                                  </td>
+                                </tr>
+                            {% endfor %}
                           </tbody>
                         </table>
                     </div>
