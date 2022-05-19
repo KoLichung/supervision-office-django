@@ -135,7 +135,7 @@
               </div>
 
               <!-- 收件者明細 -->
-              {% for order in orders %}
+              
                       <div class="card h-lg-100 mb-3">
                         <div class="card-header">
                           <div class="table-responsive scrollbar">
@@ -176,8 +176,7 @@
                             <div class="table-responsive scrollbar">
                                 <table class="table  table-striped fs--1 mb-0">
 
-                                    {% for product in products%}
-                                        {% if order.product == product %}
+                                    
                                             <p>訂購商品明細</p>
                                             <thead class="bg-200 text-900">
                                               <tr>
@@ -187,35 +186,39 @@
                                                 <th >小計</th>
                                               </tr>
                                             </thead>
-                                            <tbody class="list">
-                                                
+                                            {% for order in orders %}
+                                                <tbody class="list">
+                                                  
+                                                    {% for ship in ships%}
+                                                      {% if ship.order == order %}
 
-                                                      <tr>
-                                                        <td>{{product.name}}</td>
-                                                        <td>{{product.price}}</td>
-                                                        <td>{{order.amount}}</td>
-                                                        <td >{{order.orderMoney}}</td>
-                                                      </tr>
+                                                          <tr>
+                                                            <td>{{ship.product.name}}</td>
+                                                            <td>{{ship.product.price}}</td>
+                                                            <td>{{ship.amount}}</td>
+                                                            <td >{{order.orderMoney}}</td>
+                                                          </tr>
+                                                      {% endif %}
+                                                    {% endfor %}
                                               
-                                          
-                                            </tbody>
-                                            <tfoot>
-                                              <tr>
-                                                <td>總計</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>{{order.orderMoney}}</td>
-                                              </tr>
-                                            </tfoot>
-                                        {% endif %}
-                                    {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                  <tr>
+                                                    <td>總計</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{{sum}}</td>
+                                                  </tr>
+                                                </tfoot>
+                                            {% endfor %}
+                                        
                         
                               
                                 </table>
                             </div>
                           </div>
                         </div>
-              {% endfor %}
+              
 
 
             </div>

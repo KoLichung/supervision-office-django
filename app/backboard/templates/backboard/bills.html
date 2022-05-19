@@ -34,8 +34,9 @@
                   <td>{{officeTotalorder1}}</td>
                   <td>{{officeTotalMoney1}}</td>
                   <td class="text-end">                    
-                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                    <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{office.id}}'">
                   </td>
+                  
                   {% endif %}
                 {% endfor %}
               </tr>
@@ -46,8 +47,9 @@
                   <td>{{officeTotalorder2}}</td>
                   <td>{{officeTotalMoney2}}</td>
                   <td class="text-end">                    
-                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                    <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{office.id}}'">
                   </td>
+
                   {% endif %}
                 {% endfor %}
               </tr>
@@ -58,7 +60,7 @@
                   <td>{{officeTotalorder3}}</td>
                   <td>{{officeTotalMoney3}}</td>
                   <td class="text-end">                    
-                    <a href="＃" class="btn btn-warning btn-sm" role="button">看商品明細</a>
+                    <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{office.id}}'">
                   </td>
                   {% endif %}
                 {% endfor %}
