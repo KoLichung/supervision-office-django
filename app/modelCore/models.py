@@ -127,7 +127,8 @@ class Order(models.Model):
     )
     supervisionOffice = models.ForeignKey(
         SupervisionOffice,
-        on_delete=models.RESTRICT
+        on_delete=models.RESTRICT,
+        null=True
     )
     #已完成, 未處理, 已取消 
     state =  models.ForeignKey(
@@ -135,7 +136,7 @@ class Order(models.Model):
         on_delete=models.RESTRICT,
         null =True
     )
-    #paid, failPaid, waitForATMPay, waitForCVSPay  
+    #unPaid, paid, failPaid, waitForATMPay, waitForCVSPay  
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
 
     orderMoney = models.IntegerField(default=0, null=True)
