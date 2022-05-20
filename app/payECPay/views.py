@@ -46,7 +46,7 @@ class GetTokenView(APIView):
                     "MerchantTradeNo": merchantTradeNo,
                     "MerchantTradeDate": (datetime.now()+timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S"),
                     "TotalAmount": f"{order.orderMoney}",
-                    "ReturnURL": "http://45.77.24.12/api/ecpay/post_callback",
+                    "ReturnURL": "https://088c-125-230-206-99.jp.ngrok.io/api/ecpay/post_callback",
                     "TradeDesc": "監所購物",
                     "ItemName": f"訂單編號{order.id}"
                 },
@@ -150,6 +150,15 @@ class PaymentResultCallback(APIView):
                 payInfo.ATMInfovAccount = data_json['ATMInfo']['ATMAccNo']
             else:
                 print("no atm info")
+
+            if('CVSInfo' in data_json and data_json['CVSInfo']!= None):
+                print("cvs info")
+                payInfo.PaymentType = "CVS"
+                payInfo.CVSInfoPayFrom = data_json['CVSInfo']['PayFrom']
+                payInfo.CVSInfoPaymentNo = data_json['CVSInfo']['PaymentNo']
+                payInfo.CVSInfoPaymentURL = data_json['CVSInfo']['PaymentURL']
+            else:
+                print("no cvs info")
 
             if('CustomField' in data_json and data_json['CustomField']!= None):
                 # try:
