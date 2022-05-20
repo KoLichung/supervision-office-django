@@ -79,7 +79,10 @@ class SupervisionOfficeViewSet(viewsets.GenericViewSet,
 
 
 class OrderViewSet(viewsets.GenericViewSet,
-                    mixins.ListModelMixin,):
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 

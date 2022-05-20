@@ -135,7 +135,7 @@ class Order(models.Model):
         on_delete=models.RESTRICT,
         null =True
     )
-    #paid, failPaid, waitForATMPay, waitForSuperMarketPay  
+    #paid, failPaid, waitForATMPay, waitForCVSPay  
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
 
     orderMoney = models.IntegerField(default=0, null=True)
