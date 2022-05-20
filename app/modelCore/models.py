@@ -165,11 +165,6 @@ class ProductOrderShip(models.Model):
         Product,
         on_delete=models.RESTRICT,
     )
-    state =  models.ForeignKey(
-        OrderState,
-        on_delete=models.RESTRICT,
-        null =True
-    )
     amount = models.IntegerField(default=0,null=True)
     money = models.IntegerField(default=0, null=True)
 

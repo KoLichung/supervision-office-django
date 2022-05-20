@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart
+from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, ProductOrderShip
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,5 +42,15 @@ class OrderSerializer(serializers.ModelSerializer):
 class ShoppingCartSerializer(serializers.ModelSerializer):
     class Meta:    
         model = ShoppingCart
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+class ProductOrderShipSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+    price = serializers.IntegerField(read_only=True)
+    subTotal = serializers.IntegerField(read_only=True)
+
+    class Meta:    
+        model = ProductOrderShip
         fields = '__all__'
         read_only_fields = ('id',)

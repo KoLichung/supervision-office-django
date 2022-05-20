@@ -34,7 +34,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(ProductOrderShip)
 class ProductOrderShipAdmin(admin.ModelAdmin):
-    list_display = ('id', 'product' , 'order' ,'amount','state')
+    list_display = ('id', 'product' , 'order' ,'amount')
 
 @admin.register(OrderState)
 class OrderState(admin.ModelAdmin):

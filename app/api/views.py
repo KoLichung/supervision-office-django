@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 # Create your views here.
 
-from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, User
+from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, User, ProductOrderShip
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -44,7 +44,6 @@ class ProductViewSet(viewsets.GenericViewSet,
 
         return queryset
 
-
 class ProductImageViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
                             mixins.RetrieveModelMixin,
@@ -60,23 +59,12 @@ class ProductImageViewSet(viewsets.GenericViewSet,
         queryset = queryset.filter(product=theProduct)
         return queryset
 
-    #query by product
 
 class SupervisionOfficeViewSet(viewsets.GenericViewSet,
                                 mixins.ListModelMixin,):
 
     queryset = SupervisionOffice.objects.all()
     serializer_class = (serializers.SupervisionOfficeSerializer)
-
-
-# class ProductSupervisionOfficeShipViewSet(viewsets.GenericViewSet,
-#                                             mixins.ListModelMixin,
-#                                             mixins.RetrieveModelMixin,
-#                                             mixins.CreateModelMixin,
-#                                             mixins.UpdateModelMixin):
-#     queryset = ProductSupervisionOfficeShip.objects.all()
-#     serializer_class = serializers.ProductSuperofficeShipSerializer
-
 
 class OrderViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin,
@@ -98,6 +86,24 @@ class OrderViewSet(viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, cashflowState='unPaid')
+
+class OrderProductShipViewSet(viewsets.GenericViewSet,
+                            mixins.ListModelMixin,
+                            mixins.CreateModelMixin,):
+
+    queryset = ProductOrderShip.objects.all()
+    serializer_class = serializers.ProductOrderShipSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        order_id = self.request.query_params.get('order_id')
+        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        for i in range(len(queryset)):
+            queryset[i].name = queryset[i].product.name
+            queryset[i].price = queryset[i].product.price
+            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
+        return queryset
+    
 
 class ShoppingCartViewSet(viewsets.GenericViewSet,
                         mixins.ListModelMixin,):
