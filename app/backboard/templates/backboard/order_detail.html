@@ -141,7 +141,7 @@
                           <div class="table-responsive scrollbar">
                             <table class="table  table-striped fs--1 mb-0">
                         
-                          
+                                  {% for order in orders %}
                                     {% for user in users %}
                                         {% if order.user == user %}
                                             <p>收件者資料</p>
@@ -165,6 +165,7 @@
                                             </tbody>
                                         {% endif %}
                                       {% endfor %}
+                                    {% endfor %}
                             </table>
                           </div>
                         </div>
