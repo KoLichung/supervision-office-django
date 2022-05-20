@@ -17,14 +17,21 @@ def index(request):
     UndealtOrdersNum = undealtorders.count()
     dealtOrdersShips = Order.objects.filter(state=2)
     lastweek = datetime.today() - timedelta(days=7)
-    print(lastweek)
     WeekOrders = dealtOrdersShips.filter(createDate__date__gte=lastweek.date())
-    for WeekOrder in WeekOrders:
-            ships=ships.filter(order=WeekOrder)
-            for product in products:
-                        sum = ships.filter(product=product).aggregate(Sum('amount'))
-                        product.week_sum_nums = sum['amount__sum']
-                        product.save()
+    
+    for product in products:
+        sum = 0
+        for WeekOrder in WeekOrders:
+            OrderShips=ships.filter(order=WeekOrder,product=product)
+            
+            for OrderShip in OrderShips:
+                sum += OrderShip.amount      
+            
+        product.week_sum_nums = sum
+        
+        print(product)
+        product.save()
+                        
     
     
     productRank = Product.objects.order_by("-week_sum_nums")[:3]
