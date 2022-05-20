@@ -140,14 +140,19 @@ class Order(models.Model):
 
     orderMoney = models.IntegerField(default=0, null=True)
     memo = models.TextField(default='', null=True, blank=True)
-    isAtm = models.BooleanField(default=False, blank = True, null=True)
+
+    "credit, atm, cvs"
+    paymentType = models.CharField(max_length=20, default='', blank = True, null=True)
+
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfovAccount = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfoExpireDate = models.DateTimeField(auto_now=False, blank = True,null=True)
-    createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
-
     
-
+    CVSInfoPayFrom = models.CharField(max_length=20, default='', blank = True, null=True)
+    CVSInfoPaymentNo = models.CharField(max_length=20, default='', blank = True, null=True)
+    CVSInfoPaymentURL = models.CharField(max_length=100, default='', blank = True, null=True)
+    
+    createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
 
 class ProductOrderShip(models.Model):
     order = models.ForeignKey(
@@ -193,6 +198,10 @@ class PayInfo(models.Model):
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfovAccount = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfoExpireDate = models.DateTimeField(auto_now=False,null=True)
+
+    CVSInfoPayFrom = models.CharField(max_length=20, default='', blank = True, null=True)
+    CVSInfoPaymentNo = models.CharField(max_length=20, default='', blank = True, null=True)
+    CVSInfoPaymentURL = models.CharField(max_length=100, default='', blank = True, null=True)
 
     CardInfoAuthCode = models.CharField(max_length=100, default='', blank = True, null=True)
     CardInfoGwsr = models.IntegerField(default=0, null=True)
