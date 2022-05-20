@@ -19,6 +19,7 @@ urlpatterns = [
     path('order_detail', views.order_detail, name = 'order_detail'), 
     path('orders', views.orders, name = 'orders'), 
     path('products', views.products, name = 'products'), 
+    path('offices_order', views.offices_order, name = 'offices_order'), 
     path('bills', views.bills, name = 'bills'), 
     path('edit_product/<str:id>/delete/', views.deleteImage, name='delete_images'),
     path('', include('django.contrib.auth.urls'))

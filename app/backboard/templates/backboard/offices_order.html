@@ -1,0 +1,49 @@
+{% extends 'backboard/base.html' %} {% block content %}
+
+<!-- 內容 -->
+    <div class="card h-lg-100 mb-3">
+        <div class="card-header">
+        <div class="table-responsive scrollbar">
+            <table class="table  table-striped fs--1 mb-0">
+                {% for office in offices %}
+                
+                        <p>{{office.name}}商品明細</p>
+                        <thead class="bg-200 text-900">
+                            <tr>
+                            <th>商品名稱</th>
+                            <th>單價</th>
+                            <th>數量</th>
+                            <th >小計</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            {% for order in orders %}
+                                {% for ship in ships%}
+                                    {% if ship.order == order %}
+
+                                        <tr>
+                                        <td>{{ship.product.name}}</td>
+                                        <td>{{ship.product.price}}</td>
+                                        <td>{{ship.amount}}</td>
+                                        <td >{{order.orderMoney}}</td>
+                                        </tr>
+                                
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                            <td>總計</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{sum}}</td>
+                            </tr>
+                        </tfoot> 
+                {% endfor %}
+            </table>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}

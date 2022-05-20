@@ -10,23 +10,33 @@ from datetime import datetime, timedelta
 # Create your views here.
 
 def index(request):
-    offices = SupervisionOffice.objects.all()
+    orders = Order.objects.filter(state=1)
     ships = ProductOrderShip.objects.all()
+    products =Product.objects.all()
     undealtorders = Order.objects.filter(state=1)
     UndealtOrdersNum = undealtorders.count()
-    dealtOrders = ships.filter(state=2)
-    lastweek = datetime.today() - timedelta(weeks=1)
-    WeekOrdersIds = Order.objects.filter(listing_date__week=lastweek.isocalendar()[1]).id
-    print(WeekOrdersIds)
-    a = None
-    for id in WeekOrdersIds:
-        a += dealtOrders.filter(order=id)
-    print(a)
-
-    products = Product.objects.all()
-    Ranklist=dealtOrders.annotate(sales_sum=Sum('order__amount')).order_by('sales_sum')
+    dealtOrdersShips = Order.objects.filter(state=2)
+    lastweek = datetime.today() - timedelta(days=7)
+    WeekOrders = dealtOrdersShips.filter(createDate__date__gte=lastweek.date())
     
-    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'Ranklist':Ranklist})
+    for product in products:
+        sum = 0
+        for WeekOrder in WeekOrders:
+            OrderShips=ships.filter(order=WeekOrder,product=product)
+            
+            for OrderShip in OrderShips:
+                sum += OrderShip.amount      
+            
+        product.week_sum_nums = sum
+        
+        print(product)
+        product.save()
+                        
+    
+    
+    productRank = Product.objects.order_by("-week_sum_nums")[:3]
+    
+    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def base(request):
     return render(request, 'backboard/base.html')
@@ -101,10 +111,17 @@ def order_detail(request):
     payinfos=PayInfo.objects.all()
     orderstates = OrderState.objects.all()
     products=Product.objects.all()
-    
+    ships = ProductOrderShip.objects.all()
     
     order_id=request.GET.get('IdOrder')
     orders = orders.filter(id=order_id)
+    sum = 0
+    for order in orders:
+        for ship in ships:
+            if ship.order == order:
+                sum += order.orderMoney
+
+ 
     if order_id != None:        
         
         theOrder = Order.objects.get(id=order_id)
@@ -121,7 +138,7 @@ def order_detail(request):
 
         return redirect('/backboard/orders')
 
-    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates})
+    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates,'ships':ships,'sum':sum})
 
 
 def products(request):
@@ -134,6 +151,24 @@ def products(request):
     #     print(product.image)
 
     return render(request, 'backboard/products.html',{'products':products,'ships':ships,'productimages':productimages})
+
+
+def offices_order(request):
+    offices_all = SupervisionOffice.objects.all()
+    ships = ProductOrderShip.objects.all()
+    office_Id = request.GET.get('OfficeId')
+    orders =  Order.objects.filter(supervisionOffice=office_Id)
+    offices = offices_all.filter(id=office_Id)
+    sum = 0
+    for order in orders:
+            sum += order.orderMoney
+
+    print(sum)
+
+
+    
+    return render(request,'backboard/offices_order.html',{'ships':ships,'orders':orders,'offices':offices,'sum':sum})
+
 
 def add_new_product(request):
 
