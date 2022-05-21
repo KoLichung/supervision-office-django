@@ -82,7 +82,7 @@ class OrderViewSet(viewsets.GenericViewSet,
         # user_id = Token.objects.get(key=my_token).user_id
         # user = User.objects.get(id=user_id)
         # user = self.request.user
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(user=self.request.user).order_by('-id')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, cashflowState='unPaid')
@@ -97,7 +97,7 @@ class OrderProductShipViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         queryset = self.queryset
         order_id = self.request.query_params.get('order_id')
-        queryset = queryset.filter(order=Order.objects.get(id=order_id)).order_by('-id')
+        queryset = queryset.filter(order=Order.objects.get(id=order_id))
         for i in range(len(queryset)):
             queryset[i].name = queryset[i].product.name
             queryset[i].price = queryset[i].product.price
