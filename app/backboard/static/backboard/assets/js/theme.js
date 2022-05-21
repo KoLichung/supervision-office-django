@@ -10629,6 +10629,7 @@ docReady(totalOrderInit);
 docReady(weeklySalesInit);
 docReady(marketShareInit);
 docReady(totalSalesInit);
+docReady(sumSalesInit);
 docReady(topProductsInit);
 docReady(navbarTopDropShadow);
 docReady(tooltipInit);

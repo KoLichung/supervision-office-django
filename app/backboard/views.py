@@ -1,3 +1,4 @@
+from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 import requests
@@ -16,27 +17,82 @@ def index(request):
     undealtorders = Order.objects.filter(state=1)
     UndealtOrdersNum = undealtorders.count()
     dealtOrdersShips = Order.objects.filter(state=2)
-    lastweek = datetime.today() - timedelta(days=7)
-    WeekOrders = dealtOrdersShips.filter(createDate__date__gte=lastweek.date())
-    
+    last7Days = (datetime.today() - timedelta(days=7)).date()
+    last6Days = (datetime.today() - timedelta(days=6)).date()
+    last5Days = (datetime.today() - timedelta(days=5)).date()
+    last4Days = (datetime.today() - timedelta(days=4)).date()
+    last3Days = (datetime.today() - timedelta(days=3)).date()
+    last2Days = (datetime.today() - timedelta(days=2)).date()
+    last1Days = (datetime.today() - timedelta(days=1)).date()
+    WeekOrders = dealtOrdersShips.filter(createDate__date__gte=last7Days)
+    last7DaysOrders = dealtOrdersShips.filter(createDate__date=last7Days)
+    last6DaysOrders = dealtOrdersShips.filter(createDate__date=last6Days)
+    last5DaysOrders = dealtOrdersShips.filter(createDate__date=last5Days)
+    last4DaysOrders = dealtOrdersShips.filter(createDate__date=last4Days)
+    last3DaysOrders = dealtOrdersShips.filter(createDate__date=last3Days)
+    last2DaysOrders = dealtOrdersShips.filter(createDate__date=last2Days)
+    last1DaysOrders = dealtOrdersShips.filter(createDate__date=last1Days)
+    sum7=0
+    sum6=0
+    sum5=0
+    sum4=0
+    sum3=0
+    sum2=0
+    sum1=0
+    sum7Money=0 
+    sum6Money=0
+    sum5Money=0
+    sum4Money=0
+    sum3Money=0
+    sum2Money=0
+    sum1Money=0
+    for last7DaysOrder in last7DaysOrders:
+        ships7 = ships.filter(order=last7DaysOrder)
+        for ship in ships7:
+            sum7 += ship.amount
+            sum7Money += ship.product.price * ship.amount
+    for last6DaysOrder in last6DaysOrders:
+        ships6 = ships.filter(order=last6DaysOrder)
+        for ship in ships6:
+            sum6 += ship.amount
+            sum6Money += ship.product.price * ship.amount
+    for last5DaysOrder in last5DaysOrders:
+        ships5 = ships.filter(order=last5DaysOrder)
+        for ship in ships5:
+            sum5 += ship.amount
+            sum5Money += ship.product.price * ship.amount
+    for last4DaysOrder in last4DaysOrders:
+        ships4 = ships.filter(order=last4DaysOrder)
+        for ship in ships4:
+            sum4 += ship.amount
+            sum4Money += ship.product.price * ship.amount
+    for last3DaysOrder in last3DaysOrders:
+        ships3 = ships.filter(order=last3DaysOrder)
+        for ship in ships3:
+            sum3 += ship.amount
+            sum3Money += ship.product.price * ship.amount
+    for last2DaysOrder in last2DaysOrders:
+        ships2 = ships.filter(order=last2DaysOrder)
+        for ship in ships2:
+            sum2 += ship.amount
+            sum2Money += ship.product.price * ship.amount
+    for last1DaysOrder in last1DaysOrders:
+        ships1 = ships.filter(order=last1DaysOrder)
+        for ship in ships1:
+            sum1 += ship.amount
+            sum1Money += ship.product.price * ship.amount
     for product in products:
         sum = 0
         for WeekOrder in WeekOrders:
-            OrderShips=ships.filter(order=WeekOrder,product=product)
-            
+            OrderShips=ships.filter(order=WeekOrder,product=product)       
             for OrderShip in OrderShips:
-                sum += OrderShip.amount      
-            
-        product.week_sum_nums = sum
-        
-        print(product)
-        product.save()
-                        
-    
-    
+                sum += OrderShip.amount                 
+        product.week_sum_nums = sum      
+        product.save()   
+    print(sum7Money)
     productRank = Product.objects.order_by("-week_sum_nums")[:3]
     
-    return render(request, 'backboard/index.html',{'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
+    return render(request, 'backboard/index.html',{'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def base(request):
     return render(request, 'backboard/base.html')
@@ -64,9 +120,21 @@ def bills(request):
     officeTotalMoney3 = 0
     for officeOrder3 in officeOrders3:
         officeTotalMoney3 += officeOrder3.orderMoney
-
-
-    return render(request, 'backboard/bills.html',{ 'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
+    
+    today = datetime.today()
+    current_month = today.month
+    current_year = today.year
+    this_month = Order.objects.filter(createDate__year=current_year,
+                           createDate__month=current_month)
+    
+    d = {}
+    for i in range(current_month):
+        num = current_month -i
+        if num > 0:
+            d['last'+str(i)+'Months'] = Order.objects.filter(createDate__year=current_year,
+                           createDate__month=num)
+    
+    return render(request, 'backboard/bills.html',{ 'current_month':current_month,'current_year':current_year, 'd':d,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
 
 def customers(request):
     customers = User.objects.all()
@@ -480,3 +548,4 @@ def deleteImage(request, id=None):
 
     
     return redirect_params("/backboard/edit_product",your_params)
+
