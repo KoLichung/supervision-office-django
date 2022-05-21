@@ -97,7 +97,7 @@ class OrderProductShipViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         queryset = self.queryset
         order_id = self.request.query_params.get('order_id')
-        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        queryset = queryset.filter(order=Order.objects.get(id=order_id)).order_by('-id')
         for i in range(len(queryset)):
             queryset[i].name = queryset[i].product.name
             queryset[i].price = queryset[i].product.price
