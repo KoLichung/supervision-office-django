@@ -101,25 +101,10 @@ def base(request):
 def bills(request):
     offices = SupervisionOffice.objects.all()
     orders=Order.objects.filter(state=2)
-    TotalOrder = orders.count()
-    TotalMoney = 0
-    for order in orders:
-        TotalMoney += order.orderMoney
-    officeOrders1 =  orders.filter(supervisionOffice=1)
-    officeTotalorder1 = officeOrders1.count()
-    officeTotalMoney1 = 0
-    for officeOrder1 in officeOrders1:
-        officeTotalMoney1 += officeOrder1.orderMoney
+    officeOrders1 =  orders.filter(supervisionOffice=1)  
     officeOrders2 =  orders.filter(supervisionOffice=2)
-    officeTotalorder2 = officeOrders2.count()
-    officeTotalMoney2 = 0
-    for officeOrder2 in officeOrders2:
-        officeTotalMoney2 += officeOrder2.orderMoney
     officeOrders3 =  orders.filter(supervisionOffice=3)
-    officeTotalorder3 = officeOrders3.count()
-    officeTotalMoney3 = 0
-    for officeOrder3 in officeOrders3:
-        officeTotalMoney3 += officeOrder3.orderMoney
+  
     
     today = datetime.today()
     current_month = today.month
@@ -127,14 +112,77 @@ def bills(request):
     this_month = Order.objects.filter(createDate__year=current_year,
                            createDate__month=current_month)
     
-    d = {}
-    for i in range(current_month):
-        num = current_month -i
-        if num > 0:
-            d['last'+str(i)+'Months'] = Order.objects.filter(createDate__year=current_year,
-                           createDate__month=num)
-    
-    return render(request, 'backboard/bills.html',{ 'current_month':current_month,'current_year':current_year, 'd':d,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
+    monthId = request.GET.get('lastMonth')
+    if current_month-int(monthId) > 0:
+        month_id = current_month - int(monthId)
+        yearId = current_year
+        print(month_id)
+    elif current_month-int(monthId) <= 0:
+        month_id = current_month - int(monthId) + 12
+        yearId = current_year-1
+        print(month_id)
+    dict_office1 = {}
+    dict_office2 = {}
+    dict_office3 = {}
+    dict_all = {}
+    listMonth = {}
+    listYear = {}
+    for i in range(6):
+        theMonth = current_month -i
+        if theMonth > 0:
+            month = theMonth
+            year = current_year
+        else:
+            month = theMonth + 12
+            year = current_year - 1
+        dict_all['last'+str(i)+'Months'] = orders.filter(createDate__year=year,
+                           createDate__month=month)
+        dict_office1['last'+str(i)+'Months'] = officeOrders1.filter(createDate__year=year,
+                           createDate__month=month)
+        dict_office2['last'+str(i)+'Months'] = officeOrders2.filter(createDate__year=year,
+                           createDate__month=month)
+        dict_office3['last'+str(i)+'Months'] = officeOrders3.filter(createDate__year=year,
+                           createDate__month=month)
+        listMonth['last'+str(i)+'Month'] = month
+        listYear['last'+str(i)+'Month'] = year
+    TotalMoney = 0
+    if dict_all['last'+str(monthId)+'Months'] != None:
+        TotalOrder = dict_all['last'+str(monthId)+'Months'].count()
+        for order in dict_all['last'+str(monthId)+'Months']:
+            TotalMoney += order.orderMoney
+    else:
+        TotalOrder = 0
+    officeTotalMoney1 = 0
+    if dict_office1['last'+str(monthId)+'Months'] != None:
+        officeTotalorder1 = dict_office1['last'+str(monthId)+'Months'].count()
+        for officeOrder1 in dict_office1['last'+str(monthId)+'Months']:
+                officeTotalMoney1 += officeOrder1.orderMoney
+    else:
+        officeTotalorder1 = 0
+    officeTotalMoney2 = 0
+    if dict_office2['last'+str(monthId)+'Months'] != None:
+        officeTotalorder2 = dict_office2['last'+str(monthId)+'Months'].count()
+        for officeOrder2 in dict_office2['last'+str(monthId)+'Months']:
+            officeTotalMoney2 += officeOrder2.orderMoney
+    else:
+        print('what?')
+        officeTotalorder2 = 0
+    officeTotalMoney3 = 0
+    if dict_office3['last'+str(monthId)+'Months'] != None:
+        officeTotalorder3 = dict_office3['last'+str(monthId)+'Months'].count()
+        for officeOrder3 in dict_office3['last'+str(monthId)+'Months']:
+            officeTotalMoney3 += officeOrder3.orderMoney
+    else:
+        officeTotalorder3 = 0
+    if request.method == 'POST':
+        
+        checkMonth = request.POST.get('selectMonth')
+        your_params = {
+        'lastMonth': checkMonth
+    }
+        return redirect_params('bills', your_params)
+
+    return render(request, 'backboard/bills.html',{'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
 
 def customers(request):
     customers = User.objects.all()

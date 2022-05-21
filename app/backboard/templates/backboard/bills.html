@@ -11,35 +11,67 @@
       <form method="post">{% csrf_token %}
         <button class="btn btn-outline-warning btn-sm" type="button" data-bs-toggle="modal" 
 
-        data-bs-target="#modal{{order.state}}" 
+        data-bs-target="#modalSelectMonth" 
       
         >
-        {{current_year}}/{{current_month}}
+        {{yearId}}/{{month_id}}月
         </button>
-        <div class="modal fade" id="modal{{order.state}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modalSelectMonth" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5>請選擇月份</h5>
               </div>
-              <div class="modal-body">
-                {% for i in d %}
-                  {% if month == current_month - i %}
-                      <input class="form-check-input" id="OrderState" type="radio" name="OrderState" value="{{orderstate.id}}" 
+              <div class="modal-body">                 
+                      
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="5"
                        
                         checked 
                       
                       />
-                      <label class="form-check-label" for="OrderState">{{month}}月份</label>
-                    <hr>
-                  {% endif %}
-                {% endfor %}
+                      <label class="form-check-label" for="selectMonth">{{listYear.last5Month}}/{{listMonth.last5Month}}月</label>
+                    <hr>  
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="4"
+                       
+                        checked 
+                      
+                      />
+                      <label class="form-check-label" for="selectMonth">{{listYear.last4Month}}/{{listMonth.last4Month}}月</label>
+                    <hr>  
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="3"
+                       
+                        checked 
+                      
+                      />
+                      <label class="form-check-label" for="selectMonth">{{listYear.last3Month}}/{{listMonth.last3Month}}月</label>
+                    <hr>  
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="2"
+                       
+                        checked 
+                      
+                      />
+                      <label class="form-check-label" for="OrderState">{{listYear.last2Month}}/{{listMonth.last2Month}}月</label>
+                    <hr>  
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth"  value="1"
+                       
+                        checked 
+                      
+                      />
+                      <label class="form-check-label" for="selectMonth">{{listYear.last1Month}}/{{listMonth.last1Month}}月</label>
+                    <hr>  
+                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="0"
+                       
+                        checked 
+                      
+                      />
+                      <label class="form-check-label" for="selectMonth">{{listYear.last0Month}}/{{listMonth.last0Month}}月</label>
+                    <hr>  
               </div>
               <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                   取消
                 </button>
-                <button class="btn btn-primary" type="submit" name="submit" value="ok" onclick="location.href='{% url 'bills' %}'">
+                <button class="btn btn-primary" type="submit" name="submit" value="ok" >
                   儲存
                 </button>
                   
