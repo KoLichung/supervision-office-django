@@ -376,8 +376,6 @@ def edit_product(request):
     ship2 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=2)
     ship3 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=3)
     productimages = ProductImage.objects.filter(product=theproduct).order_by('-id')[:6]
-    for ship in productships:
-        print(ship.supervisionOffice.id)
   
     if request.method == 'POST':
       
@@ -394,24 +392,15 @@ def edit_product(request):
             product.stocks = request.POST.get('productStock')
             product.isPublish = request.POST.get('productIspublish')
             product.save()
-            
-            
+                        
             officeId1=request.POST.get('ship_officeId1')
             officeId2=request.POST.get('ship_officeId2')
             officeId3=request.POST.get('ship_officeId3')
-            
-            
-            
-            
-            
-            
+                      
             if officeId1 == "1" :
-                print("officeId1:",officeId1)
                 if ship1.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship1')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=1)
                     productsupervisionOfficeship.product = product
@@ -419,21 +408,16 @@ def edit_product(request):
 
             else:
                 if ship1.exists() :
-                    print('delete ship1')
                     ship1.delete()
                 else:
-                    print('pass2')
                     pass
 
 
 
             if officeId2 == "2" :
-                print("officeId2:",officeId2)
                 if ship2.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship2')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=2)
                     productsupervisionOfficeship.product = product
@@ -441,19 +425,14 @@ def edit_product(request):
 
             else:
                 if ship2.exists() :
-                    print('delete ship2')
                     ship2.delete()
                 else:
-                    print('pass2')
                     pass
 
             if officeId3 == "3" :
-                print("officeId3:",officeId3)
                 if ship3.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship3')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=3)
                     productsupervisionOfficeship.product = product
@@ -461,10 +440,8 @@ def edit_product(request):
 
             else:
                 if ship3.exists() :
-                    print('delete ship3')
                     ship3.delete()
                 else:
-                    print('pass2')
                     pass
 
             if form.is_valid():
@@ -472,13 +449,16 @@ def edit_product(request):
                 form.save()
                 # Get the current instance object to display in the template
                 img_obj = form.instance
-                print('1')
+                print('valid1')
                 # form.initial['product'] = Product.objects.latest('id')
                 theproductImage=ProductImage.objects.latest('id')
                 theproductImage.product=theproduct
                 theproductImage.save()
-                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
-
+                render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
+            else:
+                print('not valid1')
+                your_params = {'productId':productId}
+                return redirect_params('edit_product',your_params)
 
         elif Product.objects.filter(name=request.POST.get('productName')).exists() == False :
             form = ProductImageForm(request.POST, request.FILES)
@@ -500,12 +480,9 @@ def edit_product(request):
             officeId3=request.POST.get('ship_officeId3')
                      
             if officeId1 == "1" :
-                print("officeId1:",officeId1)
                 if ship1.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship1')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=1)
                     productsupervisionOfficeship.product = product
@@ -513,19 +490,14 @@ def edit_product(request):
 
             else:
                 if ship1.exists() :
-                    print('delete ship1')
                     ship1.delete()
                 else:
-                    print('pass2')
                     pass
 
             if officeId2 == "2" :
-                print("officeId2:",officeId2)
                 if ship2.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship2')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=2)
                     productsupervisionOfficeship.product = product
@@ -533,19 +505,14 @@ def edit_product(request):
 
             else:
                 if ship2.exists() :
-                    print('delete ship2')
                     ship2.delete()
                 else:
-                    print('pass2')
                     pass
 
             if officeId3 == "3" :
-                print("officeId3:",officeId3)
                 if ship3.exists() :
-                    print('pass1')
                     pass
                 else:
-                    print('add ship3')
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=3)
                     productsupervisionOfficeship.product = product
@@ -553,29 +520,29 @@ def edit_product(request):
 
             else:
                 if ship3.exists() :
-                    print('delete ship3')
                     ship3.delete()
                 else:
-                    print('pass2')
                     pass
             
             if form.is_valid():
-                
                 form.save()
                 # Get the current instance object to display in the template
                 img_obj = form.instance
-                print('1')
                 # form.initial['product'] = Product.objects.latest('id')
                 theproductImage=ProductImage.objects.latest('id')
                 theproductImage.product=Product.objects.get(id=productId)
                 theproductImage.save()
-                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
-
-
+                render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
+            else:
+                print('not valid2')
+                your_params = {'productId':productId}
+                return redirect_params('edit_product',your_params)
+            
     else:
+        
         form = ProductImageForm()
         form.initial['product'] = theproduct
-        print('2')
+        print("not post")
     
     return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'productimages':productimages,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form})
 
