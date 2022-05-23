@@ -21,19 +21,20 @@
                               <div>
                                 <label class="form-label">供應站所：</label>
                               </div>
-                                
+                                {% for office in supervisionoffices %}
 
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="ship_officeId1" type="checkbox" name="ship_officeId1" value="1" 
-                                    {% for ship in productships %}
-                                        {% if ship.supervisionOffice.id == 1  %} 
-                                          checked 
-                                        {% endif %} 
-                                    {% endfor %}
-                                    />
-                                    <label class="form-check-label" for="ship_officeId1">台中監理所</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" id="ship_officeId" type="checkbox" name="ship_officeId" value="1" 
+                                      {% for ship in productships %}
+                                          {% if ship.supervisionOffice.id == office.id  %} 
+                                            checked 
+                                          {% endif %} 
+                                      {% endfor %}
+                                      />
+                                      <label class="form-check-label" for="ship_officeId">{{office.name}}</label>
+                                    </div>
+                                {% endfor %}
+                                  <!-- <div class="form-check form-check-inline">
                                       <input class="form-check-input" id="ship_officeId2" type="checkbox" name="ship_officeId2" value="2" 
                                         {% for ship in productships %}
                                             {% if ship.supervisionOffice.id == 2 %} 
@@ -54,7 +55,7 @@
                                         <label class="form-check-label" for="ship_officeId3">花蓮監理所</label>
                                       
                                   
-                                  </div>
+                                  </div> -->
                           
                         </div>
 
