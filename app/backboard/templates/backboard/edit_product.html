@@ -9,7 +9,7 @@
       
         
           <form method="post" enctype="multipart/form-data">{% csrf_token %}
-            {% for product in ProductQueryset %}
+            {% comment %} {% for product in ProductQueryset %} {% endcomment %}
               
 
                 <div class="card h-lg-100 mt-3">
@@ -135,10 +135,10 @@
                           <label class="form-label" for="exampleFormControlInput1">商品圖片：</label>
                           <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
-                            {% comment %} <input type="hidden" id="product" name="product" value="1"> {% endcomment %}
+                            <input type="hidden" id="product" name="product" value={{productId}}>
                             {{ form.product.as_hidden }}
                             {{ form.image }} </br></br>
-                            <button type="submit">Upload</button>
+                            <button type="submit" name="submit" value="upload_image">Upload</button>
                           </form>
 
                           <div class="row mx-n1 mt-3">
@@ -178,7 +178,7 @@
                         </div>
 
                         <div class="col-12 text-end">
-                          <button class="btn btn-warning btn-sm" type="submit" name="submit" value=ok
+                          <button class="btn btn-warning btn-sm" type="submit" name="submit" value="edit"
                             onclick="location.href='{% url 'products' %}'">
                             修改商品
                           </button>
@@ -191,7 +191,7 @@
                   </div>
                 </div>
               
-            {% endfor %}
+            {% comment %} {% endfor %} {% endcomment %}
           </form>
         
       

@@ -369,174 +369,93 @@ def edit_product(request):
     productId = request.GET.get("productId")
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
-    ProductQueryset = Product.objects.filter(id=productId)
+    # ProductQueryset = Product.objects.filter(id=productId)
     theproduct = Product.objects.get(id=productId)
     productships = ProductSupervisionOfficeShip.objects.filter(product=theproduct)
     ship1 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=1)
     ship2 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=2)
     ship3 = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=3)
-    productimages = ProductImage.objects.filter(product=theproduct).order_by('-id')[:6]
+    productimages = ProductImage.objects.filter(product=theproduct).order_by('-id')
   
     if request.method == 'POST':
-      
-        if theproduct.name == request.POST.get('productName'):
+    
+        submitValue = request.POST.get('submit')
+
+        # related to image
+        if submitValue == "upload_image":
             form = ProductImageForm(request.POST, request.FILES)
-            product = Product.objects.get(id=productId)
-            category_Id = request.POST.get('productCategory')
-            product.category = Category.objects.get(id=category_Id)
-            product.sublabel =request.POST.get('productSublabel')
-            product.info = request.POST.get('productInfo')
-            product.content = request.POST.get('productContent')
-            product.price = request.POST.get('productPrice')
-            product.unit =request.POST.get('productUnit')
-            product.stocks = request.POST.get('productStock')
-            product.isPublish = request.POST.get('productIspublish')
-            product.save()
-                        
-            officeId1=request.POST.get('ship_officeId1')
-            officeId2=request.POST.get('ship_officeId2')
-            officeId3=request.POST.get('ship_officeId3')
-                      
-            if officeId1 == "1" :
-                if ship1.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=1)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
+            form.save()
 
+            img_obj = form.instance
+
+            render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'product':theproduct,'form':form, 'img_obj': img_obj})
+
+        # not related to image
+        product = Product.objects.get(id=productId)
+        category_Id = request.POST.get('productCategory')
+        product.name = request.POST.get('productName')
+        product.category = Category.objects.get(id=category_Id)
+        product.sublabel =request.POST.get('productSublabel')
+        product.info = request.POST.get('productInfo')
+        product.content = request.POST.get('productContent')
+        product.price = request.POST.get('productPrice')
+        product.unit =request.POST.get('productUnit')
+        product.stocks = request.POST.get('productStock')
+        product.isPublish = request.POST.get('productIspublish')
+        product.save()
+                    
+        officeId1=request.POST.get('ship_officeId1')
+        officeId2=request.POST.get('ship_officeId2')
+        officeId3=request.POST.get('ship_officeId3')
+                    
+        if officeId1 == "1" :
+            if ship1.exists() :
+                pass
             else:
-                if ship1.exists() :
-                    ship1.delete()
-                else:
-                    pass
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=1)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-
-
-            if officeId2 == "2" :
-                if ship2.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=2)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
-
+        else:
+            if ship1.exists() :
+                ship1.delete()
             else:
-                if ship2.exists() :
-                    ship2.delete()
-                else:
-                    pass
+                pass
 
-            if officeId3 == "3" :
-                if ship3.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=3)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
 
+
+        if officeId2 == "2" :
+            if ship2.exists() :
+                pass
             else:
-                if ship3.exists() :
-                    ship3.delete()
-                else:
-                    pass
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=2)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-            if form.is_valid():
-                
-                form.save()
-                # Get the current instance object to display in the template
-                img_obj = form.instance
-                print('valid1')
-                # form.initial['product'] = Product.objects.latest('id')
-                theproductImage=ProductImage.objects.latest('id')
-                theproductImage.product=theproduct
-                theproductImage.save()
-                render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
+        else:
+            if ship2.exists() :
+                ship2.delete()
             else:
-                print('not valid1')
-                your_params = {'productId':productId}
-                return redirect_params('edit_product',your_params)
+                pass
 
-        elif Product.objects.filter(name=request.POST.get('productName')).exists() == False :
-            form = ProductImageForm(request.POST, request.FILES)
-            product = Product.objects.get(id=productId)
-            product.name = request.POST.get('productName')
-            category_Id = request.POST.get('productCategory')
-            product.category = Category.objects.get(id=category_Id)
-            product.sublabel =request.POST.get('productSublabel')
-            product.info = request.POST.get('productInfo')
-            product.content = request.POST.get('productContent')
-            product.price = request.POST.get('productPrice')
-            product.unit =request.POST.get('productUnit')
-            product.stocks = request.POST.get('productStock')
-            product.isPublish = request.POST.get('productIspublish')
-            product.save()
-                        
-            officeId1=request.POST.get('ship_officeId1')
-            officeId2=request.POST.get('ship_officeId2')
-            officeId3=request.POST.get('ship_officeId3')
-                     
-            if officeId1 == "1" :
-                if ship1.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=1)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
-
+        if officeId3 == "3" :
+            if ship3.exists() :
+                pass
             else:
-                if ship1.exists() :
-                    ship1.delete()
-                else:
-                    pass
+                productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=3)
+                productsupervisionOfficeship.product = product
+                productsupervisionOfficeship.save()
 
-            if officeId2 == "2" :
-                if ship2.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=2)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
-
+        else:
+            if ship3.exists() :
+                ship3.delete()
             else:
-                if ship2.exists() :
-                    ship2.delete()
-                else:
-                    pass
+                pass
 
-            if officeId3 == "3" :
-                if ship3.exists() :
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=3)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
-
-            else:
-                if ship3.exists() :
-                    ship3.delete()
-                else:
-                    pass
-            
-            if form.is_valid():
-                form.save()
-                # Get the current instance object to display in the template
-                img_obj = form.instance
-                # form.initial['product'] = Product.objects.latest('id')
-                theproductImage=ProductImage.objects.latest('id')
-                theproductImage.product=Product.objects.get(id=productId)
-                theproductImage.save()
-                render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form, 'img_obj': img_obj})
-            else:
-                print('not valid2')
-                your_params = {'productId':productId}
-                return redirect_params('edit_product',your_params)
+        return redirect_params('edit_product',{'productId':productId})
             
     else:
         
@@ -544,7 +463,7 @@ def edit_product(request):
         form.initial['product'] = theproduct
         print("not post")
     
-    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'productimages':productimages,'categories':categories,'productships':productships,'products':products,'productId':productId,'ProductQueryset':ProductQueryset,'form':form})
+    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'productimages':productimages,'categories':categories,'productships':productships,'products':products,'productId':productId,'product':theproduct,'form':form})
 
 def redirect_params(url, params=None):
     response = redirect(url)
