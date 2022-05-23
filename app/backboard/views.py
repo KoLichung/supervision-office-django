@@ -151,6 +151,7 @@ def bills(request):
 
     officeTotalMoney = {}
     officeTotalorder = {}
+    forlooplist=[] 
     for x in range(1,offices.count()+1):
         
         officeTotalMoney['office_id_'+str(x)] = 0
@@ -159,8 +160,9 @@ def bills(request):
             for officeOrder in dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)]:
                     officeTotalMoney['office_id_'+str(x)] += officeOrder.orderMoney
         else:
-            officeTotalorder = 0
-    
+            officeTotalorder['office_id_'+str(x)] = 0
+        forlooplist.append({'office':offices.get(id=x) ,'Totalorder':officeTotalorder['office_id_'+str(x)],'TotalMoney':officeTotalMoney['office_id_'+str(x)]})
+        print(forlooplist[x-1])
     if request.method == 'POST':
         
         checkMonth = request.POST.get('selectMonth')
@@ -169,7 +171,7 @@ def bills(request):
     }
         return redirect_params('bills', your_params)
 
-    return render(request, 'backboard/bills.html',{'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
+    return render(request, 'backboard/bills.html',{'forlooplist':forlooplist, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
 
 def customers(request):
     customers = User.objects.all()
