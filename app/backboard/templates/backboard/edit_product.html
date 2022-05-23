@@ -24,7 +24,7 @@
                                 {% for office in supervisionoffices %}
 
                                     <div class="form-check form-check-inline">
-                                      <input class="form-check-input" id="ship_officeId{{office.id}}" type="checkbox" name="ship_officeId{{office.id}}" value="{{office.id}}" 
+                                      <input class="form-check-input" id="ship_officeId{{office.id}}" type="checkbox" name="ship_officeId{{office.id}}" value="check_office_{{office.id}}" 
                                       {% for ship in productships %}
                                           {% if ship.supervisionOffice.id == office.id  %} 
                                             checked 

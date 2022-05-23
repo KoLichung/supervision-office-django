@@ -101,9 +101,8 @@ def base(request):
 def bills(request):
     offices = SupervisionOffice.objects.all()
     orders=Order.objects.filter(state=2)
-    officeOrders1 =  orders.filter(supervisionOffice=1)  
-    officeOrders2 =  orders.filter(supervisionOffice=2)
-    officeOrders3 =  orders.filter(supervisionOffice=3)
+     
+    
   
     
     today = datetime.today()
@@ -121,9 +120,7 @@ def bills(request):
         month_id = current_month - int(monthId) + 12
         yearId = current_year-1
         print(month_id)
-    dict_office1 = {}
-    dict_office2 = {}
-    dict_office3 = {}
+    dict_office = {}
     dict_all = {}
     listMonth = {}
     listYear = {}
@@ -137,12 +134,11 @@ def bills(request):
             year = current_year - 1
         dict_all['last'+str(i)+'Months'] = orders.filter(createDate__year=year,
                            createDate__month=month)
-        dict_office1['last'+str(i)+'Months'] = officeOrders1.filter(createDate__year=year,
-                           createDate__month=month)
-        dict_office2['last'+str(i)+'Months'] = officeOrders2.filter(createDate__year=year,
-                           createDate__month=month)
-        dict_office3['last'+str(i)+'Months'] = officeOrders3.filter(createDate__year=year,
-                           createDate__month=month)
+        for x in range(1,offices.count()+1):
+            officeOrders =  orders.filter(supervisionOffice=x) 
+            dict_office['last'+str(i)+'Months'+'office_id'+str(x)] = officeOrders.filter(createDate__year=year,
+                            createDate__month=month)
+            
         listMonth['last'+str(i)+'Month'] = month
         listYear['last'+str(i)+'Month'] = year
     TotalMoney = 0
@@ -152,28 +148,19 @@ def bills(request):
             TotalMoney += order.orderMoney
     else:
         TotalOrder = 0
-    officeTotalMoney1 = 0
-    if dict_office1['last'+str(monthId)+'Months'] != None:
-        officeTotalorder1 = dict_office1['last'+str(monthId)+'Months'].count()
-        for officeOrder1 in dict_office1['last'+str(monthId)+'Months']:
-                officeTotalMoney1 += officeOrder1.orderMoney
-    else:
-        officeTotalorder1 = 0
-    officeTotalMoney2 = 0
-    if dict_office2['last'+str(monthId)+'Months'] != None:
-        officeTotalorder2 = dict_office2['last'+str(monthId)+'Months'].count()
-        for officeOrder2 in dict_office2['last'+str(monthId)+'Months']:
-            officeTotalMoney2 += officeOrder2.orderMoney
-    else:
-        print('what?')
-        officeTotalorder2 = 0
-    officeTotalMoney3 = 0
-    if dict_office3['last'+str(monthId)+'Months'] != None:
-        officeTotalorder3 = dict_office3['last'+str(monthId)+'Months'].count()
-        for officeOrder3 in dict_office3['last'+str(monthId)+'Months']:
-            officeTotalMoney3 += officeOrder3.orderMoney
-    else:
-        officeTotalorder3 = 0
+
+    officeTotalMoney = {}
+    officeTotalorder = {}
+    for x in range(1,offices.count()+1):
+        
+        officeTotalMoney['office_id_'+str(x)] = 0
+        if dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)] != None:
+            officeTotalorder['office_id_'+str(x)] = dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)].count()
+            for officeOrder in dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)]:
+                    officeTotalMoney['office_id_'+str(x)] += officeOrder.orderMoney
+        else:
+            officeTotalorder = 0
+    
     if request.method == 'POST':
         
         checkMonth = request.POST.get('selectMonth')
@@ -182,7 +169,7 @@ def bills(request):
     }
         return redirect_params('bills', your_params)
 
-    return render(request, 'backboard/bills.html',{'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder1':officeTotalorder1,'officeTotalMoney1':officeTotalMoney1,'officeTotalorder2':officeTotalorder2,'officeTotalMoney2':officeTotalMoney2,"officeTotalorder3":officeTotalorder3,"officeTotalMoney3":officeTotalMoney3})
+    return render(request, 'backboard/bills.html',{'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
 
 def customers(request):
     customers = User.objects.all()
@@ -403,7 +390,8 @@ def edit_product(request):
             office_dict['officeId'+str(i)]=request.POST.get(strcombine)
             ship = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=i)
                 
-            if office_dict['officeId'+str(i)] == str(i) :
+            if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
+ 
                 if ship.exists() :
                     print('pass1')
                     pass
@@ -421,7 +409,7 @@ def edit_product(request):
                     pass
                     print('pass2')
         
-
+            
         return redirect_params('edit_product',{'productId':productId})
             
     else:

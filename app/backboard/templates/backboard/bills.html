@@ -23,49 +23,66 @@
                 <h5>請選擇月份</h5>
               </div>
               <div class="modal-body">                 
-                      
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="5"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="selectMonth">{{listYear.last5Month}}/{{listMonth.last5Month}}月</label>
-                    <hr>  
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="4"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="selectMonth">{{listYear.last4Month}}/{{listMonth.last4Month}}月</label>
-                    <hr>  
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="3"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="selectMonth">{{listYear.last3Month}}/{{listMonth.last3Month}}月</label>
-                    <hr>  
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="2"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="OrderState">{{listYear.last2Month}}/{{listMonth.last2Month}}月</label>
-                    <hr>  
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth"  value="1"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="selectMonth">{{listYear.last1Month}}/{{listMonth.last1Month}}月</label>
-                    <hr>  
-                    <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="0"
-                       
-                        checked 
-                      
-                      />
-                      <label class="form-check-label" for="selectMonth">{{listYear.last0Month}}/{{listMonth.last0Month}}月</label>
-                    <hr>  
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="0"
+                  {% if monthId == '0' %}
+                    checked 
+                  {% endif %}
+                />
+                <label class="form-check-label" for="selectMonth">{{listYear.last0Month}}/{{listMonth.last0Month}}月</label>
+              
+            
+                <br>
+
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth"  value="1"
+                  {% if monthId == '1' %}
+                    checked 
+                  {% endif %}
+                />
+                
+                <label class="form-check-label" for="selectMonth">{{listYear.last1Month}}/{{listMonth.last1Month}}月</label>
+              
+                <br>
+                
+
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="2"
+                  {% if monthId == '2' %}
+                    checked 
+                  {% endif %}
+                />
+                <label class="form-check-label" for="OrderState">{{listYear.last2Month}}/{{listMonth.last2Month}}月</label>
+              
+                <br>
+              
+
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="3"
+                  {% if monthId == '3' %}
+                    checked 
+                  {% endif %}
+                />
+                <label class="form-check-label" for="selectMonth">{{listYear.last3Month}}/{{listMonth.last3Month}}月</label>
+              
+            
+                <br>
+
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="4"
+                  {% if monthId == '4' %}
+                    checked 
+                  {% endif %}
+                />
+                <label class="form-check-label" for="selectMonth">{{listYear.last4Month}}/{{listMonth.last4Month}}月</label>
+              
+            
+                <br>
+
+                <input class="form-check-input" id="selectMonth" type="radio" name="selectMonth" value="5"
+                  {% if monthId == '5' %}
+                    checked 
+                  {% endif %}
+                />
+                <label class="form-check-label" for="selectMonth">{{listYear.last5Month}}/{{listMonth.last5Month}}月</label>
+              
+                <br>
+                    
               </div>
               <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
@@ -103,18 +120,23 @@
             <tbody class="list">
               <tr>
                 {% for office in offices %}
-                  {% if office.id == 1 %}
+                  <script type="text/javascript">
+                    const id = document.getElementById('office.id').value;
+                    const sumMoney = 'officeTotalMoney.office_id_'+ $(id);
+                    const sumorder = 'officeTotalorder.office_id_'+ $(id);
+                  </script>
+                  <input type="hidden" id="office_id{{office.id}}" name="office_id{{office.id}}" value={{office.id}}>
                   <td>{{office.name}}</td>
-                  <td>{{officeTotalorder1}}</td>
-                  <td>{{officeTotalMoney1}}</td>
+                  <td>{{sumorder}}</td>
+                  <td>{{sumMoney}}</td>
                   <td class="text-end">                    
                     <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{office.id}}'">
                   </td>
                   
-                  {% endif %}
+                  
                 {% endfor %}
               </tr>
-              <tr>
+              <!-- <tr>
                 {% for office in offices %}
                   {% if office.id == 2 %}
                   <td>{{office.name}}</td>
@@ -138,7 +160,7 @@
                   </td>
                   {% endif %}
                 {% endfor %}
-              </tr>
+              </tr> -->
                            
             </tbody>
             </table>
