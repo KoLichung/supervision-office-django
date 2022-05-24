@@ -262,17 +262,31 @@ def offices_order(request):
     offices_all = SupervisionOffice.objects.all()
     ships = ProductOrderShip.objects.all()
     office_Id = request.GET.get('OfficeId')
-    orders =  Order.objects.filter(supervisionOffice=office_Id)
-    offices = offices_all.filter(id=office_Id)
+    monthId = request.GET.get('lastMonth')
+    orders =  Order.objects.filter(supervisionOffice=office_Id,state=2)
+    theOffice = offices_all.get(id=office_Id)
+    today = datetime.today()
+    current_month = today.month
+    current_year = today.year
+       
+    if current_month-int(monthId) > 0:
+        month = current_month - int(monthId)
+        year = current_year
+        
+    elif current_month-int(monthId) <= 0:
+        month = current_month - int(monthId) + 12
+        year = current_year-1
+        
+    currentOrders = orders.filter(createDate__year=year,createDate__month=month)
+    looplist=[]
     sum = 0
-    for order in orders:
-            sum += order.orderMoney
+    for order in currentOrders:
+        for ship in ships:
+            if ship.order==order:
+                sum += ship.amount * ship.product.price
+                looplist.append({'name':ship.product.name,'price':ship.product.price,'amount':ship.amount,'ordermoney':ship.product.price * ship.amount})
 
-    print(sum)
-
-
-    
-    return render(request,'backboard/offices_order.html',{'ships':ships,'orders':orders,'offices':offices,'sum':sum})
+    return render(request,'' 'backboard/offices_order.html',{'looplist':looplist, 'currentOrders':currentOrders, 'ships':ships,'orders':orders,'theOffice':theOffice,'sum':sum})
 
 
 def add_new_product(request):
@@ -280,14 +294,27 @@ def add_new_product(request):
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
     form = ProductImageForm()
-
-    product = Product()
-       
-
+    ships = ProductSupervisionOfficeShip.objects.all()
+    productimages = ProductImage.objects.order_by('-id')
+    list=[]
+ 
     if request.method == 'POST':
+        
+        submitValue = request.POST.get('submit')
+        submitValue2 = request.POST.get('submit2')
+        if submitValue == "upload_image":
+            form = ProductImageForm(request.POST, request.FILES)
+            form.save()
+            img_obj = form.instance
+            image_id = img_obj.id
+            list.append(img_obj)
+            # render(request, 'backboard/add_new_product.html',{'productimages':productimages, 'list':list, 'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
 
-            
-            
+
+        # related to image
+        
+        
+            product = Product()
             form = ProductImageForm(request.POST, request.FILES)
             productName = request.POST.get('productName') 
             product.name = productName
@@ -300,51 +327,90 @@ def add_new_product(request):
             product.unit =request.POST.get('productUnit')
             product.stocks = request.POST.get('productStock')
             product.isPublish = request.POST.get('productIspublish')
+            office_dict={}
+            office_list=[]
+
+            for i in range(1,supervisionoffices.count()+1):  
+                strcombine = ''.join(['ship_officeId', str(i)])
+                office_dict['officeId'+str(i)]=request.POST.get(strcombine)
+                ship = ProductSupervisionOfficeShip.objects.filter(product=product,supervisionOffice=i)
+                office = SupervisionOffice.objects.get(id=i)
+                if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
+                    check = 1
+
+                    if ship.exists() :
+                        pass
+                    else:
+                        productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                        productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=i)
+                        productsupervisionOfficeship.product = product
+                else:
+                    check = 0
+                    if ship.exists() :
+                        ship.delete()
+                    else:
+                        pass
+                office_list.append({'check':check,'office':office})
+            
+            return render(request, 'backboard/add_new_product.html',{'image_id':image_id,'product':product, 'office_list':office_list, 'ships':ships, 'productimages':productimages, 'list':list, 'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
+
+        
+        if submitValue2 =="upload_product":
+            
+            product = Product()
+            form = ProductImageForm(request.POST, request.FILES)
+            image_id = request.POST.get('imageId')
+            productName = request.POST.get('productName') 
+            product.name = productName
+            category_Id = request.POST.get('productCategory')
+            product.category = Category.objects.get(id=category_Id)
+            product.sublabel =request.POST.get('productSublabel')
+            product.info = request.POST.get('productInfo')
+            product.content = request.POST.get('productContent')
+            product.price = request.POST.get('productPrice')
+            product.unit =request.POST.get('productUnit')
+            product.stocks = request.POST.get('productStock')
+            product.isPublish = request.POST.get('productIspublish')
+            office_dict={}
+            office_list=[]
+
+            for i in range(1,supervisionoffices.count()+1):  
+                strcombine = ''.join(['ship_officeId', str(i)])
+                office_dict['officeId'+str(i)]=request.POST.get(strcombine)
+                ship = ProductSupervisionOfficeShip.objects.filter(product=product,supervisionOffice=i)
+                office = SupervisionOffice.objects.get(id=i)
+                if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
+                    check = 1
+
+                    if ship.exists() :
+                        pass
+                    else:
+                        productsupervisionOfficeship = ProductSupervisionOfficeShip()
+                        productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=i)
+                        productsupervisionOfficeship.product = product
+                        
+                        
+                else:
+                    check = 0
+                    if ship.exists() :
+                        ship.delete()
+                    else:
+                        pass
+            
             product.save()
-            products = Product.objects.filter(name=productName)
-            
-            
-            ship_officeId1 =request.POST.get('ship_officeId1')
-            ship_officeId2 =request.POST.get('ship_officeId2')
-            ship_officeId3 =request.POST.get('ship_officeId3')
-            
-            if ship_officeId1 == "1":
-                productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId1)
-                productsupervisionOfficeship.product = product
-                productsupervisionOfficeship.save()
+            productsupervisionOfficeship.save()
+            theImage = ProductImage.objects.get(id=image_id)
+            theImage.product = product
+            theImage.save()
 
-            if ship_officeId2 == "2":
-                productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId2)
-                productsupervisionOfficeship.product = product
-                productsupervisionOfficeship.save()
-
-            if ship_officeId3 == "3":
-                productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=ship_officeId3)
-                productsupervisionOfficeship.product = product
-                productsupervisionOfficeship.save()
-
-            
-
-            
-            if form.is_valid():
-                
-                form.save()
-                # Get the current instance object to display in the template
-                img_obj = form.instance
-                print('1')
-                # form.initial['product'] = Product.objects.latest('id')
-                theproductImage=ProductImage.objects.latest('id')
-                theproductImage.product=Product.objects.latest('id')
-                theproductImage.save()
-                render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'products':products, 'form':form, 'img_obj': img_obj})
+        
+            return redirect('/backboard/products')
     else:
         form = ProductImageForm()
         form.initial['product'] = Product.objects.latest('id')
-        print('2')
-    return render(request, 'backboard/add_new_product.html',{'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
+    
+    
+    return render(request, 'backboard/add_new_product.html',{ 'ships':ships, 'productimages':productimages, 'list':list, 'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
          
 
 def edit_product(request):
@@ -370,7 +436,7 @@ def edit_product(request):
             form.save()
 
             img_obj = form.instance
-
+            
             render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'product':theproduct,'form':form, 'img_obj': img_obj})
 
         # not related to image

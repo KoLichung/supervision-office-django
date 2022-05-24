@@ -125,7 +125,7 @@
                   <td>{{list.Totalorder}}</td>
                   <td>{{list.TotalMoney}}</td>
                   <td class="text-end">                    
-                    <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{list.office.id}}'">
+                    <input class="btn btn-warning btn-sm" type="button" value="看商品明細" onclick="location.href='{% url 'offices_order' %}?OfficeId={{list.office.id}}&lastMonth={{monthId}}'">
                   </td>
               </tr>
               {% endfor %}

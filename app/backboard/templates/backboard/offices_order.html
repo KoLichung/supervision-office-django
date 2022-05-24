@@ -5,9 +5,9 @@
         <div class="card-header">
         <div class="table-responsive scrollbar">
             <table class="table  table-striped fs--1 mb-0">
-                {% for office in offices %}
                 
-                        <p>{{office.name}}商品明細</p>
+                
+                        <p>{{theOffice.name}}商品明細</p>
                         <thead class="bg-200 text-900">
                             <tr>
                             <th>商品名稱</th>
@@ -17,19 +17,14 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-                            {% for order in orders %}
-                                {% for ship in ships%}
-                                    {% if ship.order == order %}
-
+                            {% for list in looplist %}
                                         <tr>
-                                        <td>{{ship.product.name}}</td>
-                                        <td>{{ship.product.price}}</td>
-                                        <td>{{ship.amount}}</td>
-                                        <td >{{order.orderMoney}}</td>
+                                        <td>{{list.name}}</td>
+                                        <td>{{list.price}}</td>
+                                        <td>{{list.amount}}</td>
+                                        <td >{{list.ordermoney}}</td>
                                         </tr>
-                                
-                                    {% endif %}
-                                {% endfor %}
+                                 
                             {% endfor %}
                         </tbody>
                         <tfoot>
@@ -40,7 +35,7 @@
                             <td>{{sum}}</td>
                             </tr>
                         </tfoot> 
-                {% endfor %}
+                
             </table>
         </div>
         </div>
