@@ -90,7 +90,7 @@
                                   <td>＄{{list.sum}}</td>
                                   <td class="text-end">
                                     <div class="dropdown font-sans-serif position-static">   
-                                          <input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'">
+                                          <input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{list.order.id}}'">
                                     </div>
                                   </td>
                                 </tr>
