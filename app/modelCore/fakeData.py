@@ -1,8 +1,8 @@
 import csv
 import os
-from datetime import datetime, timedelta
-from .models import OrderState, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
-
+import datetime
+from .models import OrderState, ProductOrderShip, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from django.utils import timezone
 
 def importSupervisionOffice():
     module_dir = os.path.dirname(__file__)  # get current directory
@@ -22,8 +22,10 @@ def importSupervisionOffice():
             
 
 def fakeData():
+    def ordermoney(self):
+        return self.amount * self.product.price
     user = User()
-    user.name = '許筱真'
+    user.name = '許小姐'
     user.phone = '0915323131'
     user.email ='happy@gmail.com'
     user.is_active = True
@@ -34,6 +36,14 @@ def fakeData():
     user.name = '周杰倫'
     user.phone = '0985463816'
     user.email = 'cat@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = '蔡英文'
+    user.phone = '0985478981'
+    user.email = 'president@gmail.com'
     user.is_active = True
     user.is_staff =  False
     user.save()
@@ -80,6 +90,14 @@ def fakeData():
     product.info = "★暢銷多年的好滋味\n★餅乾裡有滿滿的巧克力內餡\n★可愛小熊共有200種圖案"
     product.save()
 
+    product = Product()
+    product.category = Category.objects.get(id=4)
+    product.name = 'test'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '台中監理所'
     supervisionOffice.save()
@@ -90,6 +108,10 @@ def fakeData():
 
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '花蓮監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '台南監理所'
     supervisionOffice.save()
     
     productsupervisionOfficeship =ProductSupervisionOfficeShip()
@@ -107,6 +129,16 @@ def fakeData():
     productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 3)
     productsupervisionOfficeship.save()
 
+    productsupervisionOfficeship =ProductSupervisionOfficeShip()
+    productsupervisionOfficeship.product = Product.objects.get(id=3)
+    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 4)
+    productsupervisionOfficeship.save()
+
+    productsupervisionOfficeship =ProductSupervisionOfficeShip()
+    productsupervisionOfficeship.product = Product.objects.get(id=1)
+    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 4)
+    productsupervisionOfficeship.save()
+
     orderstate = OrderState()
     orderstate.name = '未處理'
     orderstate.save()
@@ -121,30 +153,94 @@ def fakeData():
 
     order = Order()
     order.user = User.objects.get(id = 2)
-    order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=1).supervisionOffice
+    order.supervisionOffice = SupervisionOffice.objects.get(id=4)
     order.state =  OrderState.objects.get(id=1)
-    order.amount = 5
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=1).product.price * order.amount
-    order.product = ProductSupervisionOfficeShip.objects.get(id=1).product
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
-    order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=2).supervisionOffice
+    order.supervisionOffice = SupervisionOffice.objects.get(id=2)
     order.state =  OrderState.objects.get(id=2)
-    order.amount = 3
-    order.product = ProductSupervisionOfficeShip.objects.get(id=2).product
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=2).product.price * order.amount
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
-    order.supervisionOffice = ProductSupervisionOfficeShip.objects.get(id=3).supervisionOffice
+    order.supervisionOffice = SupervisionOffice.objects.get(id=1)
     order.state =  OrderState.objects.get(id=2)
-    order.amount = 5
-    order.product = ProductSupervisionOfficeShip.objects.get(id=3).product
-    order.orderMoney = ProductSupervisionOfficeShip.objects.get(id=3).product.price * order.amount
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
     order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 2)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=4)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 4)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=2)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 3)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=3)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=1)
+    productordership.product = Product.objects.get(id=2)
+    productordership.amount = 3
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=2)
+    productordership.product = Product.objects.get(id=3)
+    productordership.amount = 20
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=3)
+    productordership.product = Product.objects.get(id=1)
+    productordership.amount = 11
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=4)
+    productordership.product = Product.objects.get(id=4)
+    productordership.amount = 5
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=5)
+    productordership.product = Product.objects.get(id=1)
+    productordership.amount = 8
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=2)
+    productordership.product = Product.objects.get(id=4)
+    productordership.amount = 5
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=6)
+    productordership.product = Product.objects.get(id=4)
+    productordership.amount = 4
+    productordership.money = ordermoney(productordership)
+    productordership.save()
 
     payinfo = PayInfo()
     payinfo.order = Order.objects.get(id=1)

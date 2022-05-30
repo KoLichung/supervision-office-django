@@ -1,228 +1,196 @@
 {% extends 'backboard/base.html' %} {% block content %}
 
-          <!-- 內容 -->
+  <!-- 內容 -->
 
-          <div class="g-3 mb-3">
-            <div class="col-lg-12 ps-lg-2 mb-3">
-
-              <!-- 訂單明細 -->
-              <div class="card h-lg-100 mb-3">
-                <div class="card-header">
+  <div class="g-3 mb-3">
+    <div class="col-lg-12 ps-lg-2 mb-3">
+      
+        <!-- 訂單明細 -->
+      
+        <div class="card h-lg-100 mb-3">
+          <div class="card-header">
+            
+              <div class="table-responsive scrollbar">
                   
-                    <div class="table-responsive scrollbar">
-                        
-                      <table class="table  table-striped fs--1 mb-0">
-                          <p>訂單明細</p>
-                          
-                        
-                                <thead class="bg-200 text-900">
-                          
-                                  <tr>
-                                    <th>狀態</th>
-                                    <th>日期</th>
-                                    <th>姓名</th>
-                                    <th>電話</th>
-                                    <th>金額</th>
-                                  </tr>
-                                </thead>
-
-                                <tbody class="list">
-                                  
-                                  {% for order in orders %}
-                                    {% for user in users %}
-
-                                      
-                                        {% if order.user == user %}
-                                        
-                                          <tr>
-                                      
-                                            <td> 
-                                              <form method="post">{% csrf_token %}
-                                                <button class="btn btn-outline-warning btn-sm" type="button" data-bs-toggle="modal" 
-                                  
-                                                data-bs-target="#modal{{order.state}}" 
-                                              
-                                                >
-                                                  {{order.state}}
-                                                </button>
-                                                <div class="modal fade" id="modal{{order.state}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                  <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                      <div class="modal-header">
-                                                        <h5>請選擇訂單狀態</h5>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        
-                                                          {% for orderstate in orderstates %}
-                                                              <input class="form-check-input" id="OrderState" type="radio" name="OrderState" value="{{orderstate.id}}" 
-                                                              {% if order.state == orderstate %} 
-                                                                checked 
-                                                              {% endif %} 
-                                                              />
-                                                              <label class="form-check-label" for="OrderState">{{orderstate.name}}</label>
-                                                            <hr>
-                                                          {% endfor %}
-                                                        
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                                                          取消
-                                                        </button>
-                                                        <button class="btn btn-primary" type="submit" name="submit" value="ok" onclick="location.href='{% url 'orders' %}'">
-                                                          儲存
-                                                        </button>
-                                                          
-                                                      </div>
-                                                        
-                                                      
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </form>
-                                            </td>
-                                            <td class="text-nowrap">{{order.createDate}}</td>>
-                                            <td class="text-nowrap">{{user.name}}</td>>
-                                            <td class="text-nowrap">{{user.phone}}</td>
-                                            <td class="text-nowrap">{{order.orderMoney}}</td>
-                                  
-                                          </tr>
-                                        {% endif %}
-                                      
-                                      
-                                    {% endfor %}
-                                  {% endfor %}
-                                  
-                                </tbody>
-                              
-                      </table>
-                    </div>
-                 
-                </div>
-              </div>
-
-              <!-- 金流明細 -->
-              <div class="card h-lg-100 mb-3">
-                <div class="card-header">
-
-                    <div class="table-responsive scrollbar">
-                      <table class="table  table-striped fs--1 mb-0">
-                        <p>金流明細</p>
-                        <thead class="bg-200 text-900">
-                              <tr>
-                                <th >付款狀態</th>
-                                <th >付款方式</th>
-                              </tr>
-                        </thead>
-                        <tbody class="list">
-                          {% for payinfo in payinfos %}
-                            {% for order in orders %}
-                              {% if payinfo.order == order %}
+                <table class="table  table-striped fs--1 mb-0">
+                    <p>訂單明細</p>   
+                          <thead class="bg-200 text-900">
+                    
+                            <tr>
+                              <th>狀態</th>
+                              <th>日期</th>
+                              <th>姓名</th>
+                              <th>電話</th>
+                              <th>金額</th>
+                            </tr>
+                          </thead>
+                          <tbody class="list">
                             
-                                <tr>
-                                  <td >
-                                    <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
-                                  </td>
-                                  <td>{{payinfo.PaymentType}}</td>
-                                </tr>
-                              {% endif %}
-                            {% endfor %}
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  
-                </div>
-              </div>
-
-              <!-- 收件者明細 -->
-              
-                      <div class="card h-lg-100 mb-3">
-                        <div class="card-header">
-                          <div class="table-responsive scrollbar">
-                            <table class="table  table-striped fs--1 mb-0">
-                        
-                                  {% for order in orders %}
-                                    {% for user in users %}
-                                        {% if order.user == user %}
-                                            <p>收件者資料</p>
-                                            <thead class="bg-200 text-900">
-                                              <tr>
-                                                <th>站所</th>
-                                                <th>姓名</th>
-                                                <th >編號</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody class="list">
-                                              
-                                              <tr>
-                                                <td>{{order.supervisionOffice}}</td>
-                                                <td>{{user.name}}</td>
-                                                <td>{{user.phone}}</td>
-                                                        
-                                              </tr>
-                                      
-                                  
-                                            </tbody>
-                                        {% endif %}
-                                      {% endfor %}
-                                    {% endfor %}
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-
-                        <!-- 商品明細 -->
-                        <div class="card h-lg-100 mb-3">
-                          <div class="card-header">
-                            <div class="table-responsive scrollbar">
-                                <table class="table  table-striped fs--1 mb-0">
-
-                                    
-                                            <p>訂購商品明細</p>
-                                            <thead class="bg-200 text-900">
-                                              <tr>
-                                                <th>商品名稱</th>
-                                                <th>單價</th>
-                                                <th>數量</th>
-                                                <th >小計</th>
-                                              </tr>
-                                            </thead>
-                                            {% for order in orders %}
-                                                <tbody class="list">
-                                                  
-                                                    {% for ship in ships%}
-                                                      {% if ship.order == order %}
-
-                                                          <tr>
-                                                            <td>{{ship.product.name}}</td>
-                                                            <td>{{ship.product.price}}</td>
-                                                            <td>{{ship.amount}}</td>
-                                                            <td >{{order.orderMoney}}</td>
-                                                          </tr>
-                                                      {% endif %}
-                                                    {% endfor %}
-                                              
-                                                </tbody>
-                                                <tfoot>
-                                                  <tr>
-                                                    <td>總計</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{sum}}</td>
-                                                  </tr>
-                                                </tfoot>
-                                            {% endfor %}
+                                    <tr>                    
+                                      <td> 
+                                        <form method="post">{% csrf_token %}
+                                          <button class="btn btn-outline-warning btn-sm" type="button" data-bs-toggle="modal" 
+                            
+                                          data-bs-target="#modal{{order.state}}" 
                                         
+                                          >
+                                            {{order.state}}
+                                          </button>
+                                          <div class="modal fade" id="modal{{order.state}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5>請選擇訂單狀態</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                  
+                                                    {% for orderstate in orderstates %}
+                                                        <input class="form-check-input" id="OrderState" type="radio" name="OrderState" value="{{orderstate.id}}" 
+                                                        {% if order.state == orderstate %} 
+                                                          checked 
+                                                        {% endif %} 
+                                                        />
+                                                        <label class="form-check-label" for="OrderState">{{orderstate.name}}</label>
+                                                      <hr>
+                                                    {% endfor %}
+                                                  
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                                                    取消
+                                                  </button>
+                                                  <button class="btn btn-primary" type="submit" name="submit" value="ok" onclick="location.href='{% url 'orders' %}'">
+                                                    儲存
+                                                  </button>
+                                                    
+                                                </div>                             
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </td>
+                                      <td class="text-nowrap">{{order.createDate}}</td>
+                                      <td class="text-nowrap">{{order.user.name}}</td>
+                                      <td class="text-nowrap">{{order.user.phone}}</td>
+                                      <td class="text-nowrap">{{sum}}</td>
+                            
+                                    </tr>       
+                          </tbody>
                         
-                              
-                                </table>
-                            </div>
-                          </div>
-                        </div>
-              
+                </table>
+              </div>
+          
+          </div>
+        </div>
+      
+      
+        <!-- 金流明細 -->
+      
+        <div class="card h-lg-100 mb-3">
+          <div class="card-header">
 
-
+              <div class="table-responsive scrollbar">
+                <table class="table  table-striped fs--1 mb-0">
+                  <p>金流明細</p>
+                  <thead class="bg-200 text-900">
+                        <tr>
+                          <th >付款狀態</th>
+                          <th >付款方式</th>
+                        </tr>
+                  </thead>
+                  <tbody class="list">
+                    {% for payinfo in payinfos %}
+                        {% if payinfo.order == order %}     
+                          <tr>
+                            <td >
+                              <button type="button" class="btn btn-outline-dark btn-sm">{{order.state}}</button>
+                            </td>
+                            <td>{{payinfo.PaymentType}}</td>
+                          </tr>
+                        {% endif %}
+                      {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            
+          </div>
+        </div>
+      
+      
+        <!-- 收件者明細 -->
+      
+        <div class="card h-lg-100 mb-3">
+          <div class="card-header">
+            <div class="table-responsive scrollbar">
+              <table class="table  table-striped fs--1 mb-0">
+                
+                    
+                              <p>收件者資料</p>
+                              <thead class="bg-200 text-900">
+                                <tr>
+                                  <th>站所</th>
+                                  <th>姓名</th>
+                                  <th >編號</th>
+                                </tr>
+                              </thead>
+                              <tbody class="list">
+                                
+                                <tr>
+                                  <td>{{order.supervisionOffice}}</td>
+                                  <td>{{order.user.name}}</td>
+                                  <td>{{order.user.phone}}</td>
+                                          
+                                </tr>
+                        
+                    
+                              </tbody>
+              </table>
             </div>
           </div>
+        </div>
+      
+      
+        <!-- 商品明細 -->
+      
+        <div class="card h-lg-100 mb-3">
+          <div class="card-header">
+            <div class="table-responsive scrollbar">
+                <table class="table  table-striped fs--1 mb-0">
 
-          {% endblock %}
+                    
+                            <p>訂購商品明細</p>
+                            <thead class="bg-200 text-900">
+                              <tr>
+                                <th>商品名稱</th>
+                                <th>單價</th>
+                                <th>數量</th>
+                                <th >小計</th>
+                              </tr>
+                            </thead>
+                            
+                                <tbody class="list">
+                                  {% for list in forlooplist %}
+                                          <tr>
+                                            <td>{{list.ship.product.name}}</td>
+                                            <td>{{list.ship.product.price}}</td>
+                                            <td>{{list.ship.amount}}</td>
+                                            <td >{{list.money}}</td>
+                                          </tr>
+                                  {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <td>總計</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{sum}}</td>
+                                  </tr>
+                                </tfoot>  
+                </table>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}

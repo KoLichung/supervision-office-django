@@ -39,26 +39,20 @@
                     </tr>
                   </thead>
                   <tbody class="list">
-                      {% for order in orders %}                       
-                              {% for theState in theOrderstates %}
-                                {% if order.state == theState %}                                 
-                                      {% for user in users %}
-                                        {% if order.user == user %}   
+                                         
+                              {% for list in forlooplist %}   
                                           <tr>                       
-                                              <td><button type="button" class="btn btn-outline-warning btn-sm">{{theState.name}}</button></td>                                                     
-                                              <td class="text-nowrap">{{user.name}}</td>
-                                              <td class="text-nowrap">{{user.phone}}</td>
-                                              <td class="text-nowrap">{{order.createDate}}</td>
-                                              <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
-                                              <td class="text-nowrap">{{order.orderMoney}}</td>
-                                              <td class="text-nowrap">{{order.state}}</td>
-                                              <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
-                                          </tr>
-                                        {% endif %}                                       
-                                      {% endfor %}                                                                                                         
-                                {% endif %}                             
+                                              <td><button type="button" class="btn btn-outline-warning btn-sm">{{list.order.state}}</button></td>                                                     
+                                              <td class="text-nowrap">{{list.user.name}}</td>
+                                              <td class="text-nowrap">{{list.user.phone}}</td>
+                                              <td class="text-nowrap">{{list.order.createDate}}</td>
+                                              <td class="text-nowrap">{{list.order.supervisionOffice}}</td>                              
+                                              <td class="text-nowrap">{{list.sum}}</td>
+                                              <td class="text-nowrap">{{list.order.state}}</td>
+                                              <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{list.order.id}}'"></td>
+                                          </tr>    
                               {% endfor %}                             
-                      {% endfor %}
+                     
                   </tbody>
                 </table>
               </div>

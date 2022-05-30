@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.urls import reverse
 import pathlib
 import uuid
+from django.db.models import Sum 
 
 class UserManager(BaseUserManager):
 
@@ -151,9 +152,11 @@ class Order(models.Model):
     
     CVSInfoPaymentNo = models.CharField(max_length=20, default='', blank = True, null=True)
     CVSInfoPaymentURL = models.CharField(max_length=100, default='', blank = True, null=True)
-    CVSInfoExpireDate = models.DateTimeField(auto_now=False, blank = True,null=True)
+    CVSInfoExpireDate = models.DateTimeField(auto_now_add=False, blank = True,null=True)
 
     createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
+
+    
 
 class ProductOrderShip(models.Model):
     order = models.ForeignKey(
@@ -166,10 +169,10 @@ class ProductOrderShip(models.Model):
         on_delete=models.RESTRICT,
     )
     amount = models.IntegerField(default=0,null=True)
+    
     money = models.IntegerField(default=0, null=True)
 
-    def money(self):
-        return self.amount * self.product.price
+    
 
 
 

@@ -89,10 +89,17 @@ def index(request):
                 sum += OrderShip.amount                 
         product.week_sum_nums = sum      
         product.save()   
-    print(sum7Money)
+    forlooplist = []
+    for order in orders:
+        sum = 0
+        TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
+        if TotalMoney['money__sum'] != None:
+            sum += TotalMoney['money__sum']
+            forlooplist.append({'sum':sum,'order':order})
+
     productRank = Product.objects.order_by("-week_sum_nums")[:3]
     
-    return render(request, 'backboard/index.html',{'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
+    return render(request, 'backboard/index.html',{'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def base(request):
     return render(request, 'backboard/base.html')
@@ -102,7 +109,7 @@ def bills(request):
     offices = SupervisionOffice.objects.all()
     orders=Order.objects.filter(state=2)
      
-    
+    ships = ProductOrderShip.objects.all()
   
     
     today = datetime.today()
@@ -141,11 +148,14 @@ def bills(request):
             
         listMonth['last'+str(i)+'Month'] = month
         listYear['last'+str(i)+'Month'] = year
-    TotalMoney = 0
+    sum = 0
     if dict_all['last'+str(monthId)+'Months'] != None:
         TotalOrder = dict_all['last'+str(monthId)+'Months'].count()
         for order in dict_all['last'+str(monthId)+'Months']:
-            TotalMoney += order.orderMoney
+            TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
+            if TotalMoney['money__sum'] != None:
+                sum += TotalMoney['money__sum']
+        print(sum)
     else:
         TotalOrder = 0
 
@@ -158,11 +168,16 @@ def bills(request):
         if dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)] != None:
             officeTotalorder['office_id_'+str(x)] = dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)].count()
             for officeOrder in dict_office['last'+str(monthId)+'Months'+'office_id'+str(x)]:
-                    officeTotalMoney['office_id_'+str(x)] += officeOrder.orderMoney
+                TotalMoney = ships.filter(order=officeOrder).aggregate(Sum('money'))
+                if TotalMoney['money__sum'] != None:
+                        officeTotalMoney['office_id_'+str(x)] += TotalMoney['money__sum']
+            
         else:
             officeTotalorder['office_id_'+str(x)] = 0
         forlooplist.append({'office':offices.get(id=x) ,'Totalorder':officeTotalorder['office_id_'+str(x)],'TotalMoney':officeTotalMoney['office_id_'+str(x)]})
-        print(forlooplist[x-1])
+        # print(forlooplist[x-1])
+    print(officeTotalMoney)
+    print(dict_office)
     if request.method == 'POST':
         
         checkMonth = request.POST.get('selectMonth')
@@ -171,7 +186,7 @@ def bills(request):
     }
         return redirect_params('bills', your_params)
 
-    return render(request, 'backboard/bills.html',{'forlooplist':forlooplist, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'TotalMoney':TotalMoney,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
+    return render(request, 'backboard/bills.html',{'sum':sum, 'forlooplist':forlooplist, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
 
 def customers(request):
     customers = User.objects.all()
@@ -186,11 +201,17 @@ def customer_detail(request):
     orders = Order.objects.all()
     customer_id = request.GET.get('customer_id','')
     customers = customers.filter(id=customer_id)
-    
+    ships = ProductOrderShip.objects.all()
+    forlooplist=[] 
     for order in orders:
+        sum = 0
         if order.user == customers.get(id=customer_id):
-                order_id = order.id
-    return render(request, 'backboard/customer_detail.html',{'orders':orders,'customers':customers,'order_id':order_id})
+                
+                TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
+                if TotalMoney['money__sum'] != None:
+                    sum += TotalMoney['money__sum']
+                    forlooplist.append({'user':order.user ,'sum':sum,'order':order})
+    return render(request, 'backboard/customer_detail.html',{'forlooplist':forlooplist, 'orders':orders,'customers':customers})
 
 def orders(request):
     
@@ -198,16 +219,24 @@ def orders(request):
     orders = Order.objects.all()
     users = User.objects.all()
     orderstates = OrderState.objects.all()
+    ships = ProductOrderShip.objects.all()
     q = request.GET.get('order_state')
     if q != None:
-        theOrderstates = orderstates.filter(id=request.GET.get('order_state'))        
+        theOrderstate = orderstates.get(id=request.GET.get('order_state'))      
+        theOrders = orders.filter(state=theOrderstate)  
     else:
-        theOrderstates = orderstates
-   
+        theOrders = orders
+    forlooplist=[] 
+    for theOrder in theOrders:
+        sum = 0
+        TotalMoney = ships.filter(order=theOrder).aggregate(Sum('money'))
+        if TotalMoney['money__sum'] != None:
+                sum += TotalMoney['money__sum']
+                forlooplist.append({'user':theOrder.user ,'sum':sum,'order':theOrder})
     for order in orders:
         IdOder=order.id
  
-    return render(request, 'backboard/orders.html',{'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates,'theOrderstates':theOrderstates})
+    return render(request, 'backboard/orders.html',{'forlooplist':forlooplist, 'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates})
     
 
 def order_detail(request):
@@ -219,14 +248,18 @@ def order_detail(request):
     ships = ProductOrderShip.objects.all()
     
     order_id=request.GET.get('IdOrder')
-    orders = orders.filter(id=order_id)
+    order = orders.get(id=order_id)
     sum = 0
-    for order in orders:
-        for ship in ships:
-            if ship.order == order:
-                sum += order.orderMoney
-
- 
+    forlooplist=[]
+   
+    for ship in ships:
+        if ship.order == order:
+            TotalMoney = ship.money
+            if TotalMoney != None:
+                sum += TotalMoney
+                forlooplist.append({'money':TotalMoney,'order':order,'ship':ship})
+                
+   
     if order_id != None:        
         
         theOrder = Order.objects.get(id=order_id)
@@ -243,7 +276,7 @@ def order_detail(request):
 
         return redirect('/backboard/orders')
 
-    return render(request, 'backboard/order_detail.html',{'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates,'ships':ships,'sum':sum})
+    return render(request, 'backboard/order_detail.html',{'order':order ,'sum':sum, 'forlooplist':forlooplist, 'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates,'ships':ships,'sum':sum})
 
 
 def products(request):

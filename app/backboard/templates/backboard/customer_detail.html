@@ -36,21 +36,18 @@
               </thead>
               <tbody class="list">
 
-                {% for customer in customers %}
-                  {% for order in orders %}
-                    {% if order.user == customer %}
+                {% for list in forlooplist %}
+                  
                         <tr>
-                          <td valign="middle">{{order.id}}</td>
-                          <td valign="middle">{{order.createDate}}</td>
-                          <td valign="middle">{{order.state}}</td>
-                          <td valign="middle">{{order.orderMoney}}</td>
+                          <td valign="middle">{{list.order.id}}</td>
+                          <td valign="middle">{{list.order.createDate}}</td>
+                          <td valign="middle">{{list.order.state}}</td>
+                          <td valign="middle">{{list.sum}}</td>
                           <td >                    
-                            <a href="{% url 'order_detail' %}?order_id={{order_id}}" class="btn btn-warning btn-sm" role="button">查看</a>
+                            <a href="{% url 'order_detail' %}?IdOrder={{list.order.id}}" class="btn btn-warning btn-sm" role="button">查看</a>
 
                           </td>
                         </tr>
-                    {% endif %}
-                  {% endfor %}
                 {% endfor %} 
               </tbody>
             </table>
