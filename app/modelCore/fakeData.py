@@ -1,6 +1,7 @@
 import csv
 import os
-import datetime
+import datetime 
+from datetime import timedelta
 from .models import OrderState, ProductOrderShip, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
 from django.utils import timezone
 
@@ -44,6 +45,78 @@ def fakeData():
     user.name = '蔡英文'
     user.phone = '0985478981'
     user.email = 'president@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test01'
+    user.phone = '0980178981'
+    user.email = 'test01@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test02'
+    user.phone = '0989078981'
+    user.email = 'test02@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test03'
+    user.phone = '0985472481'
+    user.email = 'test03@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test04'
+    user.phone = '0985470481'
+    user.email = 'president04@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test05'
+    user.phone = '0980578981'
+    user.email = 'president05@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test06'
+    user.phone = '0985478061'
+    user.email = 'president06@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test07'
+    user.phone = '0985470071'
+    user.email = 'president07@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test08'
+    user.phone = '0985478991'
+    user.email = 'president08@gmail.com'
+    user.is_active = True
+    user.is_staff =  False
+    user.save()
+
+    user = User()
+    user.name = 'test09'
+    user.phone = '0985478091'
+    user.email = 'president09@gmail.com'
     user.is_active = True
     user.is_staff =  False
     user.save()
@@ -92,11 +165,84 @@ def fakeData():
 
     product = Product()
     product.category = Category.objects.get(id=4)
-    product.name = 'test'
+    product.name = 'test01'
     product.price = 100
     product.content = "test"
     product.info = "test"
     product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=4)
+    product.name = 'test02'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=4)
+    product.name = 'test03'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=4)
+    product.name = 'test04'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=2)
+    product.name = 'test05'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=1)
+    product.name = 'test06'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=2)
+    product.name = 'test07'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=3)
+    product.name = 'test08'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=2)
+    product.name = 'test09'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
+    product = Product()
+    product.category = Category.objects.get(id=4)
+    product.name = 'test10'
+    product.price = 100
+    product.content = "test"
+    product.info = "test"
+    product.save()
+
 
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '台中監理所'
@@ -112,6 +258,38 @@ def fakeData():
 
     supervisionOffice = SupervisionOffice()
     supervisionOffice.name = '台南監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '嘉義監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '苗栗監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '新竹監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '雲林監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '屏東監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '高雄監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '台東監理所'
+    supervisionOffice.save()
+
+    supervisionOffice = SupervisionOffice()
+    supervisionOffice.name = '基隆監理所'
     supervisionOffice.save()
     
     productsupervisionOfficeship =ProductSupervisionOfficeShip()
@@ -153,44 +331,149 @@ def fakeData():
 
     order = Order()
     order.user = User.objects.get(id = 2)
-    order.supervisionOffice = SupervisionOffice.objects.get(id=4)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=7)
     order.state =  OrderState.objects.get(id=1)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=1)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = SupervisionOffice.objects.get(id=2)
     order.state =  OrderState.objects.get(id=2)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=2)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = SupervisionOffice.objects.get(id=1)
     order.state =  OrderState.objects.get(id=2)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=3)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 2)
     order.supervisionOffice = SupervisionOffice.objects.get(id=4)
     order.state =  OrderState.objects.get(id=2)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=1)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 4)
     order.supervisionOffice = SupervisionOffice.objects.get(id=2)
     order.state =  OrderState.objects.get(id=1)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=3)
     order.save()
 
     order = Order()
     order.user = User.objects.get(id = 3)
     order.supervisionOffice = SupervisionOffice.objects.get(id=3)
     order.state =  OrderState.objects.get(id=2)
-    order.createDate = datetime.datetime.now(tz=timezone.utc)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=4)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 7)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=9)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=2)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 3)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=8)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=3)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 8)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=2)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=4)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 9)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=1)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=3)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 5)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=7)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=2)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 3)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=5)
+    order.state =  OrderState.objects.get(id=2)
+    order.createDate = datetime.datetime.now(tz=timezone.utc)- timedelta(days=5)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 2)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=7)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=1)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 3)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=9)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=3)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 7)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=7)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=7)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 12)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=11)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=100)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 8)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=8)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=8)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 6)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=7)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=1)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 9)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=4)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=1)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 11)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=9)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=2)
+    order.save()
+
+    order = Order()
+    order.user = User.objects.get(id = 10)
+    order.supervisionOffice = SupervisionOffice.objects.get(id=10)
+    order.state =  OrderState.objects.get(id=1)
+    order.createDate = datetime.datetime.now(tz=timezone.utc) - timedelta(days=1)
     order.save()
 
     productordership = ProductOrderShip()
@@ -239,6 +522,132 @@ def fakeData():
     productordership.order = Order.objects.get(id=6)
     productordership.product = Product.objects.get(id=4)
     productordership.amount = 4
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=7)
+    productordership.product = Product.objects.get(id=8)
+    productordership.amount = 40
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=8)
+    productordership.product = Product.objects.get(id=7)
+    productordership.amount = 25
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=9)
+    productordership.product = Product.objects.get(id=3)
+    productordership.amount = 7
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=10)
+    productordership.product = Product.objects.get(id=9)
+    productordership.amount = 19
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=11)
+    productordership.product = Product.objects.get(id=10)
+    productordership.amount = 30
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=12)
+    productordership.product = Product.objects.get(id=6)
+    productordership.amount = 10
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=7)
+    productordership.product = Product.objects.get(id=7)
+    productordership.amount = 7
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=13)
+    productordership.product = Product.objects.get(id=12)
+    productordership.amount = 33
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=14)
+    productordership.product = Product.objects.get(id=7)
+    productordership.amount = 3
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=15)
+    productordership.product = Product.objects.get(id=7)
+    productordership.amount = 31
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=16)
+    productordership.product = Product.objects.get(id=8)
+    productordership.amount = 5
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=17)
+    productordership.product = Product.objects.get(id=1)
+    productordership.amount = 9
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=18)
+    productordership.product = Product.objects.get(id=10)
+    productordership.amount = 13
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=19)
+    productordership.product = Product.objects.get(id=2)
+    productordership.amount = 2
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=20)
+    productordership.product = Product.objects.get(id=9)
+    productordership.amount = 11
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=21)
+    productordership.product = Product.objects.get(id=8)
+    productordership.amount = 20
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=16)
+    productordership.product = Product.objects.get(id=5)
+    productordership.amount = 5
+    productordership.money = ordermoney(productordership)
+    productordership.save()
+
+    productordership = ProductOrderShip()
+    productordership.order = Order.objects.get(id=21)
+    productordership.product = Product.objects.get(id=9)
+    productordership.amount = 14
     productordership.money = ordermoney(productordership)
     productordership.save()
 

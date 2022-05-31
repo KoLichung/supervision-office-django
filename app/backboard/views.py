@@ -1,7 +1,7 @@
 from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
-import requests
+from django.core.paginator import Paginator
 from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,ProductOrderShip,PayInfo , ShoppingCart ,OrderState,image_upload_handler
 from modelCore.forms import *
 import urllib 
@@ -89,17 +89,20 @@ def index(request):
                 sum += OrderShip.amount                 
         product.week_sum_nums = sum      
         product.save()   
+    sumtotal= sum1 + sum2 + sum3 + sum4 + sum5 + sum6 + sum7
+    sumTotalMoney = sum1Money +sum2Money + sum3Money +sum4Money + sum5Money+ sum6Money + sum7Money
     forlooplist = []
-    for order in orders:
+    last10Orders = orders.order_by('-createDate')[:10]
+    for order in last10Orders:
         sum = 0
         TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
         if TotalMoney['money__sum'] != None:
             sum += TotalMoney['money__sum']
             forlooplist.append({'sum':sum,'order':order})
-
+    
     productRank = Product.objects.order_by("-week_sum_nums")[:3]
     
-    return render(request, 'backboard/index.html',{'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
+    return render(request, 'backboard/index.html',{'sumTotalMoney':sumTotalMoney, 'sumtotal':sumtotal, 'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def base(request):
     return render(request, 'backboard/base.html')
@@ -122,11 +125,11 @@ def bills(request):
     if current_month-int(monthId) > 0:
         month_id = current_month - int(monthId)
         yearId = current_year
-        print(month_id)
+        
     elif current_month-int(monthId) <= 0:
         month_id = current_month - int(monthId) + 12
         yearId = current_year-1
-        print(month_id)
+        
     dict_office = {}
     dict_all = {}
     listMonth = {}
@@ -155,7 +158,7 @@ def bills(request):
             TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
             if TotalMoney['money__sum'] != None:
                 sum += TotalMoney['money__sum']
-        print(sum)
+        
     else:
         TotalOrder = 0
 
@@ -175,9 +178,16 @@ def bills(request):
         else:
             officeTotalorder['office_id_'+str(x)] = 0
         forlooplist.append({'office':offices.get(id=x) ,'Totalorder':officeTotalorder['office_id_'+str(x)],'TotalMoney':officeTotalMoney['office_id_'+str(x)]})
-        # print(forlooplist[x-1])
-    print(officeTotalMoney)
-    print(dict_office)
+    
+
+    paginator = Paginator(forlooplist, 10)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
     if request.method == 'POST':
         
         checkMonth = request.POST.get('selectMonth')
@@ -186,15 +196,26 @@ def bills(request):
     }
         return redirect_params('bills', your_params)
 
-    return render(request, 'backboard/bills.html',{'sum':sum, 'forlooplist':forlooplist, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
+    return render(request, 'backboard/bills.html',{'sum':sum, 'forlooplist':page_obj, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
 
 def customers(request):
     customers = User.objects.all()
+    customers.order_by('-id')
+
+    paginator = Paginator(customers, 10)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
     
     for customer in customers:
         
         customer_id=customer.id
-    return render(request, 'backboard/customers.html',{'customers':customers,'customer_id':customer_id})
+    return render(request, 'backboard/customers.html',{'customers':page_obj,'customer_id':customer_id})
 
 def customer_detail(request):
     customers = User.objects.all()
@@ -235,8 +256,19 @@ def orders(request):
                 forlooplist.append({'user':theOrder.user ,'sum':sum,'order':theOrder})
     for order in orders:
         IdOder=order.id
- 
-    return render(request, 'backboard/orders.html',{'forlooplist':forlooplist, 'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates})
+
+    
+    
+    paginator = Paginator(forlooplist, 10)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    return render(request, 'backboard/orders.html',{'q':q, 'forlooplist':page_obj, 'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates})
     
 
 def order_detail(request):
@@ -284,11 +316,18 @@ def products(request):
     ships = ProductSupervisionOfficeShip.objects.all()
     productimages = ProductImage.objects.all()
     
-    # for product in products:
-    #     product.image = ProductImage.objects.all().first()
-    #     print(product.image)
+    products.order_by('-id')
+    
+    paginator = Paginator(products, 10)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, 'backboard/products.html',{'products':products,'ships':ships,'productimages':productimages})
+    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    return render(request, 'backboard/products.html',{'products':page_obj,'ships':ships,'productimages':productimages})
 
 
 def offices_order(request):
@@ -437,21 +476,21 @@ def edit_product(request):
             if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
  
                 if ship.exists() :
-                    print('pass1')
+                    
                     pass
                 else:
                     productsupervisionOfficeship = ProductSupervisionOfficeShip()
                     productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=i)
                     productsupervisionOfficeship.product = product
                     productsupervisionOfficeship.save()
-                    print('save1')
+                    
             else:
                 if ship.exists() :
                     ship.delete()
-                    print('delete')
+                    
                 else:
                     pass
-                    print('pass2')
+                    
         
             
         return redirect_params('edit_product',{'productId':productId})

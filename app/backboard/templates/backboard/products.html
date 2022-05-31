@@ -40,7 +40,11 @@
                               <div class="row mx-n1">
                                   <div class="col-6 p-1">
                                     <div class="p-1">
-                                      <img src="{{ product.first_image.image.url }}" class="customImageSize rounded mb-2">
+                                      {% if product.first_image.image.url != None %}
+                                        <img src="{{ product.first_image.image.url }}" class="customImageSize rounded mb-2">
+                                      {% else %}
+                                        <i class="fas fa-image"></i>
+                                      {% endif %}
                                   </div>
                               </div>
                             </td>
@@ -73,10 +77,14 @@
                   {% endfor %}
             </table>
           </div>
-          <div class="d-flex justify-content-center mt-3">
-            <button class="btn btn-sm btn-chijia-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-            <ul class="pagination mb-0"></ul>
-            <button class="btn btn-sm btn-chijia-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+          <div class="text-center">
+            {% for page_number in products.adjusted_elided_pages %} 
+              {% if page_number == products.paginator.ELLIPSIS %} 
+                {{page_number}} 
+              {% else %}
+                <a href="?page={{page_number}}" class="{% if page_number == products.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
+              {% endif %} 
+            {% endfor %}
           </div>
         </div>
       </div>

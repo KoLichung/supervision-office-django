@@ -135,10 +135,14 @@
             </table>
           </div>
 
-          <div class="d-flex justify-content-center mt-3">
-            <button class="btn btn-sm btn-chijia-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-            <ul class="pagination mb-0"></ul>
-            <button class="btn btn-sm btn-chijia-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+          <div class="text-center">
+            {% for page_number in forlooplist.adjusted_elided_pages %} 
+              {% if page_number == forlooplist.paginator.ELLIPSIS %} 
+                {{page_number}} 
+              {% else %}
+                <a href="?lastMonth={{monthId}}&page={{page_number}}" class="{% if page_number == forlooplist.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
+              {% endif %} 
+            {% endfor %}
           </div>
         </div>
       </div>
