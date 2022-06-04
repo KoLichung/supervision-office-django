@@ -7,10 +7,31 @@ from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
 from datetime import datetime, timedelta
+from django.contrib import auth
+from django.contrib.auth import authenticate
 
 # Create your views here.
+def login(request):
+    if request.method == 'POST':
+        phone = request.POST['phone']
+        password = request.POST['password']
+        user = authenticate(request, phone=phone, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('/backboard/index')
+        else:
+            return redirect('/backboard/')
+
+    return render(request, 'backboard/login.html')
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/backboard/')
 
 def index(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
     orders = Order.objects.filter(state=1)
     ships = ProductOrderShip.objects.all()
     products =Product.objects.all()
@@ -104,11 +125,10 @@ def index(request):
     
     return render(request, 'backboard/index.html',{'sumTotalMoney':sumTotalMoney, 'sumtotal':sumtotal, 'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
-def base(request):
-    return render(request, 'backboard/base.html')
-
-
 def bills(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
     offices = SupervisionOffice.objects.all()
     orders=Order.objects.filter(state=2)
      
@@ -199,6 +219,9 @@ def bills(request):
     return render(request, 'backboard/bills.html',{'sum':sum, 'forlooplist':page_obj, 'monthId':monthId, 'listMonth':listMonth,'listYear':listYear, 'month_id':month_id,'yearId':yearId, 'current_month':current_month,'current_year':current_year, 'dict_all':dict_all,'this_month':this_month,'offices':offices, 'TotalOrder':TotalOrder,'officeTotalorder':officeTotalorder,'officeTotalMoney':officeTotalMoney})
 
 def customers(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
     customers = User.objects.all()
     customers.order_by('-id')
 
@@ -218,6 +241,9 @@ def customers(request):
     return render(request, 'backboard/customers.html',{'customers':page_obj,'customer_id':customer_id})
 
 def customer_detail(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
     customers = User.objects.all()
     orders = Order.objects.all()
     customer_id = request.GET.get('customer_id','')
@@ -234,8 +260,9 @@ def customer_detail(request):
                     forlooplist.append({'user':order.user ,'sum':sum,'order':order})
     return render(request, 'backboard/customer_detail.html',{'forlooplist':forlooplist, 'orders':orders,'customers':customers})
 
-def orders(request):
-    
+def orders(request):    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
     
     orders = Order.objects.all()
     users = User.objects.all()
@@ -272,6 +299,9 @@ def orders(request):
     
 
 def order_detail(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
     orders = Order.objects.all()
     users = User.objects.all()
     payinfos=PayInfo.objects.all()
@@ -312,6 +342,9 @@ def order_detail(request):
 
 
 def products(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
     products = Product.objects.all()
     ships = ProductSupervisionOfficeShip.objects.all()
     productimages = ProductImage.objects.all()
@@ -331,6 +364,9 @@ def products(request):
 
 
 def offices_order(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
     offices_all = SupervisionOffice.objects.all()
     ships = ProductOrderShip.objects.all()
     office_Id = request.GET.get('OfficeId')
@@ -362,6 +398,8 @@ def offices_order(request):
 
 
 def add_new_product(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
 
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
@@ -429,7 +467,9 @@ def add_new_product(request):
          
 
 def edit_product(request):
-    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
     products = Product.objects.all()
     form = ProductImageForm()
     productId = request.GET.get("productId")
