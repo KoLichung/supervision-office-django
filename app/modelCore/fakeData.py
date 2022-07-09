@@ -50,6 +50,28 @@ def seedData():
     orderstate.name = '已取消'
     orderstate.save()
 
+def importProduct():
+    module_dir = os.path.dirname(__file__)  # get current directory
+    file_path = os.path.join(module_dir, 'products.csv')
+
+    file = open(file_path)
+    reader = csv.reader(file, delimiter=',')
+    for index, row in enumerate(reader):
+        if index != 0:
+            if Product.objects.filter(name=row[0]).count()==0:
+                product = Product()
+                product.name = row[0]
+                if "會客菜" in row[1]:
+                    product.category = Category.objects.get(id=1)
+                elif "監內百貨商品" in row[1]:
+                    product.category = Category.objects.get(id=2)
+                elif "生活日用品" in row[1]:
+                    product.category = Category.objects.get(id=3)
+                product.unit = row[2]
+                product.price = int(row[3])
+                product.info = row[4]
+                product.save()
+
 def fakeData():
     user = User()
     user.name = '許小姐'

@@ -9,6 +9,10 @@ from django.db.models import Sum
 from datetime import datetime, timedelta
 from django.contrib import auth
 from django.contrib.auth import authenticate
+import csv
+from django.core.files.storage import FileSystemStorage
+import os
+from django.conf import settings
 
 # Create your views here.
 def login(request):
@@ -302,12 +306,37 @@ def order_detail(request):
 
     return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'orderstates':orderstates})
 
-
 def products(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
-    products = Product.objects.all()
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+
+        file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+        file = open(file_path)
+        reader = csv.reader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            if index != 0:
+                if Product.objects.filter(name=row[0]).count()==0:
+                    product = Product()
+                    product.name = row[0]
+                    if "會客菜" in row[1]:
+                        product.category = Category.objects.get(id=1)
+                    elif "監內百貨商品" in row[1]:
+                        product.category = Category.objects.get(id=2)
+                    elif "生活日用品" in row[1]:
+                        product.category = Category.objects.get(id=3)
+                    product.unit = row[2]
+                    product.price = int(row[3])
+                    product.info = row[4]
+                    product.save()
+        return redirect('/backboard/products')
+
+    products = Product.objects.all().order_by('-id')
     ships = ProductSupervisionOfficeShip.objects.all()
     productimages = ProductImage.objects.all()
     
@@ -357,7 +386,6 @@ def offices_order(request):
                 looplist.append({'name':ship.product.name,'price':ship.product.price,'amount':ship.amount,'ordermoney':ship.product.price * ship.amount})
 
     return render(request,'' 'backboard/offices_order.html',{'looplist':looplist, 'currentOrders':currentOrders, 'ships':ships,'orders':orders,'theOffice':theOffice,'sum':sum})
-
 
 def add_new_product(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -427,7 +455,6 @@ def add_new_product(request):
     
     return render(request, 'backboard/add_new_product.html',{ 'ships':ships, 'productimages':productimages, 'list':list, 'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
          
-
 def edit_product(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
