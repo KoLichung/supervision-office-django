@@ -9,7 +9,7 @@
       <div class="card-header">
 
         <div class="mb-3">
-            {% if q != None %}
+            {% if q != None and q != 'None' %}
               <a href="{% url 'orders' %}" class="btn btn-outline-warning btn-sm" role="button">所有訂單</a>
             {% else %}
               <a href="{% url 'orders' %}" class="btn btn-warning btn-sm" role="button">所有訂單</a>
@@ -49,30 +49,34 @@
                       <th colspan="2">付款狀態</th>    
                     </tr>
                   </thead>
-                  <tbody class="list">
-                                         
-                              {% for list in forlooplist %}   
-                                          <tr>                       
-                                              <td><button type="button" class="btn btn-outline-warning btn-sm">{{list.order.state}}</button></td>                                                     
-                                              <td class="text-nowrap">{{list.user.name}}</td>
-                                              <td class="text-nowrap">{{list.user.phone}}</td>
-                                              <td class="text-nowrap">{{list.order.createDate}}</td>
-                                              <td class="text-nowrap">{{list.order.supervisionOffice}}</td>                              
-                                              <td class="text-nowrap">{{list.sum}}</td>
-                                              <td class="text-nowrap">{{list.order.state}}</td>
-                                              <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{list.order.id}}'"></td>
-                                          </tr>    
-                              {% endfor %}                             
-                     
+                  <tbody class="list">                  
+                    {% for order in orders %}   
+                      <tr>                       
+                        <td><button type="button" class="btn btn-outline-warning btn-sm">{{order.state}}</button></td>                                                     
+                        <td class="text-nowrap">{{order.user.name}}</td>
+                        <td class="text-nowrap">{{order.user.phone}}</td>
+                        <td class="text-nowrap">{{order.createDate}}</td>
+                        <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
+                        <td class="text-nowrap">{{order.orderMoney}}</td>
+                        <td class="text-nowrap">
+                          {% if order.cashflowState == "paid" %}
+                            已付款
+                          {% else %}
+                            尚未付款
+                          {% endif %}
+                        </td>
+                        <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
+                      </tr>    
+                    {% endfor %}                             
                   </tbody>
                 </table>
               </div>
               <div class="text-center">
-                {% for page_number in forlooplist.adjusted_elided_pages %} 
-                  {% if page_number == forlooplist.paginator.ELLIPSIS %} 
+                {% for page_number in orders.adjusted_elided_pages %} 
+                  {% if page_number == orders.paginator.ELLIPSIS %} 
                     {{page_number}} 
                   {% else %}
-                    <a href="?order_state={{q}}&page={{page_number}}" class="{% if page_number == forlooplist.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
+                    <a href="?order_state={{q}}&page={{page_number}}" class="{% if page_number == orders.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
                   {% endif %} 
                 {% endfor %}
               </div>

@@ -264,29 +264,17 @@ def orders(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
-    orders = Order.objects.all()
-    users = User.objects.all()
+    orders = Order.objects.all().order_by('-id')
     orderstates = OrderState.objects.all()
-    ships = ProductOrderShip.objects.all()
-    q = request.GET.get('order_state')
-    if q != None:
-        theOrderstate = orderstates.get(id=request.GET.get('order_state'))      
+
+    order_state_id = request.GET.get('order_state')
+    if order_state_id != None and order_state_id != "None":
+        theOrderstate = orderstates.get(id=order_state_id)      
         theOrders = orders.filter(state=theOrderstate)  
     else:
         theOrders = orders
-    forlooplist=[] 
-    for theOrder in theOrders:
-        sum = 0
-        TotalMoney = ships.filter(order=theOrder).aggregate(Sum('money'))
-        if TotalMoney['money__sum'] != None:
-                sum += TotalMoney['money__sum']
-                forlooplist.append({'user':theOrder.user ,'sum':sum,'order':theOrder})
-    for order in orders:
-        IdOder=order.id
 
-    
-    
-    paginator = Paginator(forlooplist, 10)
+    paginator = Paginator(theOrders, 10)
     if request.GET.get('page') != None:
         page_number = request.GET.get('page') 
     else:
@@ -295,50 +283,24 @@ def orders(request):
 
     page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
 
-    return render(request, 'backboard/orders.html',{'q':q, 'forlooplist':page_obj, 'orders':orders,'users':users,'IdOder':IdOder,'orderstates':orderstates})
+    return render(request, 'backboard/orders.html',{'q':order_state_id ,'orders':page_obj,'orderstates':orderstates})
     
-
 def order_detail(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
-    orders = Order.objects.all()
-    users = User.objects.all()
-    payinfos=PayInfo.objects.all()
-    orderstates = OrderState.objects.all()
-    products=Product.objects.all()
-    ships = ProductOrderShip.objects.all()
-    
     order_id=request.GET.get('IdOrder')
-    order = orders.get(id=order_id)
-    sum = 0
-    forlooplist=[]
-   
-    for ship in ships:
-        if ship.order == order:
-            TotalMoney = ship.money
-            if TotalMoney != None:
-                sum += TotalMoney
-                forlooplist.append({'money':TotalMoney,'order':order,'ship':ship})
-                
-   
-    if order_id != None:        
-        
-        theOrder = Order.objects.get(id=order_id)
-    else:
-        
-        theOrder = Order.objects.get(id=order_id)
-    
-    if request.method == 'POST':
-        
-        State_Id = request.POST.get('OrderState')
-        
-        theOrder.state = OrderState.objects.get(id=State_Id)
-        theOrder.save()
+    order = Order.objects.get(id=order_id)        
+    ships = ProductOrderShip.objects.filter(order=order)
+    orderstates = OrderState.objects.all()
 
+    if request.method == 'POST':
+        state_Id = request.POST.get('OrderState')
+        order.state = OrderState.objects.get(id=state_Id)
+        order.save()
         return redirect('/backboard/orders')
 
-    return render(request, 'backboard/order_detail.html',{'order':order ,'sum':sum, 'forlooplist':forlooplist, 'orders':orders,'users':users,'payinfos':payinfos,'products':products,'orderstates':orderstates,'ships':ships,'sum':sum})
+    return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'orderstates':orderstates})
 
 
 def products(request):
