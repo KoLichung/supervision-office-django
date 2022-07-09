@@ -42,8 +42,7 @@ def get_photo_url(self):
         return self.photo.url
     else:
         return "/static/backboard/assets/img/generic/4.jpg"
-        
-        
+         
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that suppors using email instead of username"""
     phone = models.CharField(max_length=10, unique=True)
@@ -113,14 +112,11 @@ class ProductSupervisionOfficeShip(models.Model):
         on_delete=models.CASCADE
     )
 
-
-
 class OrderState(models.Model):
     name = models.CharField(max_length=255, null=True , blank=True)
     
     def __str__(self):
         return self.name
-
 
 class Order(models.Model):
     user = models.ForeignKey(
@@ -141,7 +137,10 @@ class Order(models.Model):
     #unPaid, paid, failPaid, waitForATMPay, waitForCVSPay  
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
 
+    ship_fee = models.IntegerField(default=0, null=True)
     orderMoney = models.IntegerField(default=0, null=True)
+    prisoner_name = models.CharField(max_length=20, default='', blank = True, null=True)
+    prisoner_id = models.CharField(max_length=40, default='', blank = True, null=True)
     memo = models.TextField(default='', null=True, blank=True)
 
     "credit, atm, cvs"
@@ -157,8 +156,6 @@ class Order(models.Model):
 
     createDate = models.DateTimeField(auto_now=False, blank = True,null=True)
 
-    
-
 class ProductOrderShip(models.Model):
     order = models.ForeignKey(
         Order,
@@ -170,14 +167,9 @@ class ProductOrderShip(models.Model):
         on_delete=models.RESTRICT,
     )
     amount = models.IntegerField(default=0,null=True)
-    
     money = models.IntegerField(default=0, null=True)
 
     
-
-
-
-
 class PayInfo(models.Model):
     order = models.ForeignKey(
         Order,
