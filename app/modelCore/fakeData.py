@@ -5,9 +5,14 @@ from datetime import timedelta
 from .models import OrderState, ProductOrderShip, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
 from django.utils import timezone
 
+def set_sand_box_data():
+    importSupervisionOffice()
+    seedData()
+    fakeData()
+
 def importSupervisionOffice():
     module_dir = os.path.dirname(__file__)  # get current directory
-    file_path = os.path.join(module_dir, 'county.csv')
+    file_path = os.path.join(module_dir, 'supervision_office.csv')
 
     file = open(file_path)
     reader = csv.reader(file, delimiter=',')
@@ -15,16 +20,37 @@ def importSupervisionOffice():
         if index != 0:
             if SupervisionOffice.objects.filter(name=row[0]).count()==0:
                 supervisionOffice = SupervisionOffice()
-                supervisionOffice.name = row[0]
+                supervisionOffice.name = row[0].replace('法務部矯正署','').replace('臺','台')
                 supervisionOffice.save()
             else:
                 supervisionOffice = SupervisionOffice.objects.get(name=row[0])
 
+def seedData():
+    category = Category()
+    category.name = '會客菜'
+    category.save()
+
+    category = Category()
+    category.name = '監內百貨商品'
+    category.save()
+
+    category = Category()
+    category.name = "生活日用品\n(依監所規定)"
+    category.save()
             
+    orderstate = OrderState()
+    orderstate.name = '未處理'
+    orderstate.save()
+
+    orderstate = OrderState()
+    orderstate.name = '已完成'
+    orderstate.save()
+
+    orderstate = OrderState()
+    orderstate.name = '已取消'
+    orderstate.save()
 
 def fakeData():
-    def ordermoney(self):
-        return self.amount * self.product.price
     user = User()
     user.name = '許小姐'
     user.phone = '0915323131'
@@ -123,22 +149,6 @@ def fakeData():
 
     user = User.objects.all()[0]
 
-    category = Category()
-    category.name = '會客菜'
-    category.save()
-
-    category = Category()
-    category.name = '監內百貨商品'
-    category.save()
-
-    category = Category()
-    category.name = "生活日用品\n(依監所規定)"
-    category.save()
-
-    category = Category()
-    category.name = "生活用品\n(內衣 內褲 書籍)"
-    category.save()
-
     product = Product()
     product.category = Category.objects.get(id=1)
     product.name = '二小姐 蔓越莓雪Q餅'
@@ -164,7 +174,7 @@ def fakeData():
     product.save()
 
     product = Product()
-    product.category = Category.objects.get(id=4)
+    product.category = Category.objects.get(id=3)
     product.name = 'test01'
     product.price = 100
     product.content = "test"
@@ -172,7 +182,7 @@ def fakeData():
     product.save()
 
     product = Product()
-    product.category = Category.objects.get(id=4)
+    product.category = Category.objects.get(id=3)
     product.name = 'test02'
     product.price = 100
     product.content = "test"
@@ -180,7 +190,7 @@ def fakeData():
     product.save()
 
     product = Product()
-    product.category = Category.objects.get(id=4)
+    product.category = Category.objects.get(id=3)
     product.name = 'test03'
     product.price = 100
     product.content = "test"
@@ -188,7 +198,7 @@ def fakeData():
     product.save()
 
     product = Product()
-    product.category = Category.objects.get(id=4)
+    product.category = Category.objects.get(id=3)
     product.name = 'test04'
     product.price = 100
     product.content = "test"
@@ -234,63 +244,6 @@ def fakeData():
     product.content = "test"
     product.info = "test"
     product.save()
-
-    product = Product()
-    product.category = Category.objects.get(id=4)
-    product.name = 'test10'
-    product.price = 100
-    product.content = "test"
-    product.info = "test"
-    product.save()
-
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '台中監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '宜蘭監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '花蓮監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '台南監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '嘉義監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '苗栗監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '新竹監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '雲林監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '屏東監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '高雄監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '台東監理所'
-    supervisionOffice.save()
-
-    supervisionOffice = SupervisionOffice()
-    supervisionOffice.name = '基隆監理所'
-    supervisionOffice.save()
     
     productsupervisionOfficeship =ProductSupervisionOfficeShip()
     productsupervisionOfficeship.product = Product.objects.get(id=1)
@@ -316,18 +269,6 @@ def fakeData():
     productsupervisionOfficeship.product = Product.objects.get(id=1)
     productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 4)
     productsupervisionOfficeship.save()
-
-    orderstate = OrderState()
-    orderstate.name = '未處理'
-    orderstate.save()
-
-    orderstate = OrderState()
-    orderstate.name = '已完成'
-    orderstate.save()
-
-    orderstate = OrderState()
-    orderstate.name = '已取消'
-    orderstate.save()
 
     order = Order()
     order.user = User.objects.get(id = 2)
@@ -663,14 +604,5 @@ def fakeData():
     payinfo.order = Order.objects.get(id=3)
     payinfo.save()
 
-    shoppingCart = ShoppingCart()
-    shoppingCart.user = User.objects.get(id = 2)
-    shoppingCart.product = Product.objects.get(id = 1)
-    shoppingCart.num = 1
-    shoppingCart.save()
-
-    shoppingCart = ShoppingCart()
-    shoppingCart.user = User.objects.get(id = 3)
-    shoppingCart.product = Product.objects.get(id = 2)
-    shoppingCart.num = 2
-    shoppingCart.save()
+def ordermoney(self):
+        return self.amount * self.product.price
