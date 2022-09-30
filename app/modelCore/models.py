@@ -149,7 +149,8 @@ class Order(models.Model):
     ATMInfoBankCode = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfovAccount = models.CharField(max_length=20, default='', blank = True, null=True)
     ATMInfoExpireDate = models.DateTimeField(auto_now=False, blank = True,null=True)
-    
+    ATMFiveDigit = models.CharField(max_length=20, default='', blank = True, null=True)
+
     CVSInfoPaymentNo = models.CharField(max_length=20, default='', blank = True, null=True)
     CVSInfoPaymentURL = models.CharField(max_length=100, default='', blank = True, null=True)
     CVSInfoExpireDate = models.DateTimeField(auto_now_add=False, blank = True,null=True)

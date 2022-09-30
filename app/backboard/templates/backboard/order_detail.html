@@ -72,6 +72,50 @@
         <!-- 金流明細 -->
         <div class="card h-lg-100 mb-3">
           <div class="card-header">
+            <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATM 中國信託(822)：749530212713</p>
+            <hr>
+            <p>
+              {% if order.cashflowState == "paid" %}
+                <button type="button" class="btn btn-outline-dark btn-sm" style="pointer-events:none;">已付款</button>
+              {% else %}
+                <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modal_state">未付款</button>
+              {% endif %}
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {% if order.ATMFiveDigit != "" and order.ATMFiveDigit != None %}
+                付款後五碼：{{order.ATMFiveDigit}}
+              {% else %}
+                付款後五碼：尚未回填
+              {% endif %}
+            </p>
+          </div>
+        </div>
+
+        <div class="modal fade" id="modal_state" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <form method="post">{% csrf_token %}
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5>是否已付款</h5>
+                </div>
+                <div class="modal-body">
+                  請確認消費者是否已付款(不可回復)?
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                    取消
+                  </button>
+                  <input type="hidden" id="state" name="cashflow_state" value="paid">
+                  <button class="btn btn-primary" type="submit" name="submit" value="ok" onclick="location.href='{% url 'order_detail' %}?order_id={{order.id}}'">
+                    已付款
+                  </button>
+                </div>                             
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {% comment %} <div class="card h-lg-100 mb-3">
+          <div class="card-header">
               <div class="table-responsive scrollbar">
                 <table class="table  table-striped fs--1 mb-0">
                   <p>金流明細</p>
@@ -104,7 +148,7 @@
                 </table>
               </div>
           </div>
-        </div>
+        </div> {% endcomment %}
   
         <!-- 收件者明細 -->
         <div class="card h-lg-100 mb-3">

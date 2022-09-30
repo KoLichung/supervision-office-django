@@ -299,10 +299,13 @@ def order_detail(request):
     orderstates = OrderState.objects.all()
 
     if request.method == 'POST':
-        state_Id = request.POST.get('OrderState')
-        order.state = OrderState.objects.get(id=state_Id)
+        if request.POST.get('OrderState') != None:
+            state_Id = request.POST.get('OrderState')
+            order.state = OrderState.objects.get(id=state_Id)
+        if request.POST.get('cashflow_state') != None:
+            order.cashflowState = request.POST.get('cashflow_state')
         order.save()
-        return redirect('/backboard/orders')
+        return redirect(f'/backboard/order_detail?IdOrder={order_id}')
 
     return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'orderstates':orderstates})
 
