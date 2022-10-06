@@ -7,6 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from datetime import datetime, timedelta
 # Create your views here.
 
 from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, User, ProductOrderShip
@@ -85,7 +86,8 @@ class OrderViewSet(viewsets.GenericViewSet,
         return self.queryset.filter(user=self.request.user).order_by('-id')
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, cashflowState='unPaid')
+        # serializer.save(user=self.request.user, cashflowState='unPaid')
+        serializer.save(user=self.request.user, state='waitOwnerCheck', isAtm=True, ATMInfoBankCode="048", ATMInfovAccount="01000107609788",ATMInfoExpireDate=datetime.now()+timedelta(days=3))
 
 class OrderProductShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
