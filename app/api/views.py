@@ -87,7 +87,7 @@ class OrderViewSet(viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user, cashflowState='unPaid')
-        serializer.save(user=self.request.user, state='waitOwnerCheck', isAtm=True, ATMInfoBankCode="048", ATMInfovAccount="01000107609788",ATMInfoExpireDate=datetime.now()+timedelta(days=3))
+        serializer.save(user=self.request.user, cashflowState='unPaid', paymentType='atm', ATMInfoBankCode="048", ATMInfovAccount="01000107609788",ATMInfoExpireDate=datetime.now()+timedelta(days=3))
 
 class OrderProductShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
