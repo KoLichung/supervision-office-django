@@ -121,7 +121,8 @@ class OrderState(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(
         User,
-        on_delete=models.RESTRICT
+        null=True,
+        on_delete=models.SET_NULL
     )
     supervisionOffice = models.ForeignKey(
         SupervisionOffice,

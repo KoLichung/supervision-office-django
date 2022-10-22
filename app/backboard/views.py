@@ -356,7 +356,6 @@ def products(request):
 
     return render(request, 'backboard/products.html',{'products':page_obj,'ships':ships,'productimages':productimages})
 
-
 def offices_order(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')

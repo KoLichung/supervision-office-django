@@ -59,8 +59,13 @@
                             </form>
                           </td>
                           <td class="text-nowrap">{{order.createDate}}</td>
-                          <td class="text-nowrap">{{order.user.name}}</td>
-                          <td class="text-nowrap">{{order.user.phone}}</td>
+                          {% if order.user %}                                                  
+                            <td class="text-nowrap">{{order.user.name}}</td>
+                            <td class="text-nowrap">{{order.user.phone}}</td>
+                          {% else %}
+                            <td class="text-nowrap">該會員已刪除</td>
+                            <td class="text-nowrap"></td>
+                          {% endif %}
                           <td class="text-nowrap">{{order.orderMoney}}</td>
                         </tr>       
                     </tbody>

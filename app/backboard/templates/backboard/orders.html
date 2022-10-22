@@ -52,9 +52,14 @@
                   <tbody class="list">                  
                     {% for order in orders %}   
                       <tr>                       
-                        <td><button type="button" class="btn btn-outline-warning btn-sm">{{order.state}}</button></td>                                                     
-                        <td class="text-nowrap">{{order.user.name}}</td>
-                        <td class="text-nowrap">{{order.user.phone}}</td>
+                        <td><button type="button" class="btn btn-outline-warning btn-sm">{{order.state}}</button></td>  
+                        {% if order.user %}                                                  
+                          <td class="text-nowrap">{{order.user.name}}</td>
+                          <td class="text-nowrap">{{order.user.phone}}</td>
+                        {% else %}
+                          <td class="text-nowrap">該會員已刪除</td>
+                          <td class="text-nowrap"></td>
+                        {% endif %}
                         <td class="text-nowrap">{{order.createDate}}</td>
                         <td class="text-nowrap">{{order.supervisionOffice}}</td>                              
                         <td class="text-nowrap">{{order.orderMoney}}</td>
