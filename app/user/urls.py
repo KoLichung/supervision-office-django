@@ -11,4 +11,5 @@ urlpatterns = [
     path('me/', views.ManageUserView.as_view(), name='me'),
     path('update_line_id/', views.UpdateUserLineIdView.as_view()),
     path('update_user_password', views.UpdateUserPassword.as_view()),
+    path('deleteuser/<int:pk>/', views.DeleteUser.as_view()),
 ]
