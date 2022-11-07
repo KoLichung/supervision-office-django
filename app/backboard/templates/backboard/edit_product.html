@@ -17,46 +17,25 @@
                     
                         <!-- 站所選擇 -->
                         <div>
-
-                              <div>
-                                <label class="form-label">供應站所：</label>
-                              </div>
-                                {% for office in supervisionoffices %}
-
-                                    <div class="form-check form-check-inline">
-                                      <input class="form-check-input" id="ship_officeId{{office.id}}" type="checkbox" name="ship_officeId{{office.id}}" value="check_office_{{office.id}}" 
-                                      {% for ship in productships %}
-                                          {% if ship.supervisionOffice.id == office.id  %} 
-                                            checked 
-                                          {% endif %} 
-                                      {% endfor %}
-                                      />
-                                      <label class="form-check-label" for="ship_officeId{{office.id}}">{{office.name}}</label>
-                                    </div>
+                          <div>
+                            <label class="form-label">供應站所：</label>
+                          </div>
+                          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="check_all" type="checkbox" name="check_all" value="check_all" /> <label class="form-check-label" for="check_all">全部選擇</label>
+                          </div>
+                          {% for office in supervisionoffices %}
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="ship_officeId{{office.id}}" type="checkbox" name="ship_officeId{{office.id}}" value="check_office_{{office.id}}" 
+                                {% for ship in productships %}
+                                    {% if ship.supervisionOffice.id == office.id  %} 
+                                      checked 
+                                    {% endif %} 
                                 {% endfor %}
-                                  <!-- <div class="form-check form-check-inline">
-                                      <input class="form-check-input" id="ship_officeId2" type="checkbox" name="ship_officeId2" value="2" 
-                                        {% for ship in productships %}
-                                            {% if ship.supervisionOffice.id == 2 %} 
-                                              checked 
-                                            {% endif %} 
-                                        {% endfor %}
-                                      />
-                                      <label class="form-check-label" for="ship_officeId2">宜蘭監理所 </label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                        <input class="form-check-input" id="ship_officeId3" type="checkbox" name="ship_officeId3" value="3" 
-                                        {% for ship in productships %} 
-                                            {% if ship.supervisionOffice.id == 3 %} 
-                                              checked 
-                                            {% endif %}  
-                                        {% endfor %}    
-                                        />
-                                        <label class="form-check-label" for="ship_officeId3">花蓮監理所</label>
-                                      
-                                  
-                                  </div> -->
-                          
+                                />
+                                <label class="form-check-label" for="ship_officeId{{office.id}}">{{office.name}}</label>
+                              </div>
+                          {% endfor %}
                         </div>
 
                       
@@ -198,5 +177,22 @@
       
   </div>
 </div>
+
+<script>
+  $('#check_all').click(function(event) {
+    console.log("Hello world!");
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;                       
+        });
+    }
+  }); 
+
+</script>
 
 {% endblock %}
