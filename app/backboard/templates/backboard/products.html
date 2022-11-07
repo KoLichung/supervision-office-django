@@ -103,7 +103,7 @@
             </table>
           </div>
           <div class="text-center">
-            {% for page_number in products.adjusted_elided_pages %} 
+            {% for page_number in products.paginator.page_range %} 
               {% if page_number == products.paginator.ELLIPSIS %} 
                 {{page_number}} 
               {% else %}

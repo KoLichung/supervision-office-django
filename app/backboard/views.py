@@ -345,14 +345,14 @@ def products(request):
     
     products.order_by('-id')
     
-    paginator = Paginator(products, 10)
+    paginator = Paginator(products, 50)
     if request.GET.get('page') != None:
         page_number = request.GET.get('page') 
     else:
         page_number = 1
     page_obj = paginator.get_page(page_number)
 
-    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+    # page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
 
     return render(request, 'backboard/products.html',{'products':page_obj,'ships':ships,'productimages':productimages})
 
