@@ -2,7 +2,7 @@ import csv
 import os
 import datetime 
 from datetime import timedelta
-from .models import OrderState, ProductOrderShip, User,  Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,PayInfo , ShoppingCart
+from .models import OrderState, ProductOrderShip, User,  Category, Product, SupervisionOffice, Order ,PayInfo, Meal
 from django.utils import timezone
 
 def set_sand_box_data():
@@ -21,22 +21,23 @@ def importSupervisionOffice():
             if SupervisionOffice.objects.filter(name=row[0]).count()==0:
                 supervisionOffice = SupervisionOffice()
                 supervisionOffice.name = row[0].replace('法務部矯正署','').replace('臺','台')
+                supervisionOffice.area = row[3]
                 supervisionOffice.save()
             else:
                 supervisionOffice = SupervisionOffice.objects.get(name=row[0])
 
 def seedData():
-    category = Category()
-    category.name = '會客菜'
-    category.save()
+    # category = Category()
+    # category.name = '會客菜'
+    # category.save()
 
-    category = Category()
-    category.name = '監內百貨商品'
-    category.save()
+    # category = Category()
+    # category.name = '監內百貨商品'
+    # category.save()
 
-    category = Category()
-    category.name = "生活日用品\n(依監所規定)"
-    category.save()
+    # category = Category()
+    # category.name = "生活日用品\n(依監所規定)"
+    # category.save()
             
     orderstate = OrderState()
     orderstate.name = '未處理'
@@ -52,25 +53,51 @@ def seedData():
 
 def importProduct():
     module_dir = os.path.dirname(__file__)  # get current directory
-    file_path = os.path.join(module_dir, 'products.csv')
+    file_path = os.path.join(module_dir, 'taipei_products.csv')
+    
+    suppervisionOffice = SupervisionOffice.objects.get(id=1)
 
     file = open(file_path)
     reader = csv.reader(file, delimiter=',')
     for index, row in enumerate(reader):
         if index != 0:
-            if Product.objects.filter(name=row[0]).count()==0:
+            if Product.objects.filter(name=row[1],suppervisionOffice=suppervisionOffice).count()==0:
                 product = Product()
-                product.name = row[0]
-                if "會客菜" in row[1]:
-                    product.category = Category.objects.get(id=1)
-                elif "監內百貨商品" in row[1]:
-                    product.category = Category.objects.get(id=2)
-                elif "生活日用品" in row[1]:
-                    product.category = Category.objects.get(id=3)
-                product.unit = row[2]
-                product.price = int(row[3])
-                product.info = row[4]
+                product.suppervisionOffice = suppervisionOffice
+                product.code = row[0]
+                product.name = row[1]
+
+                if Category.objects.filter(name=row[2],suppervisionOffice=suppervisionOffice).count()==0:
+                    category = Category.objects.create(name=row[2],suppervisionOffice=suppervisionOffice)
+                else:
+                    category = Category.objects.filter(name=row[2],suppervisionOffice=suppervisionOffice).first()
+
+                product.category = category
+                product.unit = row[3]
+                product.price = int(row[4])
+                product.info = row[5]
                 product.save()
+
+def importMeal():
+    module_dir = os.path.dirname(__file__)  # get current directory
+    file_path = os.path.join(module_dir, 'taipei_meals.csv')
+    
+    suppervisionOffice = SupervisionOffice.objects.get(id=1)
+
+    file = open(file_path)
+    reader = csv.reader(file, delimiter=',')
+    for index, row in enumerate(reader):
+        if index != 0:
+            if Meal.objects.filter(name=row[1],suppervisionOffice=suppervisionOffice).count()==0:
+                meal = Meal()
+                meal.suppervisionOffice = suppervisionOffice
+                meal.code = row[0]
+                meal.name = row[1]
+                meal.unit = row[2]
+                meal.price = int(row[3])
+                meal.info = row[4]
+                meal.save()
+
 
 def fakeData():
     user = User()
@@ -175,7 +202,6 @@ def fakeData():
     product.category = Category.objects.get(id=1)
     product.name = '二小姐 蔓越莓雪Q餅'
     product.price = 165
-    product.content = "12 顆 蔓越莓 每顆重量約 18g+-3g 總重約 216g"
     product.info = "1.每顆產品皆是手工現做，注重食材新鮮安全。\n2.不使用化學添加物，減少身體負擔。\n3.用料實在，美味吃得到！經過家人親友長時間的摸索與試吃，研發出合宜的做法，吃起來鬆鬆軟軟，有帶有些微餅乾酥酥脆脆的口感，無法言語形容，只能親口體驗！"
     product.save()
 
@@ -183,7 +209,6 @@ def fakeData():
     product.category = Category.objects.get(id=2)
     product.name = 'SL065_I DO 時尚方型抱枕'
     product.price = 280
-    product.content = "材質: 麻、滌綸布"
     product.info = "外觀造型獨特，不失其質感在家的好夥伴，陪你度過悠閒的假期"
     product.save()
     
@@ -191,7 +216,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = '小熊餅乾'
     product.price = 280
-    product.content = "植物油、小麥粉、砂糖、乳糖、可可塊、澱粉、全脂奶粉、蛋、轉化糖、食鹽、膨脹劑、食用天然色素、香料、乳化劑"
     product.info = "★暢銷多年的好滋味\n★餅乾裡有滿滿的巧克力內餡\n★可愛小熊共有200種圖案"
     product.save()
 
@@ -199,7 +223,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = 'test01'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -207,7 +230,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = 'test02'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -215,7 +237,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = 'test03'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -223,7 +244,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = 'test04'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -231,7 +251,6 @@ def fakeData():
     product.category = Category.objects.get(id=2)
     product.name = 'test05'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -239,7 +258,6 @@ def fakeData():
     product.category = Category.objects.get(id=1)
     product.name = 'test06'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -247,7 +265,6 @@ def fakeData():
     product.category = Category.objects.get(id=2)
     product.name = 'test07'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -255,7 +272,6 @@ def fakeData():
     product.category = Category.objects.get(id=3)
     product.name = 'test08'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
 
@@ -263,34 +279,8 @@ def fakeData():
     product.category = Category.objects.get(id=2)
     product.name = 'test09'
     product.price = 100
-    product.content = "test"
     product.info = "test"
     product.save()
-    
-    productsupervisionOfficeship =ProductSupervisionOfficeShip()
-    productsupervisionOfficeship.product = Product.objects.get(id=1)
-    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 2)
-    productsupervisionOfficeship.save()
-
-    productsupervisionOfficeship =ProductSupervisionOfficeShip()
-    productsupervisionOfficeship.product = Product.objects.get(id=2)
-    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 1)
-    productsupervisionOfficeship.save()
-
-    productsupervisionOfficeship =ProductSupervisionOfficeShip()
-    productsupervisionOfficeship.product = Product.objects.get(id=3)
-    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 3)
-    productsupervisionOfficeship.save()
-
-    productsupervisionOfficeship =ProductSupervisionOfficeShip()
-    productsupervisionOfficeship.product = Product.objects.get(id=3)
-    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 4)
-    productsupervisionOfficeship.save()
-
-    productsupervisionOfficeship =ProductSupervisionOfficeShip()
-    productsupervisionOfficeship.product = Product.objects.get(id=1)
-    productsupervisionOfficeship.supervisionOffice  = SupervisionOffice.objects.get(id = 4)
-    productsupervisionOfficeship.save()
 
     order = Order()
     order.user = User.objects.get(id = 2)
@@ -627,4 +617,4 @@ def fakeData():
     payinfo.save()
 
 def ordermoney(self):
-        return self.amount * self.product.price
+    return self.amount * self.product.price

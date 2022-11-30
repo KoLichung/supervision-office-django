@@ -31,10 +31,10 @@ class UserManager(BaseUserManager):
 
         return user
 
-def image_upload_handler(instance,filename):
-    fpath = pathlib.Path(filename)
-    new_fname = str(uuid.uuid1()) #uuid1 -> uuid + timestamp
-    return f'images/{new_fname}{fpath.suffix}'
+# def image_upload_handler(instance,filename):
+#     fpath = pathlib.Path(filename)
+#     new_fname = str(uuid.uuid1()) #uuid1 -> uuid + timestamp
+#     return f'images/{new_fname}{fpath.suffix}'
 
 @property
 def get_photo_url(self):
@@ -56,8 +56,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'phone'
 
+class SupervisionOffice(models.Model):
+    name = models.CharField(max_length = 255, blank = True, null=True)
+    # 北中南東
+    area = models.CharField(max_length = 20, blank = True, null=True)
+    def __str__(self):
+            return self.name
+
 class Category(models.Model):
-    name = models.CharField(max_length= 100, unique=True)
+    name = models.CharField(max_length= 100)
+    suppervisionOffice = models.ForeignKey(
+        SupervisionOffice,
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return self.name
@@ -67,50 +78,65 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE
     )
+    suppervisionOffice = models.ForeignKey(
+        SupervisionOffice,
+        on_delete=models.CASCADE
+    )
     
-    name = models.CharField(max_length = 255, blank = True, null=True, unique=True)
+    code = models.CharField(max_length = 100, blank = True, null=True)
+    name = models.CharField(max_length = 255, blank = True, null=True)
     price = models.IntegerField(default=0, blank = True, null=True)
-    sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
     isPublish = models.BooleanField(default=True, blank = True, null=True)
-    content = models.TextField(default="", blank = True, null=True)
     info = models.TextField(default="", blank = True, null=True)
     unit = models.CharField(max_length = 255, blank = True, null=True,default='')
     stocks = models.IntegerField(default=0, blank = True, null=True)
     week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
     week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
-    
+    # content = models.TextField(default="", blank = True, null=True)
+    # sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
+
     def __str__(self):
         return self.name
 
-    @property
-    def first_image(self):
-        return self.images.first()
+    # @property
+    # def first_image(self):
+    #     return self.images.first()
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name='images'
+# class ProductImage(models.Model):
+#     product = models.ForeignKey(
+#         Product,
+#         on_delete=models.CASCADE,
+#         related_name='images'
 
-    )
+#     )
 
-    image = models.ImageField(upload_to=image_upload_handler, blank=True, null=True)
+#     image = models.ImageField(upload_to=image_upload_handler, blank=True, null=True)
 
-class SupervisionOffice(models.Model):
-    name = models.CharField(max_length = 255, blank = True, null=True)
-
-    def __str__(self):
-            return self.name
-
-class ProductSupervisionOfficeShip(models.Model):
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE
-    )
-    supervisionOffice = models.ForeignKey(
+class Meal(models.Model):
+    suppervisionOffice = models.ForeignKey(
         SupervisionOffice,
         on_delete=models.CASCADE
     )
+    
+    code = models.CharField(max_length = 100, blank = True, null=True)
+    name = models.CharField(max_length = 255, blank = True, null=True)
+    price = models.IntegerField(default=0, blank = True, null=True)
+    isPublish = models.BooleanField(default=True, blank = True, null=True)
+    info = models.TextField(default="", blank = True, null=True)
+    unit = models.CharField(max_length = 255, blank = True, null=True,default='')
+    stocks = models.IntegerField(default=0, blank = True, null=True)
+    week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
+    week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
+
+# class ProductSupervisionOfficeShip(models.Model):
+#     product = models.ForeignKey(
+#         Product,
+#         on_delete=models.CASCADE
+#     )
+#     supervisionOffice = models.ForeignKey(
+#         SupervisionOffice,
+#         on_delete=models.CASCADE
+#     )
 
 class OrderState(models.Model):
     name = models.CharField(max_length=255, null=True , blank=True)
@@ -171,6 +197,18 @@ class ProductOrderShip(models.Model):
     amount = models.IntegerField(default=0,null=True)
     money = models.IntegerField(default=0, null=True)
 
+class PettyCash(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.RESTRICT
+    )
+    user = models.ForeignKey(
+        User,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    money = models.IntegerField(default=0, null=True,  blank = True)
+
     
 class PayInfo(models.Model):
     order = models.ForeignKey(
@@ -204,13 +242,13 @@ class PayInfo(models.Model):
     CardInfoCard6No = models.CharField(max_length=20, default='', blank = True, null=True)
     CardInfoCard4No = models.CharField(max_length=20, default='', blank = True, null=True)
 
-class ShoppingCart(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.RESTRICT
-    )
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.RESTRICT
-    )
-    num = models.IntegerField(default=0, blank = True, null=True)
+# class ShoppingCart(models.Model):
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.RESTRICT
+#     )
+#     product = models.ForeignKey(
+#         Product,
+#         on_delete=models.RESTRICT
+#     )
+#     num = models.IntegerField(default=0, blank = True, null=True)

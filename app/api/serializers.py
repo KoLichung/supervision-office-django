@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from modelCore.models import Category , Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip , Order , ShoppingCart, ProductOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, PettyCash
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,41 +9,37 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    coverImage = serializers.CharField(read_only=True)
-
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = ('id','coverImage')
+        read_only_fields = ('id',)
 
-class ProductImageSerializer(serializers.ModelSerializer):
+class MealSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductImage
+        model = Meal
         fields = '__all__'
         read_only_fields = ('id',)
+
 class SupervisionOfficeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupervisionOffice
         fields = '__all__'
         read_only_fields = ('id',)
 
-class ProductSuperofficeShipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductSupervisionOfficeShip
-        fields = '__all__'
-        read_only_fields = ('id',)
-
 class OrderSerializer(serializers.ModelSerializer):
+    pettyCash = serializers.IntegerField(read_only=True)
+
     class Meta:    
         model = Order
         fields = '__all__'
         read_only_fields = ('id','user')
 
-class ShoppingCartSerializer(serializers.ModelSerializer):
-    class Meta:    
-        model = ShoppingCart
-        fields = '__all__'
-        read_only_fields = ('id',)
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        
+        if PettyCash.objects.filter(order=instance).count()!=0:
+            rep['pettyCash'] = PettyCash.objects.filter(order=instance).first().money
+        return rep
 
 class ProductOrderShipSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)

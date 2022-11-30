@@ -2,8 +2,8 @@ from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from modelCore.models import User , Category, Product , ProductImage , SupervisionOffice , ProductSupervisionOfficeShip ,Order ,ProductOrderShip,PayInfo , ShoppingCart ,OrderState,image_upload_handler
-from modelCore.forms import *
+from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState
+# from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
 from datetime import datetime, timedelta
@@ -340,8 +340,6 @@ def products(request):
         return redirect('/backboard/products')
 
     products = Product.objects.all().order_by('-id')
-    ships = ProductSupervisionOfficeShip.objects.all()
-    productimages = ProductImage.objects.all()
     
     products.order_by('-id')
     
@@ -354,7 +352,7 @@ def products(request):
 
     # page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
 
-    return render(request, 'backboard/products.html',{'products':page_obj,'ships':ships,'productimages':productimages})
+    return render(request, 'backboard/products.html',{'products':page_obj})
 
 def offices_order(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -395,9 +393,7 @@ def add_new_product(request):
 
     supervisionoffices = SupervisionOffice.objects.all()
     categories = Category.objects.all()
-    form = ProductImageForm()
-    ships = ProductSupervisionOfficeShip.objects.all()
-    productimages = ProductImage.objects.order_by('-id')
+ 
     list=[]
  
     if request.method == 'POST':
@@ -421,29 +417,6 @@ def add_new_product(request):
             office_dict={}
             office_list=[]
 
-            for i in range(1,supervisionoffices.count()+1):  
-                strcombine = ''.join(['ship_officeId', str(i)])
-                office_dict['officeId'+str(i)]=request.POST.get(strcombine)
-                ship = ProductSupervisionOfficeShip.objects.filter(product=product,supervisionOffice=i)
-                office = SupervisionOffice.objects.get(id=i)
-                if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
-                    
-
-                    if ship.exists() :
-                        pass
-                    else:
-                        productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                        productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=i)
-                        productsupervisionOfficeship.product = product
-                        productsupervisionOfficeship.save()
-                        
-                else:
-                    
-                    if ship.exists() :
-                        ship.delete()
-                    else:
-                        pass
-                office_list.append({'office':office})
             
             
             img_obj.product = product
@@ -455,7 +428,7 @@ def add_new_product(request):
         form.initial['product'] = Product.objects.latest('id')
     
     
-    return render(request, 'backboard/add_new_product.html',{ 'ships':ships, 'productimages':productimages, 'list':list, 'supervisionoffices':supervisionoffices,'categories':categories, 'form':form})
+    return render(request, 'backboard/add_new_product.html',{'categories':categories, 'form':form})
          
 def edit_product(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -468,9 +441,6 @@ def edit_product(request):
     categories = Category.objects.all()
     # ProductQueryset = Product.objects.filter(id=productId)
     theproduct = Product.objects.get(id=productId)
-    productships = ProductSupervisionOfficeShip.objects.filter(product=theproduct)
-    
-    productimages = ProductImage.objects.filter(product=theproduct).order_by('-id')
     
     if request.method == 'POST':
     
@@ -483,7 +453,7 @@ def edit_product(request):
 
             img_obj = form.instance
             
-            render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'productships':productships,'products':products,'productId':productId,'product':theproduct,'form':form, 'img_obj': img_obj})
+            render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'products':products,'productId':productId,'product':theproduct,'form':form, 'img_obj': img_obj})
 
         # not related to image
         product = Product.objects.get(id=productId)
@@ -502,28 +472,7 @@ def edit_product(request):
         for i in range(1,supervisionoffices.count()+1):  
             strcombine = ''.join(['ship_officeId', str(i)])
             office_dict['officeId'+str(i)]=request.POST.get(strcombine)
-            ship = ProductSupervisionOfficeShip.objects.filter(product=theproduct,supervisionOffice=i)
-                
-            if office_dict['officeId'+str(i)] ==  ''.join(['check_office_', str(i)]):
- 
-                if ship.exists() :
                     
-                    pass
-                else:
-                    productsupervisionOfficeship = ProductSupervisionOfficeShip()
-                    productsupervisionOfficeship.supervisionOffice = SupervisionOffice.objects.get(id=i)
-                    productsupervisionOfficeship.product = product
-                    productsupervisionOfficeship.save()
-                    
-            else:
-                if ship.exists() :
-                    ship.delete()
-                    
-                else:
-                    pass
-                    
-        
-            
         return redirect_params('edit_product',{'productId':productId})
             
     else:
@@ -532,7 +481,7 @@ def edit_product(request):
         form.initial['product'] = theproduct
         
     
-    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'productimages':productimages,'categories':categories,'productships':productships,'products':products,'productId':productId,'product':theproduct,'form':form})
+    return render(request, 'backboard/edit_product.html',{'supervisionoffices':supervisionoffices,'categories':categories,'products':products,'productId':productId,'product':theproduct,'form':form})
 
 def redirect_params(url, params=None):
     response = redirect(url)
