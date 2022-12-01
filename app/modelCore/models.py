@@ -165,6 +165,8 @@ class Order(models.Model):
     cashflowState = models.CharField(max_length=100, default='', blank = True, null=True)
 
     ship_fee = models.IntegerField(default=0, null=True)
+    petty_cash = models.IntegerField(default=0, null=True)
+
     orderMoney = models.IntegerField(default=0, null=True)
     prisoner_name = models.CharField(max_length=20, default='', blank = True, null=True)
     prisoner_id = models.CharField(max_length=40, default='', blank = True, null=True)
@@ -197,19 +199,31 @@ class ProductOrderShip(models.Model):
     amount = models.IntegerField(default=0,null=True)
     money = models.IntegerField(default=0, null=True)
 
-class PettyCash(models.Model):
+class MealOrderShip(models.Model):
     order = models.ForeignKey(
         Order,
-        on_delete=models.RESTRICT
+        on_delete=models.CASCADE,
     )
-    user = models.ForeignKey(
-        User,
-        null=True,
-        on_delete=models.SET_NULL
-    )
-    money = models.IntegerField(default=0, null=True,  blank = True)
 
-    
+    meal = models.ForeignKey(
+        Meal,
+        on_delete=models.RESTRICT,
+    )
+    amount = models.IntegerField(default=0,null=True)
+    money = models.IntegerField(default=0, null=True)
+
+# class PettyCash(models.Model):
+#     order = models.ForeignKey(
+#         Order,
+#         on_delete=models.RESTRICT
+#     )
+#     user = models.ForeignKey(
+#         User,
+#         null=True,
+#         on_delete=models.SET_NULL
+#     )
+#     money = models.IntegerField(default=0, null=True,  blank = True)
+
 class PayInfo(models.Model):
     order = models.ForeignKey(
         Order,

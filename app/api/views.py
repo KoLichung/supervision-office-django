@@ -10,13 +10,23 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 # Create your views here.
 
-from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal
+from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+
+        if suppervision_office_id!=None:
+            suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
+            queryset = queryset.filter(suppervisionOffice=suppervisionOffice)
+
+        return queryset
 
 #http://localhost:8000/api/products/?suppervision_office_id=1&category_id=1
 class ProductViewSet(viewsets.GenericViewSet,
@@ -52,7 +62,7 @@ class MealViewSet(viewsets.GenericViewSet,
     queryset = Meal.objects.all()
     serializer_class = serializers.MealSerializer
 
-    #query by suppervision office and category
+    #query by suppervision office
     def get_queryset(self):
         queryset = self.queryset
         suppervision_office_id = self.request.query_params.get('suppervision_office_id')
@@ -103,6 +113,23 @@ class OrderProductShipViewSet(viewsets.GenericViewSet,
 
     queryset = ProductOrderShip.objects.all()
     serializer_class = serializers.ProductOrderShipSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        order_id = self.request.query_params.get('order_id')
+        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        for i in range(len(queryset)):
+            queryset[i].name = queryset[i].product.name
+            queryset[i].price = queryset[i].product.price
+            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
+        return queryset
+
+class OrderMealShipViewSet(viewsets.GenericViewSet,
+                            mixins.ListModelMixin,
+                            mixins.CreateModelMixin,):
+
+    queryset = MealOrderShip.objects.all()
+    serializer_class = serializers.MealOrderShipSerializer
 
     def get_queryset(self):
         queryset = self.queryset

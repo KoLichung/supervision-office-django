@@ -11,6 +11,7 @@ router.register('supervisionoffices',views.SupervisionOfficeViewSet)
 router.register('orders',views.OrderViewSet)
 router.register('search', views.SearchViewSet)
 router.register('order_products', views.OrderProductShipViewSet)
+router.register('order_meals', views.OrderMealShipViewSet)
 # router.register('shoppingcarts',views.ShoppingCartViewSet)
 # router.register('product_images',views.ProductImageViewSet)
 
