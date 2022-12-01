@@ -105,8 +105,19 @@ class OrderViewSet(viewsets.GenericViewSet,
 
     def retrieve(self, request, *args, **kwargs):
         order = self.get_object()
+        
         order.products = ProductOrderShip.objects.filter(order=order)
+        for i in range(len(order.products)):
+            order.products[i].name = order.products[i].product.name
+            order.products[i].price = order.products[i].product.price
+            order.products[i].subTotal = order.products[i].product.price * order.products[i].amount
+
         order.meals = MealOrderShip.objects.filter(order=order)
+        for i in range(len(order.meals)):
+            order.meals[i].name = order.meals[i].meal.name
+            order.meals[i].price = order.meals[i].meal.price
+            order.meals[i].subTotal = order.meals[i].meal.price * order.meals[i].amount
+
         serializer = self.get_serializer(order)
         return Response(serializer.data)
 
