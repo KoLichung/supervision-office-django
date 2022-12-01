@@ -103,6 +103,13 @@ class OrderViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user).order_by('-id')
 
+    def retrieve(self, request, *args, **kwargs):
+        order = self.get_object()
+        order.products = ProductOrderShip.objects.filter(order=order)
+        order.meals = MealOrderShip.objects.filter(order=order)
+        serializer = self.get_serializer(order)
+        return Response(serializer.data)
+
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user, cashflowState='unPaid')
         serializer.save(user=self.request.user, cashflowState='waitForATMPay', paymentType='atm', ATMInfoBankCode="048", ATMInfovAccount="01000107609788",ATMInfoExpireDate=datetime.now()+timedelta(days=3))

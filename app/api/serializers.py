@@ -26,11 +26,6 @@ class SupervisionOfficeSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:    
-        model = Order
-        fields = '__all__'
-        read_only_fields = ('id','user')
 
 class ProductOrderShipSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
@@ -51,3 +46,12 @@ class MealOrderShipSerializer(serializers.ModelSerializer):
         model = MealOrderShip
         fields = '__all__'
         read_only_fields = ('id',)
+
+class OrderSerializer(serializers.ModelSerializer):
+    products = ProductOrderShipSerializer(read_only=True, many=True)
+    meals = MealOrderShipSerializer(read_only=True, many=True)
+
+    class Meta:    
+        model = Order
+        fields = '__all__'
+        read_only_fields = ('id','user')
