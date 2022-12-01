@@ -50,6 +50,7 @@ class MealOrderShipSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     products = ProductOrderShipSerializer(read_only=True, many=True)
     meals = MealOrderShipSerializer(read_only=True, many=True)
+    supervisionOffice = SupervisionOfficeSerializer(read_only=True)
 
     class Meta:    
         model = Order
