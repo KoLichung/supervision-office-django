@@ -71,7 +71,7 @@
             {% if page_number == products.paginator.ELLIPSIS %} 
               {{page_number}} 
             {% else %}
-              <a href="?page={{page_number}}" class="{% if page_number == products.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
+              <a href="?page={{page_number}}&supervisionOfficeId={{supervisionOfficeId}}" class="{% if page_number == products.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
             {% endif %} 
           {% endfor %}
         </div>
@@ -109,7 +109,7 @@
               {% if page_number == products.paginator.ELLIPSIS %} 
                 {{page_number}} 
               {% else %}
-                <a href="?page={{page_number}}" class="{% if page_number == products.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
+                <a href="?page={{page_number}}&supervisionOfficeId={{supervisionOfficeId}}" class="{% if page_number == products.number %}current{% endif %}">&nbsp;&nbsp;{{page_number}}&nbsp;&nbsp;</a>
               {% endif %} 
             {% endfor %}
           </div>
