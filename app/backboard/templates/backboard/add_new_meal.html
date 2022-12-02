@@ -1,0 +1,122 @@
+{% extends 'backboard/base.html' %} {% block content %}
+{% load static %}
+<!-- 內容 -->
+
+
+
+<div class="g-3 mb-3">
+  <div class="col-lg-12 ps-lg-2 mb-3">
+    <b>上架新餐點</b>
+      <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    
+        <div class="card h-lg-100 mt-3">
+          <div class="card-header">
+
+            <!-- 餐點分類 -->
+            {% comment %} <div >
+              
+              <div>
+                  <label class="form-label">餐點分類：</label>
+              </div>
+              {% for category in categories %}
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" id="mealCategory" type="radio" name="mealCategory" value="{{category.id}}" 
+                          {% if meal.category == category %}                                    
+                            checked
+                          {% endif %} 
+                      />
+                      <label class="form-check-label" for="mealCategory">{{category.name}}</label>
+                  </div>
+              {% endfor %}
+            </div> {% endcomment %}
+
+            <input type="hidden" id="supervisionOfficeId" name="supervisionOfficeId" value={{supervisionOfficeId}}>
+
+            <!-- 餐點代號 -->
+            <div class="mb-3">
+              <label class="form-label" for="mealCode">餐點代號：</label>
+              <input class="form-control" id="mealCode" type="text" placeholder="" name='mealCode'
+                value="{{meal.code}}" />
+            </div>
+
+            <!-- 餐點名稱 -->
+            <div class="mb-3">
+              <label class="form-label" for="mealName">餐點名稱：</label>
+              <input class="form-control" id="mealName" type="text" placeholder="" name='mealName' 
+              />
+            </div>
+
+            <!-- 餐點副標 -->
+            {% comment %} <div class="mb-3">
+              <label class="form-label" for="mealSublabel">餐點副標：</label>
+              <input class="form-control" id="mealSublabel" name="mealSublabel" type="text" placeholder=""  
+              />
+            </div> {% endcomment %}
+
+            <!-- 餐點敘述 -->
+            <div class="mb-3">
+              <label class="form-label" for="mealInfo">餐點敘述：</label>
+              <textarea class="form-control" id="mealInfo" type='text' name="mealInfo"  rows="2"
+              ></textarea>
+            </div>
+
+            <!-- 內容物 -->
+            {% comment %} <div class="mb-3">
+              <label class="form-label" for="mealContent">內容物：</label>
+              <input class="form-control" id="mealContent" type="text" name="mealContent" placeholder="例：餐點規格 會客菜三菜一湯...等"  
+              />
+            </div>                 {% endcomment %}
+
+            <!-- 餐點售價、單位、庫存 -->
+            <div class="row mb-3">
+
+              <div class="col-md-4">
+                <label class="form-label" for="mealPrice">餐點售價：</label>
+                <input class="form-control form-inline" id="mealPrice" name="mealPrice" type="number"  
+                />
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="mealUnit">單位：</label>
+                <input class="form-control form-inline" id="mealUnit" type="text" placeholder="包、個、支...等" name="mealUnit" 
+                />
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="mealStock">餐點庫存：</label>
+                <input class="form-control form-inline" id="mealStock" type="number" name="mealStock" value="0"/>
+              </div>
+                            
+            </div>
+              
+            <!-- 上架狀態 -->
+            <div >
+                    <div>
+                        <label class="form-label">上架狀態：</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="mealIspublish" type="radio" name="mealIspublish" value= True
+                        
+                        />
+                        <label class="form-check-label" for="mealIspublish">上架</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="mealIspublish" type="radio" name="mealIspublish" value= None 
+                        
+                        />
+                        <label class="form-check-label" for="mealIspublish">下架</label>
+                    </div>
+            </div>
+
+            <div class="col-12 text-end">
+                <button class="btn btn-warning btn-sm" type="submit" name="submit2" value="upload_meal" onclick="location.href='{% url 'add_new_meal' %}'">
+                  新增餐點
+                </button>
+            </div>
+                  
+        </div>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

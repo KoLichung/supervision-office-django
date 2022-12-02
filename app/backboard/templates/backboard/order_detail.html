@@ -195,6 +195,14 @@
                   </tr>
                 </thead>
                 <tbody class="list">
+                  {% for ship in mealShips %}
+                    <tr>
+                      <td>{{ship.meal.name}}</td>
+                      <td>{{ship.meal.price}}</td>
+                      <td>{{ship.amount}}</td>
+                      <td >{{ship.money}}</td>
+                    </tr>
+                  {% endfor %}
                   {% for ship in ships %}
                     <tr>
                       <td>{{ship.product.name}}</td>
@@ -205,6 +213,12 @@
                   {% endfor %}
                 </tbody>
                 <tfoot>
+                  <tr>
+                    <td>零用金</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{order.petty_cash}}</td>
+                  </tr>
                   <tr>
                     <td>運費</td>
                     <td></td>
