@@ -39,7 +39,7 @@ class ProductViewSet(viewsets.GenericViewSet,
 
     #query by suppervision office and category
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.filter(isPublish=True)
         suppervision_office_id = self.request.query_params.get('suppervision_office_id')
         category_id = self.request.query_params.get('category_id')
 
@@ -64,7 +64,7 @@ class MealViewSet(viewsets.GenericViewSet,
 
     #query by suppervision office
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.filter(isPublish=True)
         suppervision_office_id = self.request.query_params.get('suppervision_office_id')
 
         if suppervision_office_id!=None:

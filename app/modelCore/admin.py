@@ -12,12 +12,12 @@ class CatogoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'suppervisionOffice', 'name', 'category','price','info')
+    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'category', 'price', 'info')
     list_filter = ['category']
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
-    list_display = ('id', 'suppervisionOffice', 'name','price','info')
+    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish','price','info')
 
 @admin.register(SupervisionOffice)
 class SupervisionOfficeAdmin(admin.ModelAdmin):
