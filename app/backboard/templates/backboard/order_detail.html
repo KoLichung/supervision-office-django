@@ -188,6 +188,7 @@
                 <p>訂購商品明細</p>
                 <thead class="bg-200 text-900">
                   <tr>
+                    <th>商品編號</th>
                     <th>商品名稱</th>
                     <th>單價</th>
                     <th>數量</th>
@@ -197,6 +198,7 @@
                 <tbody class="list">
                   {% for ship in mealShips %}
                     <tr>
+                      <td></td>
                       <td>{{ship.meal.name}}</td>
                       <td>{{ship.meal.price}}</td>
                       <td>{{ship.amount}}</td>
@@ -205,6 +207,7 @@
                   {% endfor %}
                   {% for ship in ships %}
                     <tr>
+                      <td>{{ship.product.code}}</td>
                       <td>{{ship.product.name}}</td>
                       <td>{{ship.product.price}}</td>
                       <td>{{ship.amount}}</td>
