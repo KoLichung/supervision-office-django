@@ -69,7 +69,7 @@ class MealViewSet(viewsets.GenericViewSet,
 
         if suppervision_office_id!=None:
             suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
-            queryset = queryset.filter(suppervisionOffice=suppervisionOffice)
+            queryset = queryset.filter(suppervisionOffice=suppervisionOffice).order_by('price')
 
         return queryset
 
