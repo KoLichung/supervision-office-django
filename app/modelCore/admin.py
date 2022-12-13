@@ -13,7 +13,7 @@ class CatogoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'category', 'price', 'info')
-    list_filter = ['category']
+    list_filter = ['suppervisionOffice','category']
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
