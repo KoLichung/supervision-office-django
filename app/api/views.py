@@ -101,11 +101,17 @@ class OrderViewSet(viewsets.GenericViewSet,
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-id')
+        querySet = self.queryset.filter(user=self.request.user).order_by('-id')
+
+        for i in range(len(querySet)):
+            querySet[i].supervisionOfficeDetail = querySet[i].supervisionOffice
+
+        return querySet
 
     def retrieve(self, request, *args, **kwargs):
         order = self.get_object()
         
+        order.supervisionOfficeDetail = order.supervisionOffice
         order.products = ProductOrderShip.objects.filter(order=order)
         for i in range(len(order.products)):
             order.products[i].name = order.products[i].product.name
