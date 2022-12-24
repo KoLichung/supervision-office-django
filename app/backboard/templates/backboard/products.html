@@ -84,6 +84,7 @@
                 <tr>
                   {% comment %} <th>商品圖片</th> {% endcomment %}
                   <th>類別</th>
+                  <th>編號</th>
                   <th>商品名稱</th>
                   <th>價格</th>
                   {% comment %} <th colspan="2">供貨站所</th> {% endcomment %}
@@ -93,6 +94,7 @@
                     <tbody class="list">
                       <tr>                       
                           <td valign="middle">{{product.category}}</td>
+                          <td valign="middle"> {{product.code}} </td>
                           <td valign="middle"> {{product.name}} </td>
                           <td valign="middle">$ {{product.price}} </td>
 
