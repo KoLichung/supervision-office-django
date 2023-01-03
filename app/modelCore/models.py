@@ -266,3 +266,8 @@ class PayInfo(models.Model):
 #         on_delete=models.RESTRICT
 #     )
 #     num = models.IntegerField(default=0, blank = True, null=True)
+
+class AppVersion(models.Model):
+    iOS_current_version = models.CharField(max_length=10, default='', blank = True, null=True)
+    android_current_version = models.CharField(max_length=10, default='', blank = True, null=True)
+

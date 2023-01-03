@@ -46,3 +46,7 @@ class OrderState(admin.ModelAdmin):
 @admin.register(PayInfo)
 class PayInfoAdmin(admin.ModelAdmin):
     list_display = ('id', 'order' , 'PaymentType' )
+
+# @admin.register(AppVersion)
+# class AppVersionAdmin(admin.ModelAdmin):
+#     list_display = ('iOS', 'android')

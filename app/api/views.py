@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 # Create your views here.
 
-from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -210,3 +210,18 @@ class SearchViewSet(viewsets.GenericViewSet,
 #         theProduct = Product.objects.get(id=product_id)
 #         queryset = queryset.filter(product=theProduct)
 #         return queryset
+
+class AppVersionViewSet(viewsets.GenericViewSet,
+                                mixins.ListModelMixin,):
+
+    queryset = AppVersion.objects.all()
+    serializer_class = (serializers.AppVersionSerializer)
+
+    # def get_queryset(self):
+    #     queryset = self.queryset
+       
+
+    #     return queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,3 +56,9 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
         read_only_fields = ('id','user')
+
+class AppVersionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppVersion
+        fields = '__all__'
+        read_only_fields = ('id',)
