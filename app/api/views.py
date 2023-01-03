@@ -211,17 +211,10 @@ class SearchViewSet(viewsets.GenericViewSet,
 #         queryset = queryset.filter(product=theProduct)
 #         return queryset
 
-class AppVersionViewSet(viewsets.GenericViewSet,
-                                mixins.ListModelMixin,):
+class AppVersionView(APIView):
 
-    queryset = AppVersion.objects.all()
-    serializer_class = (serializers.AppVersionSerializer)
+    def get(self, request, format=None):
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-       
+        appVersion = AppVersion.objects.all().order_by('-id').first()
 
-    #     return queryset
-
-    def retrieve(self, request, *args, **kwargs):
-        
+        return Response({'ios': appVersion.iOS_current_version, 'android': appVersion.android_current_version})

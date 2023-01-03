@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  OrderState, ProductOrderShip, User, Category, Product, SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip
+from .models import  OrderState, ProductOrderShip, User, Category, Product, SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion
 
 
 @admin.register(User)
@@ -47,6 +47,6 @@ class OrderState(admin.ModelAdmin):
 class PayInfoAdmin(admin.ModelAdmin):
     list_display = ('id', 'order' , 'PaymentType' )
 
-# @admin.register(AppVersion)
-# class AppVersionAdmin(admin.ModelAdmin):
-#     list_display = ('iOS', 'android')
+@admin.register(AppVersion)
+class AppVersionAdmin(admin.ModelAdmin):
+    list_display = ('id','iOS_current_version', 'android_current_version')
