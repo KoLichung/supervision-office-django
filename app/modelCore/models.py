@@ -171,6 +171,7 @@ class Order(models.Model):
     prisoner_name = models.CharField(max_length=20, default='', blank = True, null=True)
     prisoner_id = models.CharField(max_length=40, default='', blank = True, null=True)
     memo = models.TextField(default='', null=True, blank=True)
+    sender_name = models.CharField(max_length=20, default='', blank = True, null=True)
 
     #credit, atm, cvs
     paymentType = models.CharField(max_length=20, default='', blank = True, null=True)
