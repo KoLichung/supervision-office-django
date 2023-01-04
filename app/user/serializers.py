@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('phone', 'password', 'name')
+        fields = ('phone', 'password', 'name', 'line_user_id')
         extra_kwargs = {
             'password': {'write_only': True, 'min_length': 5},
             }
@@ -33,7 +33,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id','phone','name','line_id')
+        fields = ('id','phone','name','line_id', 'line_user_id')
         read_only_fields = ('id',)
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -44,6 +44,7 @@ class AuthTokenSerializer(serializers.Serializer):
         trim_whitespace=False,
         allow_null=True,
     )
+
     line_id = serializers.CharField(
         style={'input_type': 'password'},
         trim_whitespace=False,

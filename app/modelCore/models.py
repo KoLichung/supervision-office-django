@@ -15,6 +15,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             phone = phone, 
             name=extra_fields.get('name'),
+            line_user_id=extra_fields.get('line_user_id'),
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -52,6 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     
     line_id = models.CharField(max_length=255, null=True , blank=True)
+    line_user_id = models.CharField(max_length=255, null=True , blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
@@ -172,6 +175,8 @@ class Order(models.Model):
     prisoner_id = models.CharField(max_length=40, default='', blank = True, null=True)
     memo = models.TextField(default='', null=True, blank=True)
     sender_name = models.CharField(max_length=20, default='', blank = True, null=True)
+
+    is_urgent = models.BooleanField(default=False)
 
     #credit, atm, cvs
     paymentType = models.CharField(max_length=20, default='', blank = True, null=True)
