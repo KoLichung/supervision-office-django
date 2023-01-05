@@ -76,6 +76,16 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class OutsideCategory(models.Model):
+    name = models.CharField(max_length= 100)
+    suppervisionOffice = models.ForeignKey(
+        SupervisionOffice,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     category = models.ForeignKey(
         Category,
@@ -105,9 +115,11 @@ class Product(models.Model):
     # def first_image(self):
     #     return self.images.first()
 class OutsideProduct(models.Model):
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE
+    outside_category = models.ForeignKey(
+        OutsideCategory,
+        on_delete=models.CASCADE,
+        null=True, 
+        blank=True,
     )
     suppervisionOffice = models.ForeignKey(
         SupervisionOffice,

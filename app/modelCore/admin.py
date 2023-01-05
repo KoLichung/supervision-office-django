@@ -17,8 +17,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(OutsideProduct)
 class OutsideProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'category', 'price', 'info')
-    list_filter = ['suppervisionOffice','category']
+    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'outside_category', 'price', 'info')
+    list_filter = ['suppervisionOffice','outside_category']
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
