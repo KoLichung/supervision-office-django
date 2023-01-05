@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 # Create your views here.
 
-from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion
+from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -36,6 +36,30 @@ class ProductViewSet(viewsets.GenericViewSet,
                     mixins.UpdateModelMixin):
     queryset = Product.objects.all()
     serializer_class = serializers.ProductSerializer
+
+    #query by suppervision office and category
+    def get_queryset(self):
+        queryset = self.queryset.filter(isPublish=True)
+        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+        category_id = self.request.query_params.get('category_id')
+
+        if suppervision_office_id!=None:
+            suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
+            queryset = queryset.filter(suppervisionOffice=suppervisionOffice)
+
+        if category_id!=None:
+            category = Category.objects.get(id=category_id)
+            queryset = queryset.filter(category=category)
+
+        return queryset
+
+class OutsideProductViewSet(viewsets.GenericViewSet,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin):
+    queryset = OutsideProduct.objects.all()
+    serializer_class = serializers.OutsideProductSerializer
 
     #query by suppervision office and category
     def get_queryset(self):
@@ -137,6 +161,23 @@ class OrderProductShipViewSet(viewsets.GenericViewSet,
 
     queryset = ProductOrderShip.objects.all()
     serializer_class = serializers.ProductOrderShipSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        order_id = self.request.query_params.get('order_id')
+        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        for i in range(len(queryset)):
+            queryset[i].name = queryset[i].product.name
+            queryset[i].price = queryset[i].product.price
+            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
+        return queryset
+
+class OrderOutsideProductShipViewSet(viewsets.GenericViewSet,
+                            mixins.ListModelMixin,
+                            mixins.CreateModelMixin,):
+
+    queryset = OutsideProductOrderShip.objects.all()
+    serializer_class = serializers.OutsideProductOrderShipSerializer
 
     def get_queryset(self):
         queryset = self.queryset

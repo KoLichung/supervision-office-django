@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  OrderState, ProductOrderShip, User, Category, Product, SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion
+from .models import  OrderState, ProductOrderShip, User, Category, Product, SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip
 
 
 @admin.register(User)
@@ -12,6 +12,11 @@ class CatogoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'category', 'price', 'info')
+    list_filter = ['suppervisionOffice','category']
+
+@admin.register(OutsideProduct)
+class OutsideProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'suppervisionOffice', 'name', 'isPublish', 'category', 'price', 'info')
     list_filter = ['suppervisionOffice','category']
 
@@ -30,6 +35,10 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(ProductOrderShip)
 class ProductOrderShipAdmin(admin.ModelAdmin):
     list_display = ('id', 'product' , 'order' ,'amount')
+
+@admin.register(OutsideProductOrderShip)
+class OutsideProductOrderShipAdmin(admin.ModelAdmin):
+    list_display = ('id', 'outside_product' , 'order' ,'amount')
 
 @admin.register(MealOrderShip)
 class MealOrderShipAdmin(admin.ModelAdmin):

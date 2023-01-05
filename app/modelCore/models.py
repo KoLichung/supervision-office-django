@@ -104,7 +104,30 @@ class Product(models.Model):
     # @property
     # def first_image(self):
     #     return self.images.first()
+class OutsideProduct(models.Model):
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE
+    )
+    suppervisionOffice = models.ForeignKey(
+        SupervisionOffice,
+        on_delete=models.CASCADE
+    )
+    
+    code = models.CharField(max_length = 100, blank = True, null=True)
+    name = models.CharField(max_length = 255, blank = True, null=True)
+    price = models.IntegerField(default=0, blank = True, null=True)
+    isPublish = models.BooleanField(default=True, blank = True, null=True)
+    info = models.TextField(default="", blank = True, null=True)
+    unit = models.CharField(max_length = 255, blank = True, null=True,default='')
+    stocks = models.IntegerField(default=0, blank = True, null=True)
+    week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
+    week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
+    # content = models.TextField(default="", blank = True, null=True)
+    # sublabel = models.CharField(max_length = 255, blank = True, null=True,default='')
 
+    def __str__(self):
+        return self.name
 # class ProductImage(models.Model):
 #     product = models.ForeignKey(
 #         Product,
@@ -200,6 +223,19 @@ class ProductOrderShip(models.Model):
 
     product = models.ForeignKey(
         Product,
+        on_delete=models.RESTRICT,
+    )
+    amount = models.IntegerField(default=0,null=True)
+    money = models.IntegerField(default=0, null=True)
+
+class OutsideProductOrderShip(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+    )
+
+    outside_product = models.ForeignKey(
+        OutsideProduct,
         on_delete=models.RESTRICT,
     )
     amount = models.IntegerField(default=0,null=True)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,6 +11,12 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+class OutsideProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OutsideProduct
         fields = '__all__'
         read_only_fields = ('id',)
 
@@ -34,6 +40,16 @@ class ProductOrderShipSerializer(serializers.ModelSerializer):
 
     class Meta:    
         model = ProductOrderShip
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+class OutsideProductOrderShipSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+    price = serializers.IntegerField(read_only=True)
+    subTotal = serializers.IntegerField(read_only=True)
+
+    class Meta:    
+        model = OutsideProductOrderShip
         fields = '__all__'
         read_only_fields = ('id',)
 
