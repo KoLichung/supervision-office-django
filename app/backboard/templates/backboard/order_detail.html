@@ -12,6 +12,7 @@
                     <thead class="bg-200 text-900">
                       <tr>
                         <th>狀態</th>
+                        <th></th>
                         <th>日期</th>
                         <th>姓名</th>
                         <th>電話</th>
@@ -20,11 +21,10 @@
                     </thead>
                     <tbody class="list">
                         <tr>                    
-                          <td> 
+                          <td style="padding-right: 0px;"> 
                             <form method="post">{% csrf_token %}
                               <button class="btn btn-outline-warning btn-sm" type="button" data-bs-toggle="modal" 
-                                data-bs-target="#modal{{order.state}}" 
-                              >
+                                data-bs-target="#modal{{order.state}}" >
                                 {{order.state}}
                               </button>
                               <div class="modal fade" id="modal{{order.state}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -58,6 +58,13 @@
                               </div>
                             </form>
                           </td>
+
+                          {% if order.is_urgent == True %} 
+                          <td class="text-nowrap" style="color: red;"><b>急件</b></td>  
+                          {% else %}
+                          <td class="text-nowrap"></td>
+                          {% endif %}
+
                           <td class="text-nowrap">{{order.createDate}}</td>
                           {% if order.user %}                                                  
                             <td class="text-nowrap">{{order.user.name}}</td>
@@ -164,15 +171,17 @@
                   <thead class="bg-200 text-900">
                     <tr>
                       <th>站所</th>
-                      <th>姓名</th>
-                      <th >編號</th>
+                      <th>收件人姓名及編號</th>
+                      <th>寄件人姓名</th>
+                      <th>寄件人LINE ID</th>
                     </tr>
                   </thead>
                   <tbody class="list">
                     <tr>
                       <td>{{order.supervisionOffice}}</td>
                       <td>{{order.prisoner_name}}</td>
-                      <td>{{order.prisoner_id}}</td>
+                      <td>{{order.sender_name}}</td>
+                      <td>{{order.user.line_user_id}}</td>
                     </tr>
                   </tbody>
               </table>
@@ -192,7 +201,7 @@
                     <th>商品名稱</th>
                     <th>單價</th>
                     <th>數量</th>
-                    <th >小計</th>
+                    <th class="text-end">小計</th>
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -220,19 +229,34 @@
                     <td>零用金</td>
                     <td></td>
                     <td></td>
-                    <td>{{order.petty_cash}}</td>
+                    <td></td>
+                    <td class="text-end">{{order.petty_cash}}</td>
                   </tr>
                   <tr>
                     <td>運費</td>
                     <td></td>
                     <td></td>
-                    <td>{{order.ship_fee}}</td>
+                    <td></td>
+                    <td class="text-end">{{order.ship_fee}}</td>
+                  </tr>
+                  <tr>
+                    <td>急件</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% if order.is_urgent == True %} 
+                    <td class="text-end" style="color: red;"><b>運費已包含急件費用</b></td>
+                    {% else %}
+                    <td class="text-end">非急件</td>
+                    {% endif %}
+                    
                   </tr>
                   <tr>
                     <td>總計</td>
                     <td></td>
                     <td></td>
-                    <td>{{order.orderMoney}}</td>
+                    <td></td>
+                    <td class="text-end">{{order.orderMoney}}</td>
                   </tr>
                 </tfoot>  
               </table>

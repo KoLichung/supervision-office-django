@@ -11,9 +11,10 @@
         <b>消費者資訊</b> <br>
         <div class="row mt-3">
           {% for customer in customers %}
-                <div class="col-4">姓名：{{customer.name}}</div>
-                <div class="col-4">電話：{{customer.phone}}</div>
-                <div class="col-4">email：{{customer.email}}</div>
+                <div class="col-3">姓名：{{customer.name}}</div>
+                <div class="col-3">LINE ID：{{customer.line_user_id}}</div>
+                <div class="col-3">電話：{{customer.phone}}</div>
+                <div class="col-3">email：{{customer.email}}</div>
           {% endfor %}
         </div>
       </div>

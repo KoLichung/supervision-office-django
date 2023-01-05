@@ -41,6 +41,7 @@
                   <thead class="bg-200 text-900">
                     <tr>
                       <th>狀態</th>
+                      <th></th>
                       <th>姓名</th>
                       <th>電話</th>
                       <th>日期</th>
@@ -53,6 +54,12 @@
                     {% for order in orders %}   
                       <tr>                       
                         <td><button type="button" class="btn btn-outline-warning btn-sm">{{order.state}}</button></td>  
+                        {% if order.is_urgent == True %} 
+                        <td class="text-nowrap" style="color: red;"><b>急件</b></td>  
+                        {% else %}
+                        <td class="text-nowrap"></td>
+                        {% endif %}
+
                         {% if order.user %}                                                  
                           <td class="text-nowrap">{{order.user.name}}</td>
                           <td class="text-nowrap">{{order.user.phone}}</td>

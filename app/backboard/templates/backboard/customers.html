@@ -16,6 +16,7 @@
                   <th>姓名</th>
                   <th>email</th>
                   <th>電話</th>
+                  <th>Line ID</th>
                   <th class="text-end">歷史訂單</th>
                 </tr>
               </thead>
@@ -27,6 +28,7 @@
                                 <td valign="middle">{{customer.name}}</td>
                                 <td valign="middle">{{customer.email}}</td>
                                 <td valign="middle">{{customer.phone}}</td>
+                                <td valign="middle">{{customer.line_user_id}}</td>
                                 <td class="text-end">                
                                 <!-- <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'customer_detail' %}?customer_id={{customer_id}}'"></td> -->
                                 <a href="{% url 'customer_detail' %}?customer_id={{customer.id}}" class="btn btn-warning btn-sm" role="button">查看</a>

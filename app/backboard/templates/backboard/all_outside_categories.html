@@ -1,0 +1,69 @@
+{% extends 'backboard/base.html' %} {% block content %}
+{% load static %}
+
+<!-- 內容 -->
+  <div class="mb-3">
+    <div class="col-lg-12 ps-lg-2 mb-3">
+      <div class="card h-lg-100">
+        <div class="card-header">
+          
+          <div class="row mb-3" display="inline-block">
+            <b>所有類別</b>
+
+            <div class="col mt-3 mb-3">
+              <select class="form-select" aria-label="Default select example" name="test_redirect">
+                {% for office in supervisionOffices %}}
+                    {% if supervisionOfficeId == office.id %}
+                    <option value={{office.id}} selected>{{office.name}}</option>
+                    {% else %}
+                    <option value={{office.id}}>{{office.name}}</option>
+                    {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col mt-3 text-end">
+              <a class="text-right custom-purple-btn text-white btn-sm " href="{% url 'new_edit_category' %}?supervisionOfficeId={{supervisionOfficeId}}">新增類別</a>
+            </div>
+            
+          </div>
+
+          <div id="tableExample2" data-list='{"valueNames":["name","email","age"],"page":10,"pagination":true}'>
+            <div class="table-responsive scrollbar">
+              <table class="table  table-striped fs--1 mb-0">
+                <div class="border border-1"></div>
+                <thead>
+                  <tr>
+                    <th scope="col">分類名稱</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody class="list">
+                  {% for category in categories %}
+                    <tr>
+                      <td>{{category.name}}</td>
+                      <td class="alnright">                    
+                        <a class="custom-purple-btn text-white btn-sm " href="{% url 'new_edit_category' %}?category_id={{category.id}}">編輯類別</a>
+                        {% comment %} <a class="bg-danger text-white btn-sm" href="{% url 'all_categories' %}?delete_id={{category.id}}" >刪除</a> {% endcomment %}
+                      </td>
+                    </tr> 
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <br>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  <script>
+    document.querySelectorAll("[name=test_redirect]")[0].addEventListener('change',
+     function () {
+         window.location = "?supervisionOfficeId=" + this.value;
+    });
+  </script>
+        
+{% endblock %}

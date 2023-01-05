@@ -338,6 +338,7 @@ def offices_order(request):
 
     return render(request,'' 'backboard/offices_order.html',{'looplist':looplist, 'currentOrders':currentOrders, 'ships':ships,'orders':orders,'theOffice':theOffice,'sum':sum})
 
+
 def products(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -467,6 +468,137 @@ def edit_product(request):
     
     return render(request, 'backboard/edit_product.html',{'categories':categories,'productId':productId,'product':theProduct})
 
+
+def outside_products(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+    # 匯入
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+
+        file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+        file = open(file_path)
+        reader = csv.reader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            if index != 0:
+                if Product.objects.filter(name=row[1],suppervisionOffice=supervisionOffice).count()==0:
+                    product = Product()
+                    product.suppervisionOffice = supervisionOffice
+                    product.code = row[0]
+                    product.name = row[1]
+
+                    if Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).count()==0:
+                        category = Category.objects.create(name=row[2],suppervisionOffice=supervisionOffice)
+                    else:
+                        category = Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).first()
+
+                    product.category = category
+                    product.unit = row[3]
+                    product.price = int(row[4])
+                    product.info = row[5]
+                    product.save()
+        return redirect(f'/backboard/products?supervisionOfficeId={supervisionOfficeId}')
+
+    
+    supervisionOffices = SupervisionOffice.objects.all()
+    products = Product.objects.all().order_by('-id')
+    
+    # print(supervisionOffices)
+    products = products.filter(suppervisionOffice=supervisionOffice)
+
+    
+    paginator = Paginator(products, 50)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    # page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    return render(request, 'backboard/products.html',{'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'products':page_obj})
+
+def add_new_outside_product(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+    categories = Category.objects.filter(suppervisionOffice=supervisionOffice)
+ 
+    if request.method == 'POST':
+            supervisionOfficeId = request.POST.get('supervisionOfficeId')
+            supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+            product = Product()
+            product.suppervisionOffice = supervisionOffice
+            product.code = request.POST.get('productCode')
+            product.name = request.POST.get('productName') 
+            category_Id = request.POST.get('productCategory')
+            product.category = Category.objects.get(id=category_Id)
+            product.info = request.POST.get('productInfo')
+            product.price = request.POST.get('productPrice')
+            if request.POST.get('productUnit') != None:
+                product.unit =request.POST.get('productUnit')
+            if request.POST.get('productStock') != None:
+                product.stocks = request.POST.get('productStock')
+            product.isPublish = request.POST.get('productIspublish')
+            product.save()
+        
+            return redirect_params('products',{'supervisionOfficeId':product.suppervisionOffice.id})
+    
+    return render(request, 'backboard/add_new_product.html',{'categories':categories, 'supervisionOfficeId':supervisionOfficeId})
+         
+def edit_outside_product(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
+    productId = request.GET.get("productId")
+    theProduct = Product.objects.get(id=productId)
+
+    supervisionOffice = theProduct.suppervisionOffice
+    categories = Category.objects.filter(suppervisionOffice=supervisionOffice)
+    
+    if request.method == 'POST':
+
+        # not related to image
+        product = Product.objects.get(id=productId)
+        product.code = request.POST.get('productCode')
+        product.name = request.POST.get('productName')
+        category_Id = request.POST.get('productCategory')
+        product.category = Category.objects.get(id=category_Id)
+        product.info = request.POST.get('productInfo')
+        product.price = request.POST.get('productPrice')
+        product.unit =request.POST.get('productUnit')
+        product.stocks = request.POST.get('productStock')
+        product.isPublish = request.POST.get('productIspublish')
+        product.save()
+                    
+        # return redirect_params('edit_product',{'productId':productId})
+
+        return redirect_params('products',{'supervisionOfficeId':product.suppervisionOffice.id})
+        
+    
+    return render(request, 'backboard/edit_product.html',{'categories':categories,'productId':productId,'product':theProduct})
+
+
 def meals(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -578,6 +710,7 @@ def edit_meal(request):
     
     return render(request, 'backboard/edit_meal.html',{'mealId':mealId,'meal':meal})
 
+
 def all_categories(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -624,6 +757,56 @@ def new_edit_category(request):
         return render(request, 'backboard/new_edit_category.html', {'category':category})
 
     return render(request, 'backboard/new_edit_category.html')
+
+
+def all_outside_categories(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+    if request.GET.get('delete_id') != None:
+        try:
+            Category.objects.get(id=request.GET.get('delete_id')).delete()
+        except:
+            print("no such category")
+
+    supervisionOffices = SupervisionOffice.objects.all()
+    categories = Category.objects.filter(suppervisionOffice=supervisionOffice)
+
+    return render(request, 'backboard/all_categories.html', {'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'categories':categories})
+
+def new_edit_outside_category(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+
+    if request.method == 'POST':
+        if request.POST.get('post') == 'save':
+            if request.POST.get('name') != None and request.POST.get('name') != '':
+                if request.GET.get('category_id') != None:
+                    category = Category.objects.get(id=request.GET.get('category_id'))
+                    category.name = request.POST.get('name')
+                    category.save()
+                    return redirect_params('all_categories', {'supervisionOfficeId':category.suppervisionOffice.id})
+                else:
+                    supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+                    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+                    Category.objects.create(name=request.POST.get('name'), suppervisionOffice=supervisionOffice)
+                    return redirect_params('all_categories', {'supervisionOfficeId':supervisionOfficeId})
+        return redirect('all_categories')
+
+    if request.GET.get('category_id') != None:
+        category = Category.objects.get(id=request.GET.get('category_id'))
+        return render(request, 'backboard/new_edit_category.html', {'category':category})
+
+    return render(request, 'backboard/new_edit_category.html')
+
+
 
 def redirect_params(url, params=None):
     response = redirect(url)
