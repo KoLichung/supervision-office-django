@@ -17,11 +17,11 @@
               
               <div>
                   <label class="form-label">監外商品分類：</label>
-              </div>
+              </div> 
               {% for category in categories %}
                   <div class="form-check form-check-inline">
                       <input class="form-check-input" id="productCategory" type="radio" name="productCategory" value="{{category.id}}" 
-                          {% if product.category = category %}                                    
+                          {% if product.outside_category == category %}                                    
                             checked
                           {% endif %} 
                       />

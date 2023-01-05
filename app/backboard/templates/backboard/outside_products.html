@@ -87,19 +87,20 @@
                   <th>編號</th>
                   <th>商品名稱</th>
                   <th>價格</th>
+                  <th></th>
                   {% comment %} <th colspan="2">供貨站所</th> {% endcomment %}
                 </tr>
               </thead>
                 {% for product in products %}
                     <tbody class="list">
                       <tr>                       
-                          <td valign="middle">{{product.category}}</td>
+                          <td valign="middle">{{product.outside_category}}</td>
                           <td valign="middle"> {{product.code}} </td>
                           <td valign="middle"> {{product.name}} </td>
                           <td valign="middle">$ {{product.price}} </td>
 
                           <td valign="middle" class="text-end">                    
-                            <a href="{% url 'edit_product' %}?productId={{product.id}}" class="btn btn-warning btn-sm" role="button">修改商品</a>
+                            <a href="{% url 'edit_outside_product' %}?productId={{product.id}}" class="btn btn-warning btn-sm" role="button">修改商品</a>
                           </td>                       
                       </tr>                    
                     </tbody>
