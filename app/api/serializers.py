@@ -1,9 +1,15 @@
 from rest_framework import serializers
-from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+class OutsideCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OutsideCategory
         fields = '__all__'
         read_only_fields = ('id',)
 

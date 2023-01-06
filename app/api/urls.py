@@ -5,6 +5,7 @@ from api import views
 
 router = DefaultRouter()
 router.register('categories', views.CategoryViewSet)
+router.register('outside_categories', views.OutsideCategoryViewSet)
 router.register('products',views.ProductViewSet)
 router.register('outside_products',views.OutsideProductViewSet)
 router.register('meals',views.MealViewSet)

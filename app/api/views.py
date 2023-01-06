@@ -10,13 +10,28 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 # Create your views here.
 
-from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+
+        if suppervision_office_id!=None:
+            suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
+            queryset = queryset.filter(suppervisionOffice=suppervisionOffice)
+
+        return queryset
+
+class OutsideCategoryViewSet(viewsets.GenericViewSet,
+                    mixins.ListModelMixin):
+    queryset = OutsideCategory.objects.all()
+    serializer_class = serializers.OutsideCategorySerializer
 
     def get_queryset(self):
         queryset = self.queryset
@@ -65,14 +80,14 @@ class OutsideProductViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         queryset = self.queryset.filter(isPublish=True)
         suppervision_office_id = self.request.query_params.get('suppervision_office_id')
-        category_id = self.request.query_params.get('category_id')
+        outside_category_id = self.request.query_params.get('outside_category_id')
 
         if suppervision_office_id!=None:
             suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
             queryset = queryset.filter(suppervisionOffice=suppervisionOffice)
 
-        if category_id!=None:
-            category = Category.objects.get(id=category_id)
+        if outside_category_id!=None:
+            category = OutsideCategory.objects.get(id=outside_category_id)
             queryset = queryset.filter(category=category)
 
         return queryset
