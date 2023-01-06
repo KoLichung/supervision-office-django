@@ -88,7 +88,7 @@ class OutsideProductViewSet(viewsets.GenericViewSet,
 
         if outside_category_id!=None:
             category = OutsideCategory.objects.get(id=outside_category_id)
-            queryset = queryset.filter(category=category)
+            queryset = queryset.filter(outside_category=category)
 
         return queryset
 
@@ -156,6 +156,12 @@ class OrderViewSet(viewsets.GenericViewSet,
             order.products[i].name = order.products[i].product.name
             order.products[i].price = order.products[i].product.price
             order.products[i].subTotal = order.products[i].product.price * order.products[i].amount
+
+        order.outside_products = OutsideProductOrderShip.objects.filter(order=order)
+        for i in range(len(order.outside_products)):
+            order.outside_products[i].name = order.outside_products[i].outside_product.name
+            order.outside_products[i].price = order.outside_products[i].outside_product.price
+            order.outside_products[i].subTotal = order.outside_products[i].outside_product.price * order.outside_products[i].amount
 
         order.meals = MealOrderShip.objects.filter(order=order)
         for i in range(len(order.meals)):

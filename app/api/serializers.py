@@ -71,6 +71,7 @@ class MealOrderShipSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     products = ProductOrderShipSerializer(read_only=True, many=True)
+    outside_products = OutsideProductOrderShipSerializer(read_only=True, many=True)
     meals = MealOrderShipSerializer(read_only=True, many=True)
     supervisionOfficeDetail = SupervisionOfficeSerializer(read_only=True)
 
