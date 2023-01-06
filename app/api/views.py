@@ -205,9 +205,9 @@ class OrderOutsideProductShipViewSet(viewsets.GenericViewSet,
         order_id = self.request.query_params.get('order_id')
         queryset = queryset.filter(order=Order.objects.get(id=order_id))
         for i in range(len(queryset)):
-            queryset[i].name = queryset[i].product.name
-            queryset[i].price = queryset[i].product.price
-            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
+            queryset[i].name = queryset[i].outside_product.name
+            queryset[i].price = queryset[i].outside_product.price
+            queryset[i].subTotal = queryset[i].outside_product.price * queryset[i].amount
         return queryset
 
 class OrderMealShipViewSet(viewsets.GenericViewSet,

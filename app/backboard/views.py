@@ -2,7 +2,7 @@ from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory
+from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip
 # from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
@@ -291,6 +291,7 @@ def order_detail(request):
     order_id=request.GET.get('IdOrder')
     order = Order.objects.get(id=order_id)        
     ships = ProductOrderShip.objects.filter(order=order)
+    outsideProductShips = OutsideProductOrderShip.objects.filter(order=order)
     mealShips = MealOrderShip.objects.filter(order=order)
     orderstates = OrderState.objects.all()
 
@@ -303,7 +304,7 @@ def order_detail(request):
         order.save()
         return redirect(f'/backboard/order_detail?IdOrder={order_id}')
 
-    return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'mealShips':mealShips, 'orderstates':orderstates})
+    return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'outsideProductShips':outsideProductShips,'mealShips':mealShips, 'orderstates':orderstates})
 
 def offices_order(request):
     if not request.user.is_authenticated or not request.user.is_staff:

@@ -211,7 +211,7 @@
                       <td>{{ship.meal.name}}</td>
                       <td>{{ship.meal.price}}</td>
                       <td>{{ship.amount}}</td>
-                      <td >{% widthratio ship.meal.price 1 ship.amount %}</td>
+                      <td class="text-end">{% widthratio ship.meal.price 1 ship.amount %}</td>
                     </tr>
                   {% endfor %}
                   {% for ship in ships %}
@@ -220,7 +220,16 @@
                       <td>{{ship.product.name}}</td>
                       <td>{{ship.product.price}}</td>
                       <td>{{ship.amount}}</td>
-                      <td >{% widthratio ship.product.price 1 ship.amount %}</td>
+                      <td class="text-end">{% widthratio ship.product.price 1 ship.amount %}</td>
+                    </tr>
+                  {% endfor %}
+                  {% for ship in outsideProductShips %}
+                    <tr>
+                      <td>{{ship.outside_product.code}}</td>
+                      <td>{{ship.outside_product.name}}</td>
+                      <td>{{ship.outside_product.price}}</td>
+                      <td>{{ship.amount}}</td>
+                      <td class="text-end">{% widthratio ship.outside_product.price 1 ship.amount %}</td>
                     </tr>
                   {% endfor %}
                 </tbody>

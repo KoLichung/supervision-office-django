@@ -77,7 +77,7 @@
                             尚未付款
                           {% endif %}
                         </td>
-                        <td><input class="btn btn-warning btn-link text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
+                        <td><input class="btn btn-warning text-white btn-sm" type="button" value="查看" onclick="location.href='{% url 'order_detail' %}?IdOrder={{order.id}}'"></td>
                       </tr>    
                     {% endfor %}                             
                   </tbody>
