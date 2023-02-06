@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
-    path('index', views.index, name = 'index'), 
+    # path('index', views.index, name = 'index'), 
     path('customers', views.customers, name = 'customers'), 
     path('customer_detail', views.customer_detail, name = 'customer_detail'),
     path('order_detail', views.order_detail, name = 'order_detail'), 

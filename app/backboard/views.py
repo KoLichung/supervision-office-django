@@ -22,7 +22,7 @@ def login(request):
         user = authenticate(request, phone=phone, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('/backboard/index')
+            return redirect('/backboard/orders')
         else:
             return redirect('/backboard/')
 
@@ -32,102 +32,102 @@ def logout(request):
     auth.logout(request)
     return redirect('/backboard/')
 
-def index(request):
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return redirect('/backboard/')
+# def index(request):
+#     if not request.user.is_authenticated or not request.user.is_staff:
+#         return redirect('/backboard/')
 
-    orders = Order.objects.filter(state=1)
-    ships = ProductOrderShip.objects.all()
-    products =Product.objects.all()
-    undealtorders = Order.objects.filter(state=1)
-    UndealtOrdersNum = undealtorders.count()
-    dealtOrdersShips = Order.objects.filter(state=2)
-    last7Days = (datetime.today() - timedelta(days=7)).date()
-    last6Days = (datetime.today() - timedelta(days=6)).date()
-    last5Days = (datetime.today() - timedelta(days=5)).date()
-    last4Days = (datetime.today() - timedelta(days=4)).date()
-    last3Days = (datetime.today() - timedelta(days=3)).date()
-    last2Days = (datetime.today() - timedelta(days=2)).date()
-    last1Days = (datetime.today() - timedelta(days=1)).date()
-    WeekOrders = dealtOrdersShips.filter(createDate__date__gte=last7Days)
-    last7DaysOrders = dealtOrdersShips.filter(createDate__date=last7Days)
-    last6DaysOrders = dealtOrdersShips.filter(createDate__date=last6Days)
-    last5DaysOrders = dealtOrdersShips.filter(createDate__date=last5Days)
-    last4DaysOrders = dealtOrdersShips.filter(createDate__date=last4Days)
-    last3DaysOrders = dealtOrdersShips.filter(createDate__date=last3Days)
-    last2DaysOrders = dealtOrdersShips.filter(createDate__date=last2Days)
-    last1DaysOrders = dealtOrdersShips.filter(createDate__date=last1Days)
-    sum7=0
-    sum6=0
-    sum5=0
-    sum4=0
-    sum3=0
-    sum2=0
-    sum1=0
-    sum7Money=0 
-    sum6Money=0
-    sum5Money=0
-    sum4Money=0
-    sum3Money=0
-    sum2Money=0
-    sum1Money=0
-    for last7DaysOrder in last7DaysOrders:
-        ships7 = ships.filter(order=last7DaysOrder)
-        for ship in ships7:
-            sum7 += ship.amount
-            sum7Money += ship.product.price * ship.amount
-    for last6DaysOrder in last6DaysOrders:
-        ships6 = ships.filter(order=last6DaysOrder)
-        for ship in ships6:
-            sum6 += ship.amount
-            sum6Money += ship.product.price * ship.amount
-    for last5DaysOrder in last5DaysOrders:
-        ships5 = ships.filter(order=last5DaysOrder)
-        for ship in ships5:
-            sum5 += ship.amount
-            sum5Money += ship.product.price * ship.amount
-    for last4DaysOrder in last4DaysOrders:
-        ships4 = ships.filter(order=last4DaysOrder)
-        for ship in ships4:
-            sum4 += ship.amount
-            sum4Money += ship.product.price * ship.amount
-    for last3DaysOrder in last3DaysOrders:
-        ships3 = ships.filter(order=last3DaysOrder)
-        for ship in ships3:
-            sum3 += ship.amount
-            sum3Money += ship.product.price * ship.amount
-    for last2DaysOrder in last2DaysOrders:
-        ships2 = ships.filter(order=last2DaysOrder)
-        for ship in ships2:
-            sum2 += ship.amount
-            sum2Money += ship.product.price * ship.amount
-    for last1DaysOrder in last1DaysOrders:
-        ships1 = ships.filter(order=last1DaysOrder)
-        for ship in ships1:
-            sum1 += ship.amount
-            sum1Money += ship.product.price * ship.amount
-    for product in products:
-        sum = 0
-        for WeekOrder in WeekOrders:
-            OrderShips=ships.filter(order=WeekOrder,product=product)       
-            for OrderShip in OrderShips:
-                sum += OrderShip.amount                 
-        product.week_sum_nums = sum      
-        product.save()   
-    sumtotal= sum1 + sum2 + sum3 + sum4 + sum5 + sum6 + sum7
-    sumTotalMoney = sum1Money +sum2Money + sum3Money +sum4Money + sum5Money+ sum6Money + sum7Money
-    forlooplist = []
-    last10Orders = orders.order_by('-createDate')[:10]
-    for order in last10Orders:
-        sum = 0
-        TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
-        if TotalMoney['money__sum'] != None:
-            sum += TotalMoney['money__sum']
-            forlooplist.append({'sum':sum,'order':order})
+#     orders = Order.objects.filter(state=1)
+#     ships = ProductOrderShip.objects.all()
+#     products =Product.objects.all()
+#     undealtorders = Order.objects.filter(state=1)
+#     UndealtOrdersNum = undealtorders.count()
+#     dealtOrdersShips = Order.objects.filter(state=2)
+#     last7Days = (datetime.today() - timedelta(days=7)).date()
+#     last6Days = (datetime.today() - timedelta(days=6)).date()
+#     last5Days = (datetime.today() - timedelta(days=5)).date()
+#     last4Days = (datetime.today() - timedelta(days=4)).date()
+#     last3Days = (datetime.today() - timedelta(days=3)).date()
+#     last2Days = (datetime.today() - timedelta(days=2)).date()
+#     last1Days = (datetime.today() - timedelta(days=1)).date()
+#     WeekOrders = dealtOrdersShips.filter(createDate__date__gte=last7Days)
+#     last7DaysOrders = dealtOrdersShips.filter(createDate__date=last7Days)
+#     last6DaysOrders = dealtOrdersShips.filter(createDate__date=last6Days)
+#     last5DaysOrders = dealtOrdersShips.filter(createDate__date=last5Days)
+#     last4DaysOrders = dealtOrdersShips.filter(createDate__date=last4Days)
+#     last3DaysOrders = dealtOrdersShips.filter(createDate__date=last3Days)
+#     last2DaysOrders = dealtOrdersShips.filter(createDate__date=last2Days)
+#     last1DaysOrders = dealtOrdersShips.filter(createDate__date=last1Days)
+#     sum7=0
+#     sum6=0
+#     sum5=0
+#     sum4=0
+#     sum3=0
+#     sum2=0
+#     sum1=0
+#     sum7Money=0 
+#     sum6Money=0
+#     sum5Money=0
+#     sum4Money=0
+#     sum3Money=0
+#     sum2Money=0
+#     sum1Money=0
+#     for last7DaysOrder in last7DaysOrders:
+#         ships7 = ships.filter(order=last7DaysOrder)
+#         for ship in ships7:
+#             sum7 += ship.amount
+#             sum7Money += ship.product.price * ship.amount
+#     for last6DaysOrder in last6DaysOrders:
+#         ships6 = ships.filter(order=last6DaysOrder)
+#         for ship in ships6:
+#             sum6 += ship.amount
+#             sum6Money += ship.product.price * ship.amount
+#     for last5DaysOrder in last5DaysOrders:
+#         ships5 = ships.filter(order=last5DaysOrder)
+#         for ship in ships5:
+#             sum5 += ship.amount
+#             sum5Money += ship.product.price * ship.amount
+#     for last4DaysOrder in last4DaysOrders:
+#         ships4 = ships.filter(order=last4DaysOrder)
+#         for ship in ships4:
+#             sum4 += ship.amount
+#             sum4Money += ship.product.price * ship.amount
+#     for last3DaysOrder in last3DaysOrders:
+#         ships3 = ships.filter(order=last3DaysOrder)
+#         for ship in ships3:
+#             sum3 += ship.amount
+#             sum3Money += ship.product.price * ship.amount
+#     for last2DaysOrder in last2DaysOrders:
+#         ships2 = ships.filter(order=last2DaysOrder)
+#         for ship in ships2:
+#             sum2 += ship.amount
+#             sum2Money += ship.product.price * ship.amount
+#     for last1DaysOrder in last1DaysOrders:
+#         ships1 = ships.filter(order=last1DaysOrder)
+#         for ship in ships1:
+#             sum1 += ship.amount
+#             sum1Money += ship.product.price * ship.amount
+#     for product in products:
+#         sum = 0
+#         for WeekOrder in WeekOrders:
+#             OrderShips=ships.filter(order=WeekOrder,product=product)       
+#             for OrderShip in OrderShips:
+#                 sum += OrderShip.amount                 
+#         product.week_sum_nums = sum      
+#         product.save()   
+#     sumtotal= sum1 + sum2 + sum3 + sum4 + sum5 + sum6 + sum7
+#     sumTotalMoney = sum1Money +sum2Money + sum3Money +sum4Money + sum5Money+ sum6Money + sum7Money
+#     forlooplist = []
+#     last10Orders = orders.order_by('-createDate')[:10]
+#     for order in last10Orders:
+#         sum = 0
+#         TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
+#         if TotalMoney['money__sum'] != None:
+#             sum += TotalMoney['money__sum']
+#             forlooplist.append({'sum':sum,'order':order})
     
-    productRank = Product.objects.order_by("-week_sum_nums")[:3]
+#     productRank = Product.objects.order_by("-week_sum_nums")[:3]
     
-    return render(request, 'backboard/index.html',{'sumTotalMoney':sumTotalMoney, 'sumtotal':sumtotal, 'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
+#     return render(request, 'backboard/index.html',{'sumTotalMoney':sumTotalMoney, 'sumtotal':sumtotal, 'forlooplist':forlooplist, 'sum7Money':sum7Money,'sum6Money':sum6Money,'sum5Money':sum5Money,'sum4Money':sum4Money,'sum3Money':sum3Money,'sum2Money':sum2Money,'sum1Money':sum1Money, 'sum1':sum1,'sum2':sum2,'sum3':sum3,'sum4':sum4,'sum5':sum5,'sum6':sum6,'sum7':sum7, 'last6Days':last6Days,'last5Days':last5Days,'last4Days':last4Days ,'last3Days':last3Days,'last2Days':last2Days,'last1Days':last1Days, 'last7Days':last7Days, 'orders':orders,'UndealtOrdersNum':UndealtOrdersNum,'productRank':productRank})
 
 def bills(request):
     if not request.user.is_authenticated or not request.user.is_staff:
