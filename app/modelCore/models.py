@@ -235,7 +235,7 @@ class ProductOrderShip(models.Model):
 
     product = models.ForeignKey(
         Product,
-        on_delete=models.RESTRICT,
+        on_delete=models.SET_NULL,
     )
     amount = models.IntegerField(default=0,null=True)
     money = models.IntegerField(default=0, null=True)
