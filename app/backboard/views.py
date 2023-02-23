@@ -243,21 +243,27 @@ def customer_detail(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
-    customers = User.objects.all()
+    # customers = User.objects.all()
     orders = Order.objects.all()
-    customer_id = request.GET.get('customer_id','')
-    customers = customers.filter(id=customer_id)
+    customer_id = request.GET.get('customer_id')
+    customer = User.objects.get(id=customer_id)
+
+    if request.method == 'POST' and 'reset_password' in request.POST :
+        password = "12345"
+        customer.set_password(password)
+        customer.save()
+
     ships = ProductOrderShip.objects.all()
     forlooplist=[] 
     for order in orders:
         sum = 0
-        if order.user == customers.get(id=customer_id):
-                
-                TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
-                if TotalMoney['money__sum'] != None:
-                    sum += TotalMoney['money__sum']
-                    forlooplist.append({'user':order.user ,'sum':sum,'order':order})
-    return render(request, 'backboard/customer_detail.html',{'forlooplist':forlooplist, 'orders':orders,'customers':customers})
+        if order.user == customer:
+            TotalMoney = ships.filter(order=order).aggregate(Sum('money'))
+            if TotalMoney['money__sum'] != None:
+                sum += TotalMoney['money__sum']
+                forlooplist.append({'user':order.user ,'sum':sum,'order':order})
+
+    return render(request, 'backboard/customer_detail.html',{'forlooplist':forlooplist, 'orders':orders,'customer':customer})
 
 def orders(request):    
     if not request.user.is_authenticated or not request.user.is_staff:
