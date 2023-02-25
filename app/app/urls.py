@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('backboard/', include('backboard.urls')),
     path('api/ecpay/', include('payECPay.urls')),
+    path('paymentApp/', include('myPay.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
