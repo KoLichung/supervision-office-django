@@ -51,12 +51,14 @@ class GetPostTestOrderView(APIView):
         payer_name  = 'user0'
         payment_method_id = 1
         return_url = 'http://45.77.24.12/paymentApp/callback'
+        customer_number = 1
 
         HashKey = '759ggsGGkvgL1dgs'
         HashIV = '3aHKRZzC4iJIhuX9'
 
         data = {
             'amount': amount,
+            'customer_number': customer_number,
             'encrypt_type': encrypt_type,
             'merchant_id': merchant_id,
             'pay_content': pay_content,
@@ -66,11 +68,17 @@ class GetPostTestOrderView(APIView):
             'token': token,
         }
 
-        str = f'HashKey={HashKey}&amount={amount}&encrypt_type={encrypt_type}&merchant_id={merchant_id}&pay_content={pay_content}&payer_name={payer_name}&payment_method_id={payment_method_id}&return_url={return_url}&token=${token}&HashIV={HashIV}'
-        
-        url_encode_str = urllib.parse.quote(str)
+        data_str = f'HashKey={HashKey}&amount={amount}&customer_number={customer_number}&encrypt_type={encrypt_type}&merchant_id={merchant_id}&pay_content={pay_content}&payer_name={payer_name}&payment_method_id={payment_method_id}&return_url={return_url}&token={token}&HashIV={HashIV}'
+        print(f'data str = {data_str}')
+
+        url_encode_str = urllib.parse.quote(data_str, safe='')
+        print(f'encode str = ${url_encode_str}')
+
         lower_url_encode_str = url_encode_str.lower()
+        print(f'lower_url_encode_str = {lower_url_encode_str}')
+
         sign = sha256_hash(lower_url_encode_str)
+        print(f'sign = {sign}')
 
         data['sign'] = sign
 
@@ -82,6 +90,7 @@ class CallBackView(APIView):
     def post(self, request, format=None):
         body = json.loads(request.body)
         logger.info(body)
+        return Response(body)
 
 def sha256_hash(TradeInfo):
     hashs = hashlib.sha256(TradeInfo.encode("utf-8")).hexdigest()
