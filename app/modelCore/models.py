@@ -327,3 +327,10 @@ class AppVersion(models.Model):
     iOS_current_version = models.CharField(max_length=10, default='', blank = True, null=True)
     android_current_version = models.CharField(max_length=10, default='', blank = True, null=True)
 
+class ConfigData(models.Model):
+    ATMInfoBankCode = models.CharField(max_length=10, default='', blank = True, null=True)
+    ATMInfovAccount = models.CharField(max_length=35, default='', blank = True, null=True)
+
+class Announcement(models.Model):
+    content = models.TextField(default='', blank = True, null=True)
+    create_date = models.DateTimeField(auto_now=False,null=True)

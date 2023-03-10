@@ -10,7 +10,8 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 # Create your views here.
 
-from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory
+from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
+from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -174,7 +175,11 @@ class OrderViewSet(viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user, cashflowState='unPaid')
-        serializer.save(user=self.request.user, cashflowState='waitForATMPay', paymentType='atm', ATMInfoBankCode="048", ATMInfovAccount="01000107609788",ATMInfoExpireDate=datetime.now()+timedelta(days=3))
+        config_data = ConfigData.objects.first()
+        bank_code = config_data.ATMInfoBankCode
+        bank_account = config_data.ATMInfovAccount
+
+        serializer.save(user=self.request.user, cashflowState='waitForATMPay', paymentType='atm', ATMInfoBankCode=bank_code, ATMInfovAccount=bank_account, ATMInfoExpireDate=datetime.now()+timedelta(days=3))
 
 class OrderProductShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
