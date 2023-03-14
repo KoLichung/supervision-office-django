@@ -1,0 +1,41 @@
+{% extends 'backboard/base.html' %} {% block content %}
+{% load static %}
+<!-- 內容 -->
+
+<div class="g-3 mb-3">
+  <div class="col-lg-12 ps-lg-2 mb-3">
+    <b>修改收款帳號</b>
+        
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="card h-lg-100 mt-3">
+            <div class="card-header">
+                
+                <div class="mb-3">
+                    <label class="form-label" for="bankCode">金融機構代號：</label>
+                    <input class="form-control" id="bankCode" type="text" placeholder="" name='bankCode'
+                    value="{{configData.ATMInfoBankCode}}" />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="bankAccount">金融機構帳號：</label>
+                    <input class="form-control" id="bankAccount" type="text" placeholder="" name='bankAccount'
+                    value="{{configData.ATMInfovAccount}}" />
+                </div>
+
+                <div class="col-12 text-end">
+                    <button class="btn btn-warning btn-sm" type="submit" name="submit" value="edit"
+                    onclick="location.href='{% url 'config_data' %}'">
+                    確認送出
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        
+    
+    </form>
+          
+  </div>
+</div>
+
+{% endblock %}

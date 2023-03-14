@@ -35,5 +35,13 @@ urlpatterns = [
     path('bills', views.bills, name = 'bills'), 
     # path('edit_product/<str:id>/delete/', views.deleteImage, name='delete_images'),
     path('', views.login, name='login'),
-    path('logout', views.logout, name='logout')
+    path('logout', views.logout, name='logout'),
+
+    path('config_data', views.config_data, name='config_data'),
+    path('edit_config_data', views.edit_config_data, name = 'edit_config_data'),
+
+    path('announcements', views.announcements, name='announcements'),
+    path('announcement_detail', views.announcement_detail, name = 'announcement_detail'), 
+    path('edit_announcement', views.edit_announcement, name = 'edit_announcement'),
+
 ]

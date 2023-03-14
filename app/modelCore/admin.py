@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import  OrderState, ProductOrderShip, User, Category, Product, SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory
+from .models import  OrderState, ProductOrderShip, User, Category, Product
+from .models import  SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion
+from .models import  OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
 
 
 @admin.register(User)
@@ -63,3 +65,11 @@ class PayInfoAdmin(admin.ModelAdmin):
 @admin.register(AppVersion)
 class AppVersionAdmin(admin.ModelAdmin):
     list_display = ('id','iOS_current_version', 'android_current_version')
+
+@admin.register(ConfigData)
+class ConfigDataAdmin(admin.ModelAdmin):
+    list_display = ('id','ATMInfoBankCode', 'ATMInfovAccount')
+
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ('id','content', 'create_date')

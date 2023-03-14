@@ -1,0 +1,31 @@
+{% extends 'backboard/base.html' %} {% block content %}
+
+  <!-- 內容 -->
+
+  <div class="g-3 mb-3">
+    <div class="col-lg-12 ps-lg-2 mb-3">
+        
+        <div class="card h-lg-100 mb-3">
+          <div class="card-header">
+            <span><b>日期：</b></span>
+            <div>{{announcement.create_date}}</div>
+            <br>
+            <span><b>內容：</b></span>
+            <div>{{announcement.content}}</div>
+          <br>
+          <div class="d-flex flex-row-reverse">
+            <div class="">        
+              <a href="{% url 'edit_announcement' %}?IdAnnouncement={{announcement.id}}" class="btn btn-warning btn-sm" role="button">修改內容</a>
+            </div>
+            &emsp;
+            <div class="">        
+              <a href="{% url 'edit_config_data' %}" class="btn btn-warning btn-sm" role="button">刪除公告</a>
+            </div>
+          </div>
+          </div>
+        </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'backboard/base.html' %} {% block content %}
+{% load static %}
+<!-- 內容 -->
+
+<div class="g-3 mb-3">
+
+  <div class="row mb-3" display="inline-block">
+    <b>收款金融機構帳號</b>
+  </div>
+
+  <div class="col-lg-12 ps-lg-2 mb-3">
+    <div class="card h-lg-100">
+      <div class="card-header">
+        <div>金融機構代號：{{ configData.ATMInfoBankCode }}</div>
+        <div>金融機構帳號：{{ configData.ATMInfovAccount }}</div>
+        <div class="text-end">        
+            <a href="{% url 'edit_config_data' %}" class="btn btn-warning btn-sm" role="button">修改帳號</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

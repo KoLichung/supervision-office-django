@@ -2,7 +2,7 @@ from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip
+from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip, ConfigData, Announcement
 # from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
@@ -832,4 +832,73 @@ def redirect_params(url, params=None):
 
     
 #     return redirect_params("/backboard/edit_product",your_params)
+
+def config_data(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    configData = ConfigData.objects.first()
+    
+    return render(request, 'backboard/config_data.html',{'configData':configData})
+
+def edit_config_data(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    configData = ConfigData.objects.first()
+
+    if request.method == 'POST':
+        configData = ConfigData.objects.first()
+        configData.ATMInfoBankCode = request.POST.get('bankCode')
+        configData.ATMInfovAccount = request.POST.get('bankAccount')
+        configData.save()
+        return redirect('config_data')
+    
+    return render(request, 'backboard/edit_config_data.html',{'configData':configData})
+
+def announcements(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    announcements = Announcement.objects.all().order_by('-id')
+
+    paginator = Paginator(announcements, 10)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    # return render(request, 'backboard/orders.html',{'q':order_state_id ,'orders':page_obj,'orderstates':orderstates})
+    
+    return render(request, 'backboard/announcements.html',{'announcements':page_obj})
+
+def announcement_detail(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    announcement_id=request.GET.get('IdAnnouncement')
+    announcement = Announcement.objects.get(id=announcement_id)        
+
+    return render(request, 'backboard/announcement_detail.html',{'announcement':announcement})
+
+def edit_announcement(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    announcement_id=request.GET.get('IdAnnouncement')
+    announcement = Announcement.objects.get(id=announcement_id) 
+
+    if request.method == 'POST':
+        announcement = Announcement.objects.get(id=announcement_id)
+        announcement.content = request.POST.get('announcementContent')
+        # announcement.create_date = request.POST.get('announcementDate')
+        announcement.save()
+
+        return redirect('announcements')
+        
+    
+    return render(request, 'backboard/edit_announcement.html',{'announcement':announcement,'announcementId':announcement_id})
 
