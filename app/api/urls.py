@@ -17,6 +17,7 @@ router.register('order_outside_products', views.OrderOutsideProductShipViewSet)
 router.register('order_meals', views.OrderMealShipViewSet)
 # router.register('shoppingcarts',views.ShoppingCartViewSet)
 # router.register('product_images',views.ProductImageViewSet)
+router.register('announcements', views.AnnouncementViewSet)
 
 app_name = 'api'
 

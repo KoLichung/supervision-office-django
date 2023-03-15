@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, Announcement
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +85,10 @@ class AppVersionSerializer(serializers.ModelSerializer):
         model = AppVersion
         fields = '__all__'
         read_only_fields = ('id',)
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announcement
+        fields = '__all__'
+        read_only_fields = ('id',)
+

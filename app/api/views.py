@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # Create your views here.
 
 from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
-from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData
+from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -285,3 +285,16 @@ class AppVersionView(APIView):
         appVersion = AppVersion.objects.all().order_by('-id').first()
 
         return Response({'ios': appVersion.iOS_current_version, 'android': appVersion.android_current_version})
+    
+class AnnouncementViewSet(viewsets.GenericViewSet,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin):
+    
+    queryset = Announcement.objects.all()
+    serializer_class = serializers.AnnouncementSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset.order_by('-create_date')
+        return queryset
+    
+    
