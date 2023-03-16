@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 
 from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
 from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
+from modelCore.models import SpecialMeal, SpecialMealOrderShip
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -113,6 +114,24 @@ class MealViewSet(viewsets.GenericViewSet,
 
         return queryset
 
+class SpecialMealViewSet(viewsets.GenericViewSet,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin):
+    queryset = SpecialMeal.objects.all()
+    serializer_class = serializers.SpecialMealSerializer
+
+    #query by suppervision office
+    def get_queryset(self):
+        queryset = self.queryset.filter(isPublish=True)
+        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+
+        if suppervision_office_id!=None:
+            suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
+            queryset = queryset.filter(suppervisionOffice=suppervisionOffice).order_by('price')
+
+        return queryset
 #http://localhost:8000/api/supervisionoffices/?area=%E4%B8%AD
 class SupervisionOfficeViewSet(viewsets.GenericViewSet,
                                 mixins.ListModelMixin,):
@@ -232,6 +251,23 @@ class OrderMealShipViewSet(viewsets.GenericViewSet,
             queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
         return queryset
 
+class OrderSpecialMealShipViewSet(viewsets.GenericViewSet,
+                            mixins.ListModelMixin,
+                            mixins.CreateModelMixin,):
+
+    queryset = SpecialMealOrderShip.objects.all()
+    serializer_class = serializers.SpecialMealOrderShipSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        order_id = self.request.query_params.get('order_id')
+        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        for i in range(len(queryset)):
+            queryset[i].name = queryset[i].product.name
+            queryset[i].price = queryset[i].product.price
+            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
+        return queryset
+    
 #http://localhost:8000/api/search/?q=%E5%8E%9F&suppervision_office_id=1
 class SearchViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin,):
@@ -296,5 +332,4 @@ class AnnouncementViewSet(viewsets.GenericViewSet,
     def get_queryset(self):
         queryset = self.queryset.order_by('-create_date')
         return queryset
-    
     
