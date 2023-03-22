@@ -475,7 +475,6 @@ def edit_product(request):
     
     return render(request, 'backboard/edit_product.html',{'categories':categories,'productId':productId,'product':theProduct})
 
-
 def outside_products(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -605,7 +604,6 @@ def edit_outside_product(request):
     
     return render(request, 'backboard/edit_outside_product.html',{'categories':categories,'productId':productId,'product':theProduct})
 
-
 def meals(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -717,7 +715,6 @@ def edit_meal(request):
     
     return render(request, 'backboard/edit_meal.html',{'mealId':mealId,'meal':meal})
 
-
 def all_categories(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -765,7 +762,6 @@ def new_edit_category(request):
 
     return render(request, 'backboard/new_edit_category.html')
 
-
 def all_outside_categories(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
@@ -812,26 +808,6 @@ def new_edit_outside_category(request):
         return render(request, 'backboard/new_edit_outside_category.html', {'category':category})
 
     return render(request, 'backboard/new_edit_outside_category.html')
-
-
-
-def redirect_params(url, params=None):
-    response = redirect(url)
-    if params:
-        query_string = urllib.parse.urlencode(params)
-        response['Location'] += '?' + query_string
-    return response
-
-# def deleteImage(request, id=None):
-#     image = get_object_or_404(ProductImage, pk=id)
-#     ID = image.product.id
-#     your_params = {
-#         'productId':ID
-#     }
-#     image.delete()
-
-    
-#     return redirect_params("/backboard/edit_product",your_params)
 
 def config_data(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -899,6 +875,25 @@ def edit_announcement(request):
 
         return redirect('announcements')
         
-    
     return render(request, 'backboard/edit_announcement.html',{'announcement':announcement,'announcementId':announcement_id})
 
+
+
+# ===========================================
+def redirect_params(url, params=None):
+    response = redirect(url)
+    if params:
+        query_string = urllib.parse.urlencode(params)
+        response['Location'] += '?' + query_string
+    return response
+
+# def deleteImage(request, id=None):
+#     image = get_object_or_404(ProductImage, pk=id)
+#     ID = image.product.id
+#     your_params = {
+#         'productId':ID
+#     }
+#     image.delete()
+
+    
+#     return redirect_params("/backboard/edit_product",your_params)
