@@ -166,6 +166,9 @@ class Meal(models.Model):
     week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
     week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
 
+    def __str__(self):
+        return self.name
+    
 # class ProductSupervisionOfficeShip(models.Model):
 #     product = models.ForeignKey(
 #         Product,
@@ -336,27 +339,27 @@ class Announcement(models.Model):
     create_date = models.DateTimeField(auto_now=False,null=True)
 
 class SpecialMeal(models.Model):
-    suppervisionOffice = models.ForeignKey(
-        SupervisionOffice,
-        on_delete=models.CASCADE
+    meal = models.ForeignKey(
+        Meal,
+        on_delete=models.CASCADE,
     )
     code = models.CharField(max_length = 100, blank = True, null=True)
     name = models.CharField(max_length = 255, blank = True, null=True)
-    price = models.IntegerField(default=0, blank = True, null=True)
     isPublish = models.BooleanField(default=True, blank = True, null=True)
     isSpicy = models.BooleanField(default=False, blank = True, null=True)
-    info = models.TextField(default="", blank = True, null=True)
-    unit = models.CharField(max_length = 255, blank = True, null=True,default='')
-    stocks = models.IntegerField(default=0, blank = True, null=True)
-    week_sum_nums = models.IntegerField(default=0, blank = True, null=True)
-    week_sum_revenue = models.IntegerField(default=0, blank = True, null=True)
 
-class SpecialMealOrderShip(models.Model):
+    def __str__(self):
+        return self.name
+
+class SpecialMealShip(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
     )
-
+    meal = models.ForeignKey(
+        Meal,
+        on_delete=models.CASCADE,
+    )
     special_meal = models.ForeignKey(
         SpecialMeal,
         on_delete=models.RESTRICT,

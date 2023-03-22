@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import  OrderState, ProductOrderShip, User, Category, Product
 from .models import  SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion
 from .models import  OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
-from .models import SpecialMeal, SpecialMealOrderShip
+from .models import SpecialMeal, SpecialMealShip
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -76,8 +76,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 @admin.register(SpecialMeal)
 class SpecialMealAdmin(admin.ModelAdmin):
-    list_display = ('id', 'suppervisionOffice', 'name', 'isPublish','isSpicy','price','info')
+    list_display = ('id','meal','name','isPublish','isSpicy')
 
-@admin.register(SpecialMealOrderShip)
-class SpecialMealOrderShipAdmin(admin.ModelAdmin):
-    list_display = ('id', 'special_meal' , 'order' ,'amount')
+@admin.register(SpecialMealShip)
+class SpecialMealShipAdmin(admin.ModelAdmin):
+    list_display = ('id','order','meal','special_meal','amount')

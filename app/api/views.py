@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 from modelCore.models import Category, Product, SupervisionOffice, Order, User, ProductOrderShip, Meal, MealOrderShip
 from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
-from modelCore.models import SpecialMeal, SpecialMealOrderShip
+from modelCore.models import SpecialMeal, SpecialMealShip
 from api import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -148,6 +148,7 @@ class SupervisionOfficeViewSet(viewsets.GenericViewSet,
 
         return queryset
 
+#http://localhost:8000/api/orders/1/
 class OrderViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin,
                     mixins.RetrieveModelMixin,
@@ -185,9 +186,11 @@ class OrderViewSet(viewsets.GenericViewSet,
 
         order.meals = MealOrderShip.objects.filter(order=order)
         for i in range(len(order.meals)):
-            order.meals[i].name = order.meals[i].meal.name
-            order.meals[i].price = order.meals[i].meal.price
-            order.meals[i].subTotal = order.meals[i].meal.price * order.meals[i].amount
+            order.meals[i].specialMeals = SpecialMealShip.objects.filter(order=order,meal=order.meals[i].meal)
+        # for i in range(len(order.meals)):
+        #     order.meals[i].name = order.meals[i].meal.name
+        #     order.meals[i].price = order.meals[i].meal.price
+        #     order.meals[i].subTotal = order.meals[i].meal.price * order.meals[i].amount
 
         serializer = self.get_serializer(order)
         return Response(serializer.data)
@@ -251,21 +254,19 @@ class OrderMealShipViewSet(viewsets.GenericViewSet,
             queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
         return queryset
 
-class OrderSpecialMealShipViewSet(viewsets.GenericViewSet,
+class SpecialMealShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
                             mixins.CreateModelMixin,):
 
-    queryset = SpecialMealOrderShip.objects.all()
-    serializer_class = serializers.SpecialMealOrderShipSerializer
+    queryset = SpecialMealShip.objects.all()
+    serializer_class = serializers.SpecialMealSerializer
 
     def get_queryset(self):
         queryset = self.queryset
-        order_id = self.request.query_params.get('order_id')
-        queryset = queryset.filter(order=Order.objects.get(id=order_id))
+        meal_id = self.request.query_params.get('meal_id')
+        queryset = queryset.filter(meal=Meal.objects.get(id=meal_id))
         for i in range(len(queryset)):
             queryset[i].name = queryset[i].product.name
-            queryset[i].price = queryset[i].product.price
-            queryset[i].subTotal = queryset[i].product.price * queryset[i].amount
         return queryset
     
 #http://localhost:8000/api/search/?q=%E5%8E%9F&suppervision_office_id=1

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip, AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, Announcement, SpecialMeal,SpecialMealOrderShip
+from modelCore.models import Category, Product, SupervisionOffice, Order, ProductOrderShip, Meal, MealOrderShip
+from modelCore.models import AppVersion, OutsideProduct, OutsideProductOrderShip, OutsideCategory, Announcement, SpecialMeal, SpecialMealShip
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,25 +67,36 @@ class OutsideProductOrderShipSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
 
+class SpecialMealShipSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
+    class Meta:    
+        model = SpecialMealShip
+        fields = '__all__'
+        read_only_fields = ('id',)
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['name'] = instance.special_meal.name
+        return rep
+
 class MealOrderShipSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
     price = serializers.IntegerField(read_only=True)
     subTotal = serializers.IntegerField(read_only=True)
+    specialMeals = SpecialMealShipSerializer(read_only=True, many=True)
 
     class Meta:    
         model = MealOrderShip
         fields = '__all__'
         read_only_fields = ('id',)
 
-class SpecialMealOrderShipSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(read_only=True)
-    price = serializers.IntegerField(read_only=True)
-    subTotal = serializers.IntegerField(read_only=True)
-
-    class Meta:    
-        model = SpecialMealOrderShip
-        fields = '__all__'
-        read_only_fields = ('id',)
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['name'] = instance.meal.name
+        rep['price'] = instance.meal.price
+        rep['subTotal'] = instance.meal.price * instance.amount
+        return rep
 
 class OrderSerializer(serializers.ModelSerializer):
     products = ProductOrderShipSerializer(read_only=True, many=True)
