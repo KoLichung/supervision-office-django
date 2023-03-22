@@ -10,14 +10,13 @@
             <div class="card-header">
                 
                 <div class="mb-3">
-                    <label class="form-label" for="announcementDate">公告日期：</label>
-                    <input class="form-control" id="announcementDate" type="text" placeholder="" name='announcementDate'
-                    value="{{announcement.create_date}}" />
-                </div>
-                
-                <div class="mb-3">
                     <label class="form-label" for="announcementContent">公告內容：</label>
+                    {% if announcement %}
                     <textarea class="form-control" id="announcementContent" rows="6" name='announcementContent'>{{announcement.content}}</textarea>
+                    {% else %}
+                    <textarea class="form-control" id="announcementContent" rows="6" name='announcementContent'></textarea>
+                    {% endif %}
+                
                 </div>
 
                 <div class="col-12 text-end">
@@ -26,7 +25,7 @@
                     確認送出
                     </button>
                 </div>
-
+            
             </div>
         </div>
         

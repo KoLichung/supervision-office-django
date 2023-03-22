@@ -44,4 +44,8 @@ urlpatterns = [
     path('announcement_detail', views.announcement_detail, name = 'announcement_detail'), 
     path('edit_announcement', views.edit_announcement, name = 'edit_announcement'),
 
+    path('special_meals', views.special_meals, name = 'special_meals'),
+    path('add_new_special_meal', views.add_new_special_meal, name = 'add_new_special_meal'),
+    path('edit_special_meal', views.edit_special_meal, name = 'edit_special_meal'),
+    
 ]

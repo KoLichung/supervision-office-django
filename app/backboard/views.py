@@ -2,7 +2,7 @@ from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip, ConfigData, Announcement
+from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip, ConfigData, Announcement,SpecialMeal
 # from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
@@ -344,7 +344,6 @@ def offices_order(request):
                 looplist.append({'name':ship.product.name,'price':ship.product.price,'amount':ship.amount,'ordermoney':ship.product.price * ship.amount})
 
     return render(request,'' 'backboard/offices_order.html',{'looplist':looplist, 'currentOrders':currentOrders, 'ships':ships,'orders':orders,'theOffice':theOffice,'sum':sum})
-
 
 def products(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -836,6 +835,9 @@ def announcements(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
+    if request.GET.get('delete_id') != None:
+        Announcement.objects.get(id=request.GET.get('delete_id')).delete()
+
     announcements = Announcement.objects.all().order_by('-id')
 
     paginator = Paginator(announcements, 10)
@@ -846,8 +848,6 @@ def announcements(request):
     page_obj = paginator.get_page(page_number)
 
     page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
-
-    # return render(request, 'backboard/orders.html',{'q':order_state_id ,'orders':page_obj,'orderstates':orderstates})
     
     return render(request, 'backboard/announcements.html',{'announcements':page_obj})
 
@@ -855,45 +855,152 @@ def announcement_detail(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
     
+    if request.GET.get('delete_id') != None:
+        Announcement.objects.get(id=request.GET.get('delete_id')).delete()
+
     announcement_id=request.GET.get('IdAnnouncement')
     announcement = Announcement.objects.get(id=announcement_id)        
 
     return render(request, 'backboard/announcement_detail.html',{'announcement':announcement})
 
+#new_announcement 跟 edit_announcement 用同一頁
 def edit_announcement(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
-    
-    announcement_id=request.GET.get('IdAnnouncement')
-    announcement = Announcement.objects.get(id=announcement_id) 
 
     if request.method == 'POST':
-        announcement = Announcement.objects.get(id=announcement_id)
-        announcement.content = request.POST.get('announcementContent')
-        # announcement.create_date = request.POST.get('announcementDate')
-        announcement.save()
+        if request.GET.get('IdAnnouncement') !=None:
+            announcement = Announcement.objects.get(id=request.GET.get('IdAnnouncement'))
+            announcement.content = request.POST.get('announcementContent')
+            announcement.create_date = datetime.now()
+            
+        else:
+            announcement = Announcement()
+            announcement.content = request.POST.get('announcementContent')
+            announcement.create_date = datetime.now()
+
+        if announcement.content != None and announcement.content != '':
+            announcement.save()
 
         return redirect('announcements')
+
+    if request.GET.get('IdAnnouncement') != None:
+        announcement = Announcement.objects.get(id=request.GET.get('IdAnnouncement'))
+        return render(request, 'backboard/edit_announcement.html', { 'announcement':announcement,})
+
+    return render(request, 'backboard/edit_announcement.html')
+
+def special_meals(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+    # 匯入
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+
+        file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+        file = open(file_path)
+        reader = csv.reader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            if index != 0:
+                if SpecialMeal.objects.filter(name=row[1],suppervisionOffice=supervisionOffice).count()==0:
+                    meal = SpecialMeal()
+                    meal.suppervisionOffice = supervisionOffice
+                    meal.code = row[0]
+                    meal.name = row[1]
+                    meal.unit = row[2]
+                    meal.price = int(row[3])
+                    meal.info = row[4]
+                    meal.save()
+        return redirect(f'/backboard/special_meals?supervisionOfficeId={supervisionOfficeId}')
+
+    
+    supervisionOffices = SupervisionOffice.objects.all()
+    meals = SpecialMeal.objects.all().order_by('-id')
+    
+    # print(supervisionOffices)
+    meals = meals.filter(suppervisionOffice=supervisionOffice)
+
+    
+    paginator = Paginator(meals, 50)
+    if request.GET.get('page') != None:
+        page_number = request.GET.get('page') 
+    else:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
+    # page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    return render(request, 'backboard/special_meals.html',{'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'special_meals':page_obj})
+
+def add_new_special_meal(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
+    
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+ 
+    if request.method == 'POST':
+            supervisionOfficeId = request.POST.get('supervisionOfficeId')
+            supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+
+            specialMeal = SpecialMeal()
+            specialMeal.suppervisionOffice = supervisionOffice
+            specialMeal.code = request.POST.get('specialMealCode')
+            specialMeal.name = request.POST.get('specialMealName') 
+            specialMeal.info = request.POST.get('specialMealInfo')
+            specialMeal.price = request.POST.get('specialMealPrice')
+            if request.POST.get('specialMealUnit') != None:
+                specialMeal.unit =request.POST.get('specialMealUnit')
+            if request.POST.get('specialMealStock') != None:
+                specialMeal.stocks = request.POST.get('specialMealStock')
+            specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
+            specialMeal.isPublish = request.POST.get('specialMealIsPublish')
+            specialMeal.save()
         
-    return render(request, 'backboard/edit_announcement.html',{'announcement':announcement,'announcementId':announcement_id})
+            return redirect_params('special_meals',{'supervisionOfficeId':specialMeal.suppervisionOffice.id})
+    
+    return render(request, 'backboard/add_new_special_meal.html',{'supervisionOfficeId':supervisionOfficeId})
+         
+def edit_special_meal(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('/backboard/')
 
+    specialMealId = request.GET.get("specialMealId")
+    specialMeal = SpecialMeal.objects.get(id=specialMealId)
+    
+    if request.method == 'POST':
+        specialMeal = SpecialMeal.objects.get(id=specialMealId)
+        specialMeal.code = request.POST.get('specialMealCode')
+        specialMeal.name = request.POST.get('specialMealName')
+        specialMeal.info = request.POST.get('specialMealInfo')
+        specialMeal.price = request.POST.get('specialMealPrice')
+        specialMeal.unit =request.POST.get('specialMealUnit')
+        specialMeal.stocks = request.POST.get('specialMealStock')
+        specialMeal.isPublish = request.POST.get('specialMealIsPublish')
+        specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
+        specialMeal.save()
 
-
-# ===========================================
+        return redirect_params('special_meals',{'supervisionOfficeId':specialMeal.suppervisionOffice.id})
+        
+# ================================
 def redirect_params(url, params=None):
     response = redirect(url)
     if params:
         query_string = urllib.parse.urlencode(params)
         response['Location'] += '?' + query_string
     return response
-
-# def deleteImage(request, id=None):
-#     image = get_object_or_404(ProductImage, pk=id)
-#     ID = image.product.id
-#     your_params = {
-#         'productId':ID
-#     }
-#     image.delete()
-
-    
-#     return redirect_params("/backboard/edit_product",your_params)

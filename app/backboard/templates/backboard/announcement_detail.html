@@ -7,9 +7,6 @@
         
         <div class="card h-lg-100 mb-3">
           <div class="card-header">
-            <span><b>日期：</b></span>
-            <div>{{announcement.create_date}}</div>
-            <br>
             <span><b>內容：</b></span>
             <div>{{announcement.content}}</div>
           <br>
@@ -19,7 +16,7 @@
             </div>
             &emsp;
             <div class="">        
-              <a href="{% url 'edit_config_data' %}" class="btn btn-warning btn-sm" role="button">刪除公告</a>
+              <a class="btn btn-danger text-white btn-sm" href="{% url 'announcements' %}?delete_id={{announcement.id}}" role="button">刪除</a>
             </div>
           </div>
           </div>
