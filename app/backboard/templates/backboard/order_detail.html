@@ -208,7 +208,15 @@
                   {% for ship in mealShips %}
                     <tr>
                       <td></td>
-                      <td>{{ship.meal.name}}</td>
+                      {% if ship.meal.code == "999" %}
+                        <td>{{ship.meal.name}}<br>
+                          {% for specialMealShip in specialMealShips %}
+                          &emsp;&emsp;{{specialMealShip.special_meal.name}} {% if specialMealShip.special_meal.isSpicy == True %} 加辣 {% else %} 不辣 {% endif %}<br>
+                          {% endfor %}
+                        </td>
+                      {% else %}
+                        <td>{{ship.meal.name}}</td>
+                      {% endif %}
                       <td>{{ship.meal.price}}</td>
                       <td>{{ship.amount}}</td>
                       <td class="text-end">{% widthratio ship.meal.price 1 ship.amount %}</td>

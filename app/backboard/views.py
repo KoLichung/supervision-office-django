@@ -2,7 +2,7 @@ from calendar import month
 from django.shortcuts import render ,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip, ConfigData, Announcement,SpecialMeal
+from modelCore.models import User , Category, Product, SupervisionOffice, Order ,ProductOrderShip, PayInfo, OrderState, Meal, MealOrderShip, OutsideProduct, OutsideCategory, OutsideProductOrderShip, ConfigData, Announcement,SpecialMeal, SpecialMealShip
 # from modelCore.forms import *
 import urllib 
 from django.db.models import Sum
@@ -299,6 +299,7 @@ def order_detail(request):
     ships = ProductOrderShip.objects.filter(order=order)
     outsideProductShips = OutsideProductOrderShip.objects.filter(order=order)
     mealShips = MealOrderShip.objects.filter(order=order)
+    specialMealShips = SpecialMealShip.objects.filter(order=order)
     orderstates = OrderState.objects.all()
 
     if request.method == 'POST':
@@ -310,7 +311,13 @@ def order_detail(request):
         order.save()
         return redirect(f'/backboard/order_detail?IdOrder={order_id}')
 
-    return render(request, 'backboard/order_detail.html',{'order':order, 'ships':ships, 'outsideProductShips':outsideProductShips,'mealShips':mealShips, 'orderstates':orderstates})
+    return render(request, 'backboard/order_detail.html',{
+        'order':order, 
+        'ships':ships, 
+        'outsideProductShips':outsideProductShips,
+        'mealShips':mealShips, 
+        'specialMealShips':specialMealShips,
+        'orderstates':orderstates})
 
 def offices_order(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -893,13 +900,18 @@ def edit_announcement(request):
 def special_meals(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
-    
+
     if request.GET.get('supervisionOfficeId') !=None:
-        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))  
     else:
         supervisionOfficeId = 1
 
     supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+    
+    mealId = request.GET.get('mealId')
+    meal = Meal.objects.get(suppervisionOffice=supervisionOffice,code=999)
+    supervisionOffices = SupervisionOffice.objects.all()
+    special_meals = SpecialMeal.objects.all().filter(meal=meal).order_by('id')
 
     # 匯入
     if request.method == 'POST' and request.FILES['myfile']:
@@ -913,26 +925,15 @@ def special_meals(request):
         reader = csv.reader(file, delimiter=',')
         for index, row in enumerate(reader):
             if index != 0:
-                if SpecialMeal.objects.filter(name=row[1],suppervisionOffice=supervisionOffice).count()==0:
-                    meal = SpecialMeal()
-                    meal.suppervisionOffice = supervisionOffice
-                    meal.code = row[0]
-                    meal.name = row[1]
-                    meal.unit = row[2]
-                    meal.price = int(row[3])
-                    meal.info = row[4]
-                    meal.save()
-        return redirect(f'/backboard/special_meals?supervisionOfficeId={supervisionOfficeId}')
-
+                if SpecialMeal.objects.filter(name=row[1],id=supervisionOfficeId,meal=meal).count()==0:
+                    specialMeal = SpecialMeal()
+                    specialMeal.code = row[0]
+                    specialMeal.name = row[1]
+                    specialMeal.meal = meal
+                    specialMeal.save()
+        return redirect(f'/backboard/special_meals?supervisionOfficeId={supervisionOfficeId}&mealId={mealId}')
     
-    supervisionOffices = SupervisionOffice.objects.all()
-    meals = SpecialMeal.objects.all().order_by('-id')
-    
-    # print(supervisionOffices)
-    meals = meals.filter(suppervisionOffice=supervisionOffice)
-
-    
-    paginator = Paginator(meals, 50)
+    paginator = Paginator(special_meals, 50)
     if request.GET.get('page') != None:
         page_number = request.GET.get('page') 
     else:
@@ -941,7 +942,13 @@ def special_meals(request):
 
     # page_obj.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
 
-    return render(request, 'backboard/special_meals.html',{'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'special_meals':page_obj})
+    return render(request, 'backboard/special_meals.html',
+                  {'supervisionOffices':supervisionOffices,
+                   'supervisionOffice':supervisionOffice, 
+                   'supervisionOfficeId':supervisionOfficeId, 
+                   'meal':meal,
+                   'mealId':meal.id,
+                   'special_meals':page_obj})
 
 def add_new_special_meal(request):
     if not request.user.is_authenticated or not request.user.is_staff:
@@ -953,32 +960,33 @@ def add_new_special_meal(request):
         supervisionOfficeId = 1
 
     supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
+    meal = Meal.objects.get(suppervisionOffice=supervisionOffice,code=999)
  
     if request.method == 'POST':
             supervisionOfficeId = request.POST.get('supervisionOfficeId')
-            supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
-
+            supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId,meal=meal)
             specialMeal = SpecialMeal()
-            specialMeal.suppervisionOffice = supervisionOffice
             specialMeal.code = request.POST.get('specialMealCode')
             specialMeal.name = request.POST.get('specialMealName') 
-            specialMeal.info = request.POST.get('specialMealInfo')
-            specialMeal.price = request.POST.get('specialMealPrice')
-            if request.POST.get('specialMealUnit') != None:
-                specialMeal.unit =request.POST.get('specialMealUnit')
-            if request.POST.get('specialMealStock') != None:
-                specialMeal.stocks = request.POST.get('specialMealStock')
             specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
             specialMeal.isPublish = request.POST.get('specialMealIsPublish')
+            specialMeal.meal = meal
             specialMeal.save()
         
-            return redirect_params('special_meals',{'supervisionOfficeId':specialMeal.suppervisionOffice.id})
+            return redirect_params('special_meals',{'supervisionOfficeId':supervisionOfficeId})
     
-    return render(request, 'backboard/add_new_special_meal.html',{'supervisionOfficeId':supervisionOfficeId})
+    return render(request, 'backboard/add_new_special_meal.html',{'supervisionOfficeId':supervisionOfficeId, 'supervisionOffice':supervisionOffice})
          
 def edit_special_meal(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('/backboard/')
+    
+    if request.GET.get('supervisionOfficeId') !=None:
+        supervisionOfficeId = int(request.GET.get('supervisionOfficeId'))  
+    else:
+        supervisionOfficeId = 1
+
+    supervisionOffices = SupervisionOffice.objects.all()
 
     specialMealId = request.GET.get("specialMealId")
     specialMeal = SpecialMeal.objects.get(id=specialMealId)
@@ -987,16 +995,18 @@ def edit_special_meal(request):
         specialMeal = SpecialMeal.objects.get(id=specialMealId)
         specialMeal.code = request.POST.get('specialMealCode')
         specialMeal.name = request.POST.get('specialMealName')
-        specialMeal.info = request.POST.get('specialMealInfo')
-        specialMeal.price = request.POST.get('specialMealPrice')
-        specialMeal.unit =request.POST.get('specialMealUnit')
-        specialMeal.stocks = request.POST.get('specialMealStock')
         specialMeal.isPublish = request.POST.get('specialMealIsPublish')
         specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
         specialMeal.save()
 
-        return redirect_params('special_meals',{'supervisionOfficeId':specialMeal.suppervisionOffice.id})
-        
+        return redirect_params('special_meals',{'supervisionOfficeId':supervisionOfficeId})
+    
+    return render(request, 'backboard/edit_special_meal.html',{
+        'specialMealId':specialMealId,
+        'specialMeal':specialMeal, 
+        'supervisionOffices':supervisionOffices,
+        'supervisionOfficeId':supervisionOfficeId})
+
 # ================================
 def redirect_params(url, params=None):
     response = redirect(url)

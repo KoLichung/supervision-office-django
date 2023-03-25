@@ -6,7 +6,7 @@
 
 <div class="g-3 mb-3">
   <div class="col-lg-12 ps-lg-2 mb-3">
-    <b>上架新特製餐點</b>
+    <b>在 <span style="font-size:18pt">{{supervisionOffice}}</span> 上架新特製餐點</b> 
       <form method="post" enctype="multipart/form-data">{% csrf_token %}
     
         <div class="card h-lg-100 mt-3">
@@ -38,7 +38,7 @@
 
 
             <!-- 餐點售價、單位、庫存 -->
-            <div class="row mb-3">
+            {% comment %} <div class="row mb-3">
 
               <div class="col-md-4">
                 <label class="form-label" for="specialMealPrice">特製餐點售價：</label>
@@ -57,23 +57,8 @@
                 <input class="form-control form-inline" id="specialMealStock" type="number" name="specialMealStock" value="0"/>
               </div>
                             
-            </div>
-            
-             <!-- 辣味 -->
-             {% comment %} <div>
-              <div>
-                  <label class="form-label">辣味：</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" id="specialMealIsSpicy" type="radio" name="specialMealIsSpicy" value="False">
-                  <label class="form-check-label" for="specialMealIsSpicy">否</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" id="specialMealIsSpicy" type="radio" name="specialMealIsSpicy" value= "True">
-                  <label class="form-check-label" for="specialMealIsSpicy">是</label>
-              </div>
             </div> {% endcomment %}
-
+            
             <!-- 上架狀態 -->
             <div>
               <div>
@@ -90,7 +75,7 @@
             </div>
 
             <div class="col-12 text-end">
-                <button class="btn btn-warning btn-sm" type="submit" name="submit2" value="upload_meal" onclick="location.href='{% url 'add_new_special_meal' %}'">
+                <button class="btn btn-warning btn-sm" type="submit" name="submit2" value="upload_meal" onclick="location.href='{% url 'add_new_special_meal' %}?supervisionOfficeId={{supervisionOfficeId}}'">
                   新增特製餐點
                 </button>
             </div>

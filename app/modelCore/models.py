@@ -153,7 +153,8 @@ class OutsideProduct(models.Model):
 class Meal(models.Model):
     suppervisionOffice = models.ForeignKey(
         SupervisionOffice,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='meal',
     )
     
     code = models.CharField(max_length = 100, blank = True, null=True)

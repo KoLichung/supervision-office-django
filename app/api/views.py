@@ -125,12 +125,16 @@ class SpecialMealViewSet(viewsets.GenericViewSet,
     #query by suppervision office
     def get_queryset(self):
         queryset = self.queryset.filter(isPublish=True)
-        suppervision_office_id = self.request.query_params.get('suppervision_office_id')
+        # supervision_office_id = self.request.query_params.get('supervision_office_id')
+        meal=self.request.query_params.get('meal')
 
-        if suppervision_office_id!=None:
-            suppervisionOffice = SupervisionOffice.objects.get(id=suppervision_office_id)
-            queryset = queryset.filter(suppervisionOffice=suppervisionOffice).order_by('price')
+        # if supervision_office_id!=None:
+        #     suppervisionOffice = SupervisionOffice.objects.get(id=supervision_office_id)
+        #     queryset = queryset.filter(suppervisionOffice=suppervisionOffice,meal=meal).order_by('id')
 
+        if meal:
+            queryset = queryset.filter(meal=meal)
+        
         return queryset
 #http://localhost:8000/api/supervisionoffices/?area=%E4%B8%AD
 class SupervisionOfficeViewSet(viewsets.GenericViewSet,

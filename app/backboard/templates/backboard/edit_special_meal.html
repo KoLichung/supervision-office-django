@@ -8,7 +8,7 @@
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
       <div class="card h-lg-100 mt-3">
         <div class="card-header">
-          
+
           <!-- 餐點代號 -->
           <div class="mb-3">
             <label class="form-label" for="specialMealCode">特製餐點代號：</label>
@@ -30,7 +30,7 @@
           </div>
 
           <!-- 餐點售價、單位、庫存 -->
-          <div class="row mb-3">
+          {% comment %} <div class="row mb-3">
 
             <div class="col-md-4">
               <label class="form-label" for="specialMealPrice">特製餐點售價：</label>
@@ -50,23 +50,6 @@
                 value= "{{specialMeal.stocks}}" />
             </div>
 
-          </div>
-
-          <!-- 辣味 -->
-          {% comment %} <div>
-            <div>
-              <label class="form-label">辣味：</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" id="specialMealIsSpicy" type="radio" name="specialMealIsSpicy"
-                value="False" {% if specialMeal.isSpicy == False %} checked {% endif %} />
-              <label class="form-check-label" for="specialMealIsSpicy">否</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" id="specialMealIsSpicy" type="radio" name="specialMealIsSpicy"
-                value="True" {% if specialMeal.isSpicy == True %} checked {% endif %} />
-              <label class="form-check-label" for="specialMealIsSpicy">是</label>
-            </div>
           </div> {% endcomment %}
 
           <!-- 上架狀態 -->
@@ -88,10 +71,16 @@
 
           <div class="col-12 text-end">
             <button class="btn btn-warning btn-sm" type="submit" name="submit" value="edit"
-              onclick="location.href='{% url 'special_meals' %}'">
+              onclick="location.href='{% url 'special_meals' %}?supervisionOfficeId={{supervisionOfficeId}}'">
               儲存
             </button>
           </div>
+
+          
+           
+            
+            
+            
 
         </div>
       </div>

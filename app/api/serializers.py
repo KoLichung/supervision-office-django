@@ -78,6 +78,7 @@ class SpecialMealShipSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['name'] = instance.special_meal.name
+        rep['isSpicy'] = instance.special_meal.isSpicy
         return rep
 
 class MealOrderShipSerializer(serializers.ModelSerializer):
