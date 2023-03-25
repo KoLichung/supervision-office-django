@@ -907,11 +907,13 @@ def special_meals(request):
         supervisionOfficeId = 1
 
     supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
-    
-    mealId = request.GET.get('mealId')
-    meal = Meal.objects.get(suppervisionOffice=supervisionOffice,code=999)
-    supervisionOffices = SupervisionOffice.objects.all()
-    special_meals = SpecialMeal.objects.all().filter(meal=meal).order_by('id')
+    meal = Meal.objects.filter(name__contains='特製菜單', suppervisionOffice=supervisionOffice).first()
+    special_meals = SpecialMeal.objects.filter(meal=meal)
+
+    #不是所有監獄都有特製菜單，我們要撈出有特製菜單的監獄
+    supervisionOffice_ids = Meal.objects.filter(name__contains='特製菜單').values_list('suppervisionOffice', flat=True)
+    #[1, 5, 6]
+    supervisionOffices = SupervisionOffice.objects.filter(id__in=supervisionOffice_ids)
 
     # 匯入
     if request.method == 'POST' and request.FILES['myfile']:
@@ -931,7 +933,7 @@ def special_meals(request):
                     specialMeal.name = row[1]
                     specialMeal.meal = meal
                     specialMeal.save()
-        return redirect(f'/backboard/special_meals?supervisionOfficeId={supervisionOfficeId}&mealId={mealId}')
+        return redirect(f'/backboard/special_meals?supervisionOfficeId={supervisionOfficeId}')
     
     paginator = Paginator(special_meals, 50)
     if request.GET.get('page') != None:
@@ -945,9 +947,6 @@ def special_meals(request):
     return render(request, 'backboard/special_meals.html',
                   {'supervisionOffices':supervisionOffices,
                    'supervisionOffice':supervisionOffice, 
-                   'supervisionOfficeId':supervisionOfficeId, 
-                   'meal':meal,
-                   'mealId':meal.id,
                    'special_meals':page_obj})
 
 def add_new_special_meal(request):
@@ -960,20 +959,20 @@ def add_new_special_meal(request):
         supervisionOfficeId = 1
 
     supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId)
-    meal = Meal.objects.get(suppervisionOffice=supervisionOffice,code=999)
+    meal = Meal.objects.filter(suppervisionOffice=supervisionOffice,name__contains='特製菜單').first()
  
     if request.method == 'POST':
-            supervisionOfficeId = request.POST.get('supervisionOfficeId')
-            supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId,meal=meal)
-            specialMeal = SpecialMeal()
-            specialMeal.code = request.POST.get('specialMealCode')
-            specialMeal.name = request.POST.get('specialMealName') 
-            specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
-            specialMeal.isPublish = request.POST.get('specialMealIsPublish')
-            specialMeal.meal = meal
-            specialMeal.save()
-        
-            return redirect_params('special_meals',{'supervisionOfficeId':supervisionOfficeId})
+        supervisionOfficeId = request.POST.get('supervisionOfficeId')
+        supervisionOffice = SupervisionOffice.objects.get(id=supervisionOfficeId,meal=meal)
+        specialMeal = SpecialMeal()
+        specialMeal.code = request.POST.get('specialMealCode')
+        specialMeal.name = request.POST.get('specialMealName') 
+        specialMeal.isSpicy = request.POST.get('specialMealIsSpicy')
+        specialMeal.isPublish = request.POST.get('specialMealIsPublish')
+        specialMeal.meal = meal
+        specialMeal.save()
+    
+        return redirect_params('special_meals',{'supervisionOfficeId':supervisionOfficeId})
     
     return render(request, 'backboard/add_new_special_meal.html',{'supervisionOfficeId':supervisionOfficeId, 'supervisionOffice':supervisionOffice})
          

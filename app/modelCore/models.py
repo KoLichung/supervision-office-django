@@ -347,8 +347,7 @@ class SpecialMeal(models.Model):
     code = models.CharField(max_length = 100, blank = True, null=True)
     name = models.CharField(max_length = 255, blank = True, null=True)
     isPublish = models.BooleanField(default=True, blank = True, null=True)
-    isSpicy = models.BooleanField(default=False, blank = True, null=True)
-
+    
     def __str__(self):
         return self.name
 
@@ -367,3 +366,4 @@ class SpecialMealShip(models.Model):
     )
     amount = models.IntegerField(default=0,null=True)
     money = models.IntegerField(default=0, null=True)
+    isSpicy = models.BooleanField(default=False, blank = True, null=True)

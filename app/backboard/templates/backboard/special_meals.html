@@ -10,7 +10,7 @@
     <div class="col mt-3">
       <select class="form-select" aria-label="Default select example" name="test_redirect">
         {% for office in supervisionOffices %}
-            {% if supervisionOfficeId == office.id %}
+            {% if supervisionOffice.id == office.id %}
             <option value={{office.id}} selected>{{office.name}}</option>
             {% else %}
             <option value={{office.id}}>{{office.name}}</option>
@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <a href="{% url 'add_new_special_meal' %}?supervisionOfficeId={{supervisionOfficeId}}&mealId={{mealId}}" class="btn btn-warning btn-sm" role="button">上架新特製餐點</a>
+      <a href="{% url 'add_new_special_meal' %}?supervisionOfficeId={{supervisionOffice.id}}" class="btn btn-warning btn-sm" role="button">上架新特製餐點</a>
     </div>
 
   </div>

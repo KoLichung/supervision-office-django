@@ -76,8 +76,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 @admin.register(SpecialMeal)
 class SpecialMealAdmin(admin.ModelAdmin):
-    list_display = ('id','meal','name','isPublish','isSpicy')
+    list_display = ('id','meal','name','isPublish')
 
 @admin.register(SpecialMealShip)
 class SpecialMealShipAdmin(admin.ModelAdmin):
-    list_display = ('id','order','meal','special_meal','amount')
+    list_display = ('id','order','meal','special_meal','isSpicy','amount')
