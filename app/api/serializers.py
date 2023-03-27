@@ -69,6 +69,7 @@ class OutsideProductOrderShipSerializer(serializers.ModelSerializer):
 
 class SpecialMealShipSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
+    # isSpicy = serializers.BooleanField(read_only=True) #為何這裡不用!?
 
     class Meta:    
         model = SpecialMealShip
@@ -78,7 +79,7 @@ class SpecialMealShipSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['name'] = instance.special_meal.name
-        rep['isSpicy'] = instance.special_meal.isSpicy
+        # rep['isSpicy'] = instance.special_meal.isSpicy #為何這裡不用!?
         return rep
 
 class MealOrderShipSerializer(serializers.ModelSerializer):

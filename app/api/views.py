@@ -191,10 +191,14 @@ class OrderViewSet(viewsets.GenericViewSet,
         order.meals = MealOrderShip.objects.filter(order=order)
         for i in range(len(order.meals)):
             order.meals[i].specialMeals = SpecialMealShip.objects.filter(order=order,meal=order.meals[i].meal)
-        # for i in range(len(order.meals)):
-        #     order.meals[i].name = order.meals[i].meal.name
-        #     order.meals[i].price = order.meals[i].meal.price
-        #     order.meals[i].subTotal = order.meals[i].meal.price * order.meals[i].amount
+
+            order.meals[i].name = order.meals[i].meal.name
+            order.meals[i].price = order.meals[i].meal.price
+            order.meals[i].subTotal = order.meals[i].meal.price * order.meals[i].amount
+            # for x in range(len(order.meals[i].meal.special_meal)):
+            #     order.meals[i].meal.specialMeals[x].name = order.meals[i].specialMeals[x].special_meal.name
+            #     order.meals[i].meal.specialMeals[x].isSpicy = order.meals[i].specialMeals[x].special_meal.isSpicy
+
 
         serializer = self.get_serializer(order)
         return Response(serializer.data)
@@ -263,7 +267,7 @@ class SpecialMealShipViewSet(viewsets.GenericViewSet,
                             mixins.CreateModelMixin,):
 
     queryset = SpecialMealShip.objects.all()
-    serializer_class = serializers.SpecialMealSerializer
+    serializer_class = serializers.SpecialMealShipSerializer
 
     def get_queryset(self):
         queryset = self.queryset
@@ -271,6 +275,7 @@ class SpecialMealShipViewSet(viewsets.GenericViewSet,
         queryset = queryset.filter(meal=Meal.objects.get(id=meal_id))
         for i in range(len(queryset)):
             queryset[i].name = queryset[i].product.name
+            queryset[i].isSpicy = queryset[i].product.isSpicy
         return queryset
     
 #http://localhost:8000/api/search/?q=%E5%8E%9F&suppervision_office_id=1
