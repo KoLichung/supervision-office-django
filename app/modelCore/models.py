@@ -284,6 +284,14 @@ class MealOrderShip(models.Model):
 #     )
 #     money = models.IntegerField(default=0, null=True,  blank = True)
 
+class MtPayInfo(models.Model):
+    # 目前是超商代收 only
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.RESTRICT
+    )
+
+
 class PayInfo(models.Model):
     order = models.ForeignKey(
         Order,

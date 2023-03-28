@@ -87,9 +87,32 @@ class GetPostTestOrderView(APIView):
 
 class CallBackView(APIView):
 
+
+    # {
+    #     "data":
+    #     {
+    #         "number": "MAT200408877CB",
+    #         "amount": 20000,
+    #         "status": 2,
+    #         "pay_at": "2020-04-08 18:10:15",
+    #         "pay_amount": 20000,
+    #         "encrypt_type": 1,
+    #         "return_url": "http://your.return.url",
+    #         "payment_method_id": 1,
+    #         "virtual_bank_id":0,
+    #         "customer_number": "test123456",
+    #         "sign": "0B4AC466CE1DF6ECFAB664DFDACD93B5BA7161787C150413B3B1402F3EEAB442"
+    #     }
+    # }
+
     def post(self, request, format=None):
         body = json.loads(request.body)
         logger.info(body)
+
+        # data = body['data']
+        # order_id = data['number']
+        # amount = data['amount']
+
         return Response(body)
 
 def sha256_hash(TradeInfo):
