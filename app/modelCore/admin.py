@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import  OrderState, ProductOrderShip, User, Category, Product
 from .models import  SupervisionOffice, Order, PayInfo, OrderState, Meal, MealOrderShip, AppVersion
 from .models import  OutsideProduct, OutsideProductOrderShip, OutsideCategory, ConfigData, Announcement
-from .models import SpecialMeal, SpecialMealShip
+from .models import SpecialMeal, SpecialMealShip, MtPayInfo
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -58,9 +58,9 @@ class MealOrderShipAdmin(admin.ModelAdmin):
 class OrderState(admin.ModelAdmin):
     list_display=('id','name')
 
-@admin.register(PayInfo)
-class PayInfoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'order' , 'PaymentType' )
+# @admin.register(PayInfo)
+# class PayInfoAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'order' , 'PaymentType' )
 
 @admin.register(AppVersion)
 class AppVersionAdmin(admin.ModelAdmin):
@@ -81,3 +81,7 @@ class SpecialMealAdmin(admin.ModelAdmin):
 @admin.register(SpecialMealShip)
 class SpecialMealShipAdmin(admin.ModelAdmin):
     list_display = ('id','order','meal','special_meal','isSpicy','amount')
+
+@admin.register(MtPayInfo)
+class MtPayInfoAdmin(admin.ModelAdmin):
+    list_display = ('id','order','payment_number','amount','status','pay_at')

@@ -291,6 +291,41 @@ class MtPayInfo(models.Model):
         on_delete=models.RESTRICT
     )
 
+    #付款代碼
+    payment_number = models.CharField(max_length=100, default='', blank = True, null=True)
+
+    # 訂單號
+    number = models.CharField(max_length=100, default='', blank = True, null=True)
+    # 訂單金額
+    amount = models.DecimalField(max_digits=9, decimal_places=2, null=True)
+
+
+    STATUS_CHOICES = [
+        (1, '已建立'),
+        (2, '已付款'),
+        (3, '已取消'),
+        (4, '已打單'),
+        (5, '已付款，但實際付款金額與訂單金額不符'),
+        (6, '已付款，但付款銀行資訊不符'),
+        (7, '已退款，付款銀行資訊不符'),
+    ]
+    # 交易狀態
+    status = models.IntegerField(default=1, choices=STATUS_CHOICES,null=True)
+
+    # 繳費時間
+    pay_at = models.DateTimeField(auto_now=False, blank = True, null=True)
+    # 繳費金額
+    pay_amount = models.DecimalField(max_digits=9, decimal_places=2, null=True)
+    # 加密類型
+    encrypt_type = models.IntegerField(default=0, null=True)
+    # 繳費方式
+    payment_method_id = models.IntegerField(default=0, null=True)
+    # 銀行虛擬帳號
+    virtual_bank_id  = models.IntegerField(default=0, null=True)
+    # 客戶訂單號
+    customer_number = models.CharField(max_length=100, default='', blank = True, null=True)
+    # 加密簽章
+    sign = models.CharField(max_length=100, default='', blank = True, null=True)
 
 class PayInfo(models.Model):
     order = models.ForeignKey(
