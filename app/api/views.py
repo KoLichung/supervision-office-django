@@ -209,7 +209,14 @@ class OrderViewSet(viewsets.GenericViewSet,
         bank_code = config_data.ATMInfoBankCode
         bank_account = config_data.ATMInfovAccount
 
-        serializer.save(user=self.request.user, cashflowState='waitForATMPay', paymentType='atm', ATMInfoBankCode=bank_code, ATMInfovAccount=bank_account, ATMInfoExpireDate=datetime.now()+timedelta(days=3))
+        serializer.save(
+            user=self.request.user, 
+            # cashflowState='waitForATMPay', 
+            cashflowState='unPaid',
+            paymentType='atm', 
+            ATMInfoBankCode=bank_code, 
+            ATMInfovAccount=bank_account, 
+            ATMInfoExpireDate=datetime.now()+timedelta(days=3))
 
 class OrderProductShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
