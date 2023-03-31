@@ -139,7 +139,7 @@ class GetPostOrderView(APIView):
         if resp_json['result']== 'success':
 
             mtPayInfo = MtPayInfo()
-            mtPayInfo.order = Order.objects.get(id=1)
+            mtPayInfo.order = Order.objects.get(id=10)
             mtPayInfo.status = 1
             mtPayInfo.amount = amount
             mtPayInfo.payment_number = resp_json['payment_number']
@@ -164,14 +164,14 @@ class GetUserPostOrderView(APIView):
         order_id = self.request.query_params.get('order_id')
         order = Order.objects.get(id=order_id)
 
-        customer_number = 1 # 客戶訂單號
-        # customer_number = order_id #這應該要再改
+        # customer_number = 1 # 客戶訂單號
+        customer_number = int(order_id)
         
         payer_name  = 'user0'
-        # payer_name = order.user.name
+        # payer_name = order.user.name #flutter的Order只有 user id 沒有 user name
         
-        amount = 35
-        # amount = order.orderMoney
+        # amount = 35
+        amount = int(order.orderMoney)
 
         encrypt_type  = 1
         pay_content = '測試商品'
@@ -216,12 +216,13 @@ class GetUserPostOrderView(APIView):
         if resp_json['result']== 'success':
 
             mtPayInfo = MtPayInfo()
-            mtPayInfo.order = Order.objects.get(id=1)
+            mtPayInfo.order = Order.objects.get(id=int(order_id))
             mtPayInfo.status = 1 #1是已建立
             mtPayInfo.amount = amount
             mtPayInfo.payment_number = resp_json['payment_number']
             mtPayInfo.number = resp_json['number']
             mtPayInfo.customer_number = resp_json['customer_number']
+            mtPayInfo.query_limit_at = resp_json['query_limit_at'] #新增了這行
             mtPayInfo.save()
 
         return Response(resp_json)

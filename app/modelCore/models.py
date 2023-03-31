@@ -311,6 +311,8 @@ class MtPayInfo(models.Model):
     ]
     # 交易狀態
     status = models.IntegerField(default=1, choices=STATUS_CHOICES,null=True)
+    #超商繳費時限
+    query_limit_at = models.DateTimeField(auto_now=False, blank = True, null=True)
 
     # 繳費時間
     pay_at = models.DateTimeField(auto_now=False, blank = True, null=True)

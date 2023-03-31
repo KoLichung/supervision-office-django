@@ -199,7 +199,6 @@ class OrderViewSet(viewsets.GenericViewSet,
             #     order.meals[i].meal.specialMeals[x].name = order.meals[i].specialMeals[x].special_meal.name
             #     order.meals[i].meal.specialMeals[x].isSpicy = order.meals[i].specialMeals[x].special_meal.isSpicy
 
-
         serializer = self.get_serializer(order)
         return Response(serializer.data)
 
@@ -212,8 +211,7 @@ class OrderViewSet(viewsets.GenericViewSet,
         serializer.save(
             user=self.request.user, 
             # cashflowState='waitForATMPay', 
-            cashflowState='unPaid',
-            paymentType='atm', 
+            # paymentType='atm', 
             ATMInfoBankCode=bank_code, 
             ATMInfovAccount=bank_account, 
             ATMInfoExpireDate=datetime.now()+timedelta(days=3))
