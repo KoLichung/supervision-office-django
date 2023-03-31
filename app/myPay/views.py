@@ -165,7 +165,7 @@ class GetUserPostOrderView(APIView):
         order = Order.objects.get(id=order_id)
 
         customer_number = 1 # 客戶訂單號
-        # customer_number = order_id #這應該要再改
+        # customer_number = int(order_id) #這應該要再改
         
         payer_name  = 'user0'
         # payer_name = order.user.name
