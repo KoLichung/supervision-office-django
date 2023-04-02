@@ -207,14 +207,26 @@ class OrderViewSet(viewsets.GenericViewSet,
         config_data = ConfigData.objects.first()
         bank_code = config_data.ATMInfoBankCode
         bank_account = config_data.ATMInfovAccount
+        
+        body_params = self.request.data
 
-        serializer.save(
-            user=self.request.user, 
-            # cashflowState='waitForATMPay', 
-            # paymentType='atm', 
-            ATMInfoBankCode=bank_code, 
-            ATMInfovAccount=bank_account, 
-            ATMInfoExpireDate=datetime.now()+timedelta(days=3))
+        if body_params['paymentType']=='cvs':
+            order = serializer.save(
+                user=self.request.user,
+                paymentType='cvs', 
+                cashflowState='waitForCVSPay',
+            )
+            from myPay.tasks import post_order_to_mtPay
+            post_order_to_mtPay(order.id)
+        else:
+            serializer.save(
+                user=self.request.user, 
+                cashflowState='waitForATMPay', 
+                paymentType='atm', 
+                ATMInfoBankCode=bank_code, 
+                ATMInfovAccount=bank_account, 
+                ATMInfoExpireDate=datetime.now()+timedelta(days=3),
+            )
 
 class OrderProductShipViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,

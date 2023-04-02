@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from modelCore.models import MtPayInfo, Order
+from modelCore.models import MtPayInfo, Order, OrderState
 import hashlib
 import urllib.parse
 import requests
@@ -231,8 +231,7 @@ class CallBackView(APIView):
 
 
     # {
-    #     "data":
-    #     {
+    #     "data": {
     #         "number": "MAT200408877CB",
     #         "amount": 20000,
     #         "status": 2,
@@ -241,9 +240,10 @@ class CallBackView(APIView):
     #         "encrypt_type": 1,
     #         "return_url": "http://your.return.url",
     #         "payment_method_id": 1,
-    #         "virtual_bank_id":0,
+    #         "virtual_bank_id": 0,
     #         "customer_number": "test123456",
-    #         "sign": "0B4AC466CE1DF6ECFAB664DFDACD93B5BA7161787C150413B3B1402F3EEAB442"
+    #         "payment_records": "%5B%7B%22tx_number%22%3A%22tx888888888%22%2C%22out_bank_code%22%3A%22123%22%2C%22out_bank_account%22%3A%22123456789%22%2C%22pay_amount%22%3A20000%2C%22pay_at%22%3A%222020-04-08+18%3A10%3A15%22%7D%5D",
+    #         "sign": "C8F24BE27B01DC553F8156A53708522F270D56475861FE82F25BE60373388274"
     #     }
     # }
 
@@ -251,9 +251,38 @@ class CallBackView(APIView):
         body = json.loads(request.body)
         logger.info(body)
 
-        # data = body['data']
-        # order_id = data['number']
-        # amount = data['amount']
+        data = body['data']
+        order_id = data['customer_number']
+        status = data['status']
+
+        try:
+            order = Order.objects.get(id=order_id)
+            mtPayInfo = MtPayInfo.objects.get(order=order)
+            mtPayInfo.status = status
+
+            if data['pay_at'] != None:
+                mtPayInfo.pay_at = data['pay_at']
+
+            if data['payment_records'] != None:
+                mtPayInfo.payment_records = data['payment_records']
+
+            if data['pay_amount'] != None:
+                mtPayInfo.pay_amount = data['pay_amount']
+
+            if data['encrypt_type'] != None:
+                mtPayInfo.encrypt_type = data['encrypt_type']
+                
+            if data['sign'] != None:
+                mtPayInfo.pay_amount = data['sign']
+
+            if mtPayInfo.status == 2:
+                order.state = OrderState.objects.get(name='已完成')
+                order.save()
+
+            mtPayInfo.save()
+
+        except Exception as e:
+            logger.error(e)
 
         return Response(body)
 

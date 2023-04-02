@@ -328,6 +328,8 @@ class MtPayInfo(models.Model):
     customer_number = models.CharField(max_length=100, default='', blank = True, null=True)
     # 加密簽章
     sign = models.CharField(max_length=100, default='', blank = True, null=True)
+    # 繳費記錄
+    payment_records = models.CharField(max_length=255, default='', blank = True, null=True)
 
 class PayInfo(models.Model):
     order = models.ForeignKey(
