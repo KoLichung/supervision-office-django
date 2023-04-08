@@ -102,7 +102,7 @@ class GetPostOrderView(APIView):
         payer_name  = 'user0'
         payment_method_id = 1
         return_url = 'http://45.77.24.12/paymentApp/callback'
-        customer_number = 1
+        customer_number = 71
 
         HashKey = '759ggsGGkvgL1dgs'
         HashIV = '3aHKRZzC4iJIhuX9'

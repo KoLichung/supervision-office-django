@@ -19,14 +19,14 @@ def post_order_to_mtPay(order_id):
     # customer_number = 1 # 客戶訂單號
     customer_number = int(order_id)
 
-    payer_name  = 'user0'
-    # payer_name = order.user.name #flutter的Order只有 user id 沒有 user name
+    # payer_name  = 'user0'
+    payer_name = order.user.name
     
     # amount = 35
     amount = int(order.orderMoney)
 
     encrypt_type  = 1
-    pay_content = '測試商品'
+    pay_content = '伍捌零商品'
     
     payment_method_id = 1
     return_url = 'http://45.77.24.12/paymentApp/callback'
