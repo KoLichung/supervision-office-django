@@ -273,7 +273,7 @@ class CallBackView(APIView):
                 mtPayInfo.encrypt_type = data['encrypt_type']
                 
             if data['sign'] != None:
-                mtPayInfo.pay_amount = data['sign']
+                mtPayInfo.sign = data['sign']
 
             if mtPayInfo.status == 2:
                 order.state = OrderState.objects.get(name='已完成')
