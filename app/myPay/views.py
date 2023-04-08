@@ -277,6 +277,7 @@ class CallBackView(APIView):
 
             if mtPayInfo.status == 2:
                 order.state = OrderState.objects.get(name='已完成')
+                order.cashflowState = 'paid'
                 order.save()
 
             mtPayInfo.save()
