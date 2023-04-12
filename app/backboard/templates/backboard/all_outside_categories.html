@@ -42,8 +42,8 @@
                   {% for category in categories %}
                     <tr>
                       <td>{{category.name}}</td>
-                      <td class="alnright">                    
-                        <a class="custom-purple-btn text-white btn-sm " href="{% url 'new_edit_category' %}?category_id={{category.id}}">編輯類別</a>
+                      <td class="text-end">                    
+                        <a class="btn btn-warning btn-sm " href="{% url 'new_edit_outside_category' %}?category_id={{category.id}}">修改類別名稱</a>
                         {% comment %} <a class="bg-danger text-white btn-sm" href="{% url 'all_categories' %}?delete_id={{category.id}}" >刪除</a> {% endcomment %}
                       </td>
                     </tr> 

@@ -84,21 +84,36 @@
         <!-- 金流明細 -->
         <div class="card h-lg-100 mb-3">
           <div class="card-header">
-            <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATM 王道銀行(048)：01000107609788</p>
-            <hr>
-            <p>
-              {% if order.cashflowState == "paid" %}
-                <button type="button" class="btn btn-outline-dark btn-sm" style="pointer-events:none;">已付款</button>
+            {% if order.paymentType == 'cvs' %}
+              <!-- 超商代碼付款 -->
+              <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <hr>
+              <p>
+                {% if order.cashflowState == "paid" %}
+                  <button type="button" class="btn btn-outline-dark btn-sm" style="pointer-events:none;">已付款</button>
+                {% else %}
+                  <button type="button" class="btn btn-outline-dark btn-sm" disabled>未付款</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;超商代碼付款 {{order.CVSInfoPaymentNo}}
+                {% endif %}
+              </p>
               {% else %}
-                <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modal_state">未付款</button>
-              {% endif %}
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {% if order.ATMFiveDigit != "" and order.ATMFiveDigit != None %}
-                付款後五碼：{{order.ATMFiveDigit}}
-              {% else %}
-                付款後五碼：尚未回填
-              {% endif %}
-            </p>
+              <!-- ATM轉帳 -->
+              <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATM 王道銀行(048)：01000107609788</p>
+              <hr>
+              <p>
+                {% if order.cashflowState == "paid" %}
+                  <button type="button" class="btn btn-outline-dark btn-sm" style="pointer-events:none;">已付款</button>
+                {% else %}
+                  <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modal_state">未付款</button>
+                {% endif %}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {% if order.ATMFiveDigit != "" and order.ATMFiveDigit != None %}
+                  付款後五碼：{{order.ATMFiveDigit}}
+                {% else %}
+                  付款後五碼：尚未回填
+                {% endif %}
+              </p>
+            {% endif %}
           </div>
         </div>
 

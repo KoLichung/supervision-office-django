@@ -8,7 +8,7 @@
         <div class="card-header">
   
           <div class="mb-3 d-flex justify-content-between">
-            編輯監外商品類別
+            編輯監外商品類別名稱
           </div>
           <div class="border border-1 mb-3"></div>
 
@@ -17,8 +17,8 @@
             <input type="hidden" id="supervisionOfficeId" name="supervisionOfficeId" value={{supervisionOfficeId}}>
 
             <div class="mb-3">
-              {% if outsideCategory %}
-                <input class="form-control" type="text" placeholder="輸入類別名稱" name="name" value={{outsidecategory.name}} />
+              {% if category %}
+                <input class="form-control" type="text" placeholder="輸入類別名稱" name="name" value={{category.name}} />
               {% else %}
                 <input class="form-control" type="text" placeholder="輸入類別名稱" name="name" value="" />
               {% endif %}
@@ -29,7 +29,7 @@
                 取消
               </button>
               <div>
-                <button class="btn purple-button btn-sm" type="submit" name="post" value='save'>
+                <button class="btn btn-warning btn-sm" type="submit" name="post" value='save'>
                   儲存
                 </button>
               </div>
