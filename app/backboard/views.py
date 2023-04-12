@@ -739,7 +739,7 @@ def all_categories(request):
             print("no such category")
 
     supervisionOffices = SupervisionOffice.objects.all()
-    categories = Category.objects.filter(suppervisionOffice=supervisionOffice)
+    categories = Category.objects.filter(suppervisionOffice=supervisionOffice).order_by('id')
 
     return render(request, 'backboard/all_categories.html', {'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'categories':categories})
 
@@ -786,7 +786,7 @@ def all_outside_categories(request):
             print("no such category")
 
     supervisionOffices = SupervisionOffice.objects.all()
-    categories = OutsideCategory.objects.filter(suppervisionOffice=supervisionOffice)
+    categories = OutsideCategory.objects.filter(suppervisionOffice=supervisionOffice).order_by('id')
 
     return render(request, 'backboard/all_outside_categories.html', {'supervisionOffices':supervisionOffices, 'supervisionOfficeId':supervisionOfficeId, 'categories':categories})
 
