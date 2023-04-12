@@ -86,14 +86,13 @@
           <div class="card-header">
             {% if order.paymentType == 'cvs' %}
               <!-- 超商代碼付款 -->
-              <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p>金流明細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;超商代碼付款 {{order.CVSInfoPaymentNo}}</p>
               <hr>
               <p>
                 {% if order.cashflowState == "paid" %}
                   <button type="button" class="btn btn-outline-dark btn-sm" style="pointer-events:none;">已付款</button>
                 {% else %}
                   <button type="button" class="btn btn-outline-dark btn-sm" disabled>未付款</button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;超商代碼付款 {{order.CVSInfoPaymentNo}}
                 {% endif %}
               </p>
               {% else %}
