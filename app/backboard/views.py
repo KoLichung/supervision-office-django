@@ -947,6 +947,7 @@ def special_meals(request):
     return render(request, 'backboard/special_meals.html',
                   {'supervisionOffices':supervisionOffices,
                    'supervisionOffice':supervisionOffice, 
+                   'supervisionOfficeId':supervisionOfficeId
                    'special_meals':page_obj})
 
 def add_new_special_meal(request):
