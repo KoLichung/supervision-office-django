@@ -378,20 +378,24 @@ def products(request):
             if index != 0:
                 if Product.objects.filter(name=row[1],suppervisionOffice=supervisionOffice).count()==0:
                     product = Product()
-                    product.suppervisionOffice = supervisionOffice
-                    product.code = row[0]
-                    product.name = row[1]
+                else:
+                    product = Product.objects.filter(name=row[1],suppervisionOffice=supervisionOffice).first()
 
-                    if Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).count()==0:
-                        category = Category.objects.create(name=row[2],suppervisionOffice=supervisionOffice)
-                    else:
-                        category = Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).first()
+                product.suppervisionOffice = supervisionOffice
+                product.code = row[0]
+                product.name = row[1]
 
-                    product.category = category
-                    product.unit = row[3]
-                    product.price = int(row[4])
-                    product.info = row[5]
-                    product.save()
+                if Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).count()==0:
+                    category = Category.objects.create(name=row[2],suppervisionOffice=supervisionOffice)
+                else:
+                    category = Category.objects.filter(name=row[2],suppervisionOffice=supervisionOffice).first()
+
+                product.category = category
+                product.unit = row[3]
+                product.price = int(row[4])
+                product.info = row[5]
+                product.save()
+                
         return redirect(f'/backboard/products?supervisionOfficeId={supervisionOfficeId}')
 
     
