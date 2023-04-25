@@ -392,10 +392,10 @@ def products(request):
 
                 product.category = category
                 product.unit = row[3]
-                product.price = int(row[4])
+                product.price = int(row[4].replace(',',''))
                 product.info = row[5]
                 product.save()
-                
+
         return redirect(f'/backboard/products?supervisionOfficeId={supervisionOfficeId}')
 
     
